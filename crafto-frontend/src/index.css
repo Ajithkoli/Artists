@@ -49,7 +49,7 @@
   }
 
   .glass-card {
-    @apply bg-white/10 dark:bg-black/40 backdrop-blur-xl border border-white/20 dark:border-white/20;
+    @apply bg-white dark:bg-white text-slate-900 border border-slate-200 shadow-2xl;
   }
 }
 

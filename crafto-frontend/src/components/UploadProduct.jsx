@@ -74,6 +74,7 @@ const ProductCreator = ({ open, onClose }) => {
     >
       <motion.div
         className="bg-white rounded-[32px] shadow-[0_32px_128px_-16px_rgba(0,0,0,0.5)] w-full max-w-lg relative p-8 md:p-10 max-h-[90vh] overflow-y-auto border-4 border-primary-600"
+        style={{ backgroundColor: 'white', opacity: 1, backdropFilter: 'none' }}
         initial={{ scale: 0.9, y: 20 }}
         animate={{ scale: 1, y: 0 }}
         exit={{ scale: 0.9, y: 20 }}
