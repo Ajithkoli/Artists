@@ -48,7 +48,7 @@ app.use("/api/v1/users", require("./routes/auth.routes"));
 
 app.use("/api/v1/courses", require("./routes/courseRoutes"));
 
-app.use("/api/v1/posts", require("./routes/PostCreator"));
+app.use("/api/v1/explore", require("./routes/PostCreator"));
 
 app.use("/api/v1/products", require("./routes/productRoutes"));
 

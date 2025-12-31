@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useCart } from '../contexts/CartContext';
 import { useAuth } from '../contexts/AuthContext';
-import axios from 'axios';
+import apiClient from '../api/axios';
 import toast from 'react-hot-toast';
 import ProductCard from '../components/ProductCard';
 import { ShoppingBag, Search } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const API_URL = `${import.meta.env.VITE_API_BASE_URL}/products`;
+const API_URL = `/products`;
 
 const Shop = () => {
     const [products, setProducts] = useState([]);
@@ -20,7 +20,7 @@ const Shop = () => {
     const fetchProducts = async () => {
         try {
             setLoading(true);
-            const response = await axios.get(API_URL, { withCredentials: true });
+            const response = await apiClient.get(API_URL);
             setProducts(response?.data?.products || []);
         } catch (error) {
             toast.error("Failed to load products.");
@@ -46,42 +46,35 @@ const Shop = () => {
     );
 
     return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 min-h-screen">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 min-h-screen relative z-10">
             {/* Header / Toolbar */}
-            <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-                <h1 className="text-3xl font-bold font-serif text-gray-900 dark:text-white">
-                    Art Marketplace
-                </h1>
+            <div className="flex flex-col md:flex-row justify-between items-center mb-16 gap-8">
+                <div>
+                    <h1 className="text-4xl md:text-6xl font-serif font-black text-base-content mb-2 tracking-tighter">
+                        Art <span className="text-primary-600">Marketplace</span>
+                    </h1>
+                    <p className="text-base-content/50 font-medium">Discover and acquire unique digital assets.</p>
+                </div>
 
-                <div className="flex items-center gap-4 w-full md:w-auto">
+                <div className="flex items-center gap-6 w-full md:w-auto">
                     {/* Search */}
-                    <div className="relative flex-grow md:flex-grow-0 md:w-80">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+                    <div className="relative flex-grow md:flex-grow-0 md:w-96 group">
+                        <div className="absolute inset-0 bg-primary-500/10 blur-xl opacity-0 group-focus-within:opacity-100 transition-opacity rounded-xl"></div>
+                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-base-content/40 group-focus-within:text-primary-400 transition-colors" size={20} />
                         <input
                             type="text"
-                            placeholder="Search artworks..."
-                            className="input input-bordered w-full pl-10 bg-white dark:bg-gray-800"
+                            placeholder="Find your masterpiece..."
+                            className="w-full pl-12 pr-4 py-4 rounded-2xl bg-base-100 border border-base-content/10 focus:border-primary-500/50 outline-none transition-all placeholder:text-base-content/30 text-base-content font-medium"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
                     </div>
-
-                    {/* Cart Button */}
-                    {/* Cart Button */}
-                    <Link to="/cart" className="btn btn-ghost relative">
-                        <ShoppingBag size={24} />
-                        {cart.length > 0 && (
-                            <span className="badge badge-primary badge-sm absolute -top-1 -right-1">
-                                {cart.length}
-                            </span>
-                        )}
-                    </Link>
                 </div>
             </div>
 
             {/* Product Grid */}
             {filteredProducts.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                     {filteredProducts.map(product => (
                         <ProductCard
                             key={product._id}
@@ -91,8 +84,9 @@ const Shop = () => {
                     ))}
                 </div>
             ) : (
-                <div className="text-center py-20 text-gray-500">
-                    <p className="text-xl">No artworks found matching your search.</p>
+                <div className="text-center py-32 rounded-[40px] border-2 border-dashed border-base-content/5 bg-base-content/5">
+                    <p className="text-2xl font-bold text-base-content mb-2">No Cosmic Finds</p>
+                    <p className="text-base-content/50">Try searching for something else in the universe.</p>
                 </div>
             )}
         </div>

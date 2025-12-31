@@ -22,7 +22,7 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem("archicanvas-token"));
+  const [token, setToken] = useState(localStorage.getItem("crafto-token"));
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -39,7 +39,7 @@ export const AuthProvider = ({ children }) => {
 
   // --- Check for logged-in user on initial load ---
   useEffect(() => {
-    const storedUser = localStorage.getItem("archicanvas-user");
+    const storedUser = localStorage.getItem("crafto-user");
 
     if (storedUser && storedUser !== "undefined" && token) {
       try {
@@ -50,7 +50,7 @@ export const AuthProvider = ({ children }) => {
           "❌ Invalid user in localStorage, clearing it:",
           storedUser
         );
-        localStorage.removeItem("archicanvas-user");
+        localStorage.removeItem("crafto-user");
       }
     }
 
@@ -110,8 +110,8 @@ export const AuthProvider = ({ children }) => {
       setToken(token);
 
       // Store user and token in localStorage
-      localStorage.setItem("archicanvas-user", JSON.stringify(user));
-      localStorage.setItem("archicanvas-token", token);
+      localStorage.setItem("crafto-user", JSON.stringify(user));
+      localStorage.setItem("crafto-token", token);
 
       toast.success(`Welcome back, ${user.name}!`);
 
@@ -138,8 +138,8 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     setUser(null);
     setToken(null);
-    localStorage.removeItem("archicanvas-user");
-    localStorage.removeItem("archicanvas-token");
+    localStorage.removeItem("crafto-user");
+    localStorage.removeItem("crafto-token");
     toast.success("Logged out successfully");
   };
 
@@ -167,7 +167,7 @@ export const AuthProvider = ({ children }) => {
 
       // Update context and localStorage
       setUser(updatedUser);
-      localStorage.setItem('archicanvas-user', JSON.stringify(updatedUser));
+      localStorage.setItem('crafto-user', JSON.stringify(updatedUser));
 
       toast.success('Profile updated successfully');
       return updatedUser;

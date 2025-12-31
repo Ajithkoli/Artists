@@ -17,8 +17,8 @@ uploads/
 public/
 
 # Environment variables and secrets
-.env
-backend/config.env
+# .env
+# backend/config.env
 
 # OS files
 .DS_Store
@@ -39,7 +39,7 @@ backend/uploads/
 backend/public/
 
 # Secrets (Most Important)
-backend/.env
-backend/config.env
-*.env
-config.env
+# backend/.env
+# backend/config.env
+# *.env
+# config.env

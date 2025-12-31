@@ -8,7 +8,7 @@ export const useCart = () => useContext(CartContext);
 export const CartProvider = ({ children }) => {
     const [cart, setCart] = useState(() => {
         try {
-            const savedCart = localStorage.getItem('archicanvas-cart');
+            const savedCart = localStorage.getItem('crafto-cart');
             return savedCart ? JSON.parse(savedCart) : [];
         } catch (error) {
             return [];
@@ -16,7 +16,7 @@ export const CartProvider = ({ children }) => {
     });
 
     useEffect(() => {
-        localStorage.setItem('archicanvas-cart', JSON.stringify(cart));
+        localStorage.setItem('crafto-cart', JSON.stringify(cart));
     }, [cart]);
 
     const addToCart = (product) => {

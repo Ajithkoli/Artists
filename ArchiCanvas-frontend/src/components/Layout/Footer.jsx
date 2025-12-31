@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { 
-  Instagram, 
-  Twitter, 
-  Facebook, 
-  Linkedin, 
-  Mail, 
+import {
+  Instagram,
+  Twitter,
+  Facebook,
+  Linkedin,
+  Mail,
   Phone,
   MapPin
 } from 'lucide-react'
@@ -55,15 +55,15 @@ const Footer = () => {
           <div>
             <Link to="/" className="flex items-center space-x-2 mb-4">
               <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-xl">A</span>
+                <span className="text-white font-bold text-xl">C</span>
               </div>
-              <span className="text-2xl font-serif font-bold text-gradient">ArchiCanvas</span>
+              <span className="text-2xl font-serif font-bold text-gradient">Crafto</span>
             </Link>
             <p className="text-base-content/70 mb-6 max-w-md">
-              Discover and collect unique artworks and architectural designs from talented artists worldwide. 
+              Discover and collect unique artworks and architectural designs from talented artists worldwide.
               Join our vibrant community of creators and collectors.
             </p>
-            
+
             {/* Contact Info */}
             <div className="space-y-3">
               <div className="flex items-center space-x-3 text-sm text-base-content/70">
@@ -154,9 +154,9 @@ const Footer = () => {
         <div className="border-t border-base-300 mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-sm text-base-content/70">
-              © {currentYear} ArchiCanvas. All rights reserved.
+              © {currentYear} Crafto. All rights reserved.
             </p>
-            
+
             {/* Social Links */}
             <div className="flex items-center space-x-4">
               {socialLinks.map((social) => (

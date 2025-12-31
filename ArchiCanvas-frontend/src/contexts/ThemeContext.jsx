@@ -12,18 +12,18 @@ export const useTheme = () => {
 
 export const ThemeProvider = ({ children }) => {
   const [isDark, setIsDark] = useState(() => {
-    const saved = localStorage.getItem('archicanvas-theme')
+    const saved = localStorage.getItem('crafto-theme')
     return saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches
   })
 
   useEffect(() => {
     const root = document.documentElement
     if (isDark) {
-      root.setAttribute('data-theme', 'archicanvas-dark')
-      localStorage.setItem('archicanvas-theme', 'dark')
+      root.setAttribute('data-theme', 'crafto-dark')
+      localStorage.setItem('crafto-theme', 'dark')
     } else {
-      root.setAttribute('data-theme', 'archicanvas')
-      localStorage.setItem('archicanvas-theme', 'light')
+      root.setAttribute('data-theme', 'crafto')
+      localStorage.setItem('crafto-theme', 'light')
     }
   }, [isDark])
 

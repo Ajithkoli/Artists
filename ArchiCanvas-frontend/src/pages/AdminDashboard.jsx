@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
-  LineChart, Line, PieChart, Pie, Cell
+import {
+    BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
+    LineChart, Line, PieChart, Pie, Cell
 } from 'recharts';
 import {
-  Menu, Home, Clock, Users, Palette, Package, Check, X, BarChart3
+    Menu, Home, Clock, Users, Palette, Package, Check, X, BarChart3
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
-import axios from 'axios';
+import apiClient from '../api/axios'
+import { motion, AnimatePresence } from 'framer-motion'
 import toast from 'react-hot-toast';
 
 const API_URL = `${import.meta.env.VITE_API_BASE_URL}/admin`;
@@ -15,29 +16,29 @@ const API_URL = `${import.meta.env.VITE_API_BASE_URL}/admin`;
 // --- Reusable Components (placed in the same file for simplicity) ---
 
 const Sidebar = ({ isOpen }) => {
-  const menuItems = [
-    { icon: Home, label: 'Dashboard', active: true },
-    { icon: Clock, label: 'Pending Requests' },
-    { icon: Palette, label: 'Art Listings' },
-  ];
-  return (
-    <div className={`fixed left-0 top-0 h-full bg-gray-900/90 backdrop-blur-lg border-r border-gray-700/50 transition-all duration-300 z-50 ${isOpen ? 'w-64' : 'w-16'}`}>
-      <div className="p-4 border-b border-gray-700/50 flex items-center gap-3">
-        <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-          <Palette className="w-5 h-5 text-white" />
+    const menuItems = [
+        { icon: Home, label: 'Dashboard', active: true },
+        { icon: Clock, label: 'Pending Requests' },
+        { icon: Palette, label: 'Art Listings' },
+    ];
+    return (
+        <div className={`fixed left-0 top-0 h-full bg-gray-900/90 backdrop-blur-lg border-r border-gray-700/50 transition-all duration-300 z-50 ${isOpen ? 'w-64' : 'w-16'}`}>
+            <div className="p-4 border-b border-gray-700/50 flex items-center gap-3">
+                <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                    <Palette className="w-5 h-5 text-white" />
+                </div>
+                {isOpen && <span className="text-white font-bold text-lg">ArtAdmin</span>}
+            </div>
+            <nav className="mt-6">
+                {menuItems.map((item, index) => (
+                    <div key={index} className={`flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-gray-800/50 cursor-pointer transition-all ${item.active ? 'bg-gradient-to-r from-blue-500/20 to-purple-600/20 border-r-2 border-blue-500 text-white' : ''}`}>
+                        <item.icon className="w-5 h-5" />
+                        {isOpen && <span>{item.label}</span>}
+                    </div>
+                ))}
+            </nav>
         </div>
-        {isOpen && <span className="text-white font-bold text-lg">ArtAdmin</span>}
-      </div>
-      <nav className="mt-6">
-        {menuItems.map((item, index) => (
-          <div key={index} className={`flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-gray-800/50 cursor-pointer transition-all ${item.active ? 'bg-gradient-to-r from-blue-500/20 to-purple-600/20 border-r-2 border-blue-500 text-white' : ''}`}>
-            <item.icon className="w-5 h-5" />
-            {isOpen && <span>{item.label}</span>}
-          </div>
-        ))}
-      </nav>
-    </div>
-  );
+    );
 };
 
 const Topbar = ({ sidebarOpen, setSidebarOpen }) => (
@@ -57,25 +58,25 @@ const Topbar = ({ sidebarOpen, setSidebarOpen }) => (
 );
 
 const StatsCards = ({ stats }) => {
-  const statsData = [
-    { label: 'Total Buyers', value: stats?.totalBuyers ?? '0', icon: Users },
-    { label: 'Total Artists', value: stats?.totalArtists ?? '0', icon: Palette },
-    { label: 'Total Products', value: stats?.totalProducts ?? '0', icon: Package },
-    { label: 'Total Communities', value: stats?.totalCommunities ?? '0', icon: Users },
-  ];
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-      {statsData.map((stat, index) => (
-        <div key={index} className="bg-gray-800/30 backdrop-blur-lg rounded-xl p-6 border border-gray-700/50">
-          <div className="w-12 h-12 bg-gray-700 rounded-lg flex items-center justify-center mb-4">
-            <stat.icon className="w-6 h-6 text-white" />
-          </div>
-          <p className="text-2xl font-bold text-white mb-1">{stat.value}</p>
-          <p className="text-gray-400 text-sm">{stat.label}</p>
+    const statsData = [
+        { label: 'Total Buyers', value: stats?.totalBuyers ?? '0', icon: Users },
+        { label: 'Total Artists', value: stats?.totalArtists ?? '0', icon: Palette },
+        { label: 'Total Products', value: stats?.totalProducts ?? '0', icon: Package },
+        { label: 'Total Communities', value: stats?.totalCommunities ?? '0', icon: Users },
+    ];
+    return (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            {statsData.map((stat, index) => (
+                <div key={index} className="bg-gray-800/30 backdrop-blur-lg rounded-xl p-6 border border-gray-700/50">
+                    <div className="w-12 h-12 bg-gray-700 rounded-lg flex items-center justify-center mb-4">
+                        <stat.icon className="w-6 h-6 text-white" />
+                    </div>
+                    <p className="text-2xl font-bold text-white mb-1">{stat.value}</p>
+                    <p className="text-gray-400 text-sm">{stat.label}</p>
+                </div>
+            ))}
         </div>
-      ))}
-    </div>
-  );
+    );
 };
 
 const PendingRequests = () => {
@@ -86,8 +87,8 @@ const PendingRequests = () => {
     const fetchData = async () => {
         try {
             const [artistsRes, communitiesRes] = await Promise.all([
-                axios.get(`${API_URL}/artists/pending`,{ withCredentials: true }),
-                axios.get(`${API_URL}/communities/pending`,{ withCredentials: true })
+                apiClient.get(`/admin/artists/pending`, { withCredentials: true }),
+                apiClient.get(`/admin/communities/pending`, { withCredentials: true })
             ]);
             setArtistRequests(artistsRes.data.artists);
             setCommunityRequests(communitiesRes.data.communities);
@@ -101,10 +102,10 @@ const PendingRequests = () => {
     useEffect(() => {
         fetchData();
     }, []);
-    
+
     const handleAction = async (type, id, action) => {
         try {
-            await axios.patch(`${API_URL}/${type}/${id}/${action}`,{ withCredentials: true });
+            await apiClient.patch(`/admin/${type}/${id}/${action}`, { withCredentials: true });
             toast.success(`Request ${action}ed successfully!`);
             fetchData(); // Refresh the lists
         } catch {
@@ -162,7 +163,7 @@ const AnalyticsCharts = ({ analytics, stats }) => {
                     <BarChart data={analytics?.topCommunities} layout="vertical" margin={{ left: 50 }}>
                         <XAxis type="number" hide />
                         <YAxis type="category" dataKey="name" stroke="#9CA3AF" width={100} tick={{ fill: '#9CA3AF' }} />
-                        <Tooltip cursor={{fill: 'rgba(255,255,255,0.1)'}} contentStyle={{ backgroundColor: '#1F2937', border: 'none' }} />
+                        <Tooltip cursor={{ fill: 'rgba(255,255,255,0.1)' }} contentStyle={{ backgroundColor: '#1F2937', border: 'none' }} />
                         <Bar dataKey="memberCount" fill="#3b82f6" barSize={20} />
                     </BarChart>
                 </ResponsiveContainer>
@@ -187,10 +188,10 @@ const AnalyticsCharts = ({ analytics, stats }) => {
                 <ResponsiveContainer width="100%" height={300}>
                     <PieChart>
                         <Pie data={buyerSellerData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100} label>
-                           <Cell fill="#3b82f6" />
-                           <Cell fill="#ec4899" />
+                            <Cell fill="#3b82f6" />
+                            <Cell fill="#ec4899" />
                         </Pie>
-                        <Tooltip contentStyle={{ backgroundColor: '#1F2937', border: 'none' }}/>
+                        <Tooltip contentStyle={{ backgroundColor: '#1F2937', border: 'none' }} />
                     </PieChart>
                 </ResponsiveContainer>
             </div>
@@ -228,8 +229,8 @@ const ArtAdminDashboard = () => {
             }
             try {
                 const [statsRes, analyticsRes] = await Promise.all([
-                    axios.get(`${API_URL}/stats`,{ withCredentials: true }),
-                    axios.get(`${API_URL}/analytics`,{ withCredentials: true })
+                    apiClient.get('/admin/stats', { withCredentials: true }),
+                    apiClient.get('/admin/analytics', { withCredentials: true })
                 ]);
                 setStats(statsRes.data.stats);
                 setAnalytics(analyticsRes.data.analytics);

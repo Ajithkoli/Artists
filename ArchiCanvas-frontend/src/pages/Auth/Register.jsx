@@ -43,7 +43,7 @@ const Register = () => {
     "Illustrator",
     "Other",
   ];
-    const Interested = [
+  const Interested = [
     "Painting",
     "Sculptor",
     "Architecture",
@@ -112,10 +112,10 @@ const Register = () => {
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center space-x-2">
             <div className="w-12 h-12 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-2xl">A</span>
+              <span className="text-white font-bold text-2xl">C</span>
             </div>
             <span className="text-3xl font-serif font-bold text-gradient">
-              ArchiCanvas
+              Crafto
             </span>
           </Link>
         </div>
@@ -137,22 +137,20 @@ const Register = () => {
           <div className="flex justify-center mb-6">
             <button
               type="button"
-              className={`px-4 py-2 rounded-l-lg border border-base-300 ${
-                userType === "artist"
+              className={`px-4 py-2 rounded-l-lg border border-base-300 ${userType === "artist"
                   ? "bg-primary-100 text-primary-700 font-bold"
                   : "bg-base-100 text-base-content/70"
-              }`}
+                }`}
               onClick={() => setUserType("artist")}
             >
               Artist
             </button>
             <button
               type="button"
-              className={`px-4 py-2 rounded-r-lg border border-base-300 ${
-                userType === "buyer"
+              className={`px-4 py-2 rounded-r-lg border border-base-300 ${userType === "buyer"
                   ? "bg-primary-100 text-primary-700 font-bold"
                   : "bg-base-100 text-base-content/70"
-              }`}
+                }`}
               onClick={() => setUserType("buyer")}
             >
               Buyer
@@ -204,34 +202,34 @@ const Register = () => {
                 />
               </div>
             </div>
-           {userType === "buyer" && (
-  <div>
-    <label
-      htmlFor="specialization"
-      className="block text-sm font-medium text-base-content mb-2"
-    >
-      Interested In
-    </label>
-    <div className="relative">
-      <Palette className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-base-content/40" />
-      <select
-        id="specialization"
-        name="Interested"
-        value={formData.Interested}
-        onChange={handleChange}
-        required={true}
-        className="w-full pl-10 pr-4 py-3 border border-base-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-base-100 text-base-content"
-      >
-        <option value="">Select your Interested Topic</option>
-        {Interested.map((inter) => (
-          <option key={inter} value={inter}>
-            {inter}
-          </option>
-        ))}
-      </select>
-    </div>
-  </div>
-)}
+            {userType === "buyer" && (
+              <div>
+                <label
+                  htmlFor="specialization"
+                  className="block text-sm font-medium text-base-content mb-2"
+                >
+                  Interested In
+                </label>
+                <div className="relative">
+                  <Palette className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-base-content/40" />
+                  <select
+                    id="specialization"
+                    name="Interested"
+                    value={formData.Interested}
+                    onChange={handleChange}
+                    required={true}
+                    className="w-full pl-10 pr-4 py-3 border border-base-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-base-100 text-base-content"
+                  >
+                    <option value="">Select your Interested Topic</option>
+                    {Interested.map((inter) => (
+                      <option key={inter} value={inter}>
+                        {inter}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            )}
 
             {userType === "artist" && (
               <>

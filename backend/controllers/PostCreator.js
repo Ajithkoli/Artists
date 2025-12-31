@@ -37,12 +37,64 @@ const getPosts = async (req, res) => {
 
 const getPostById = async (req, res) => {
   try {
-    const post = await Post.findById(req.params.id);
+    const post = await Post.findById(req.params.id)
+      .populate('likes', 'name email')
+      .populate('comments.user', 'name email');
+
     if (!post) return res.status(404).json({ error: "Post not found" });
+
+    // Increment views
+    post.views = (post.views || 0) + 1;
+    await post.save();
+
     res.json(post);
   } catch (err) {
     res.status(500).json({ error: "Server error" });
   }
 };
 
-module.exports = { createPost, getPosts, getPostById };
+const toggleLikePost = async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post) return res.status(404).json({ error: "Post not found" });
+
+    const isLiked = post.likes.includes(req.user.id);
+
+    if (isLiked) {
+      post.likes = post.likes.filter(id => id.toString() !== req.user.id.toString());
+    } else {
+      post.likes.push(req.user.id);
+    }
+
+    await post.save();
+    res.json({ success: true, likes: post.likes.length, isLiked: !isLiked });
+  } catch (err) {
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+const addCommentToPost = async (req, res) => {
+  try {
+    const { text } = req.body;
+    if (!text) return res.status(400).json({ error: "Comment text is required" });
+
+    const post = await Post.findById(req.params.id);
+    if (!post) return res.status(404).json({ error: "Post not found" });
+
+    post.comments.push({
+      user: req.user.id,
+      text: text
+    });
+
+    await post.save();
+
+    // Populate the newly added comment's user before sending response
+    const updatedPost = await Post.findById(req.params.id).populate('comments.user', 'name email');
+
+    res.json({ success: true, comments: updatedPost.comments });
+  } catch (err) {
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+module.exports = { createPost, getPosts, getPostById, toggleLikePost, addCommentToPost };

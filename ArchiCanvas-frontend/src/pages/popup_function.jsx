@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import apiClient from '../api/axios';
 import toast from 'react-hot-toast';
 import { useAuth } from '../contexts/AuthContext';
-import apiClient from '../api/axios';
 
 // --- Main Buy Button Component with Razorpay Logic ---
 const Bynow = ({ selectedProduct }) => {
@@ -57,7 +56,7 @@ const Bynow = ({ selectedProduct }) => {
                 key: key,
                 amount: order.amount,
                 currency: "INR",
-                name: "ArchiCanvas",
+                name: "Crafto",
                 description: `Purchase: ${product.title}`,
                 image: "https://via.placeholder.com/150",
                 order_id: order.id,
@@ -86,7 +85,7 @@ const Bynow = ({ selectedProduct }) => {
                     contact: ""
                 },
                 notes: {
-                    address: "ArchiCanvas Corporate Office"
+                    address: "Crafto Corporate Office"
                 },
                 theme: {
                     color: "#3399cc"

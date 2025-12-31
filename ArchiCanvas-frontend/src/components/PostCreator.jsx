@@ -48,7 +48,7 @@ const PostCreator = ({ open, onClose, onSubmit }) => {
     formData.append("tags", JSON.stringify(tags));
 
     try {
-      const res = await apiClient.post('/posts', formData);
+      const res = await apiClient.post('/explore', formData);
 
       onSubmit(res.data);
       onClose();
@@ -68,107 +68,120 @@ const PostCreator = ({ open, onClose, onSubmit }) => {
       exit={{ opacity: 0 }}
     >
       <motion.div
-        className="bg-base-100 rounded-2xl shadow-2xl w-full max-w-lg relative p-6 md:p-8 max-h-[90vh] overflow-y-auto"
-        initial={{ scale: 0.9 }}
-        animate={{ scale: 1 }}
-        exit={{ scale: 0.9 }}
+        className="glass-card backdrop-blur-3xl rounded-[32px] shadow-2xl w-full max-w-lg relative p-8 md:p-10 max-h-[90vh] overflow-y-auto border border-white/10"
+        initial={{ scale: 0.9, y: 20 }}
+        animate={{ scale: 1, y: 0 }}
+        exit={{ scale: 0.9, y: 20 }}
       >
         <button
-          className="absolute top-4 right-4 text-base-content/60 hover:text-base-content transition"
+          className="absolute top-6 right-6 text-white/40 hover:text-white transition-colors"
           onClick={onClose}
         >
           <X size={24} />
         </button>
-        <h2 className="text-2xl font-bold text-center mb-6">Create a Post</h2>
+        <h2 className="text-3xl font-serif font-black text-white text-center mb-8 tracking-tighter">
+          Share Your <span className="text-gradient">Journey</span>
+        </h2>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div className="space-y-2">
-            <label className="block font-medium">Photo</label>
-            <input type="file" accept="image/*" onChange={handlePhotoChange} className="w-full" />
-            {preview && (
-              <div className="relative mt-2">
-                <img src={preview} alt="Preview" className="w-full h-48 object-cover rounded-lg shadow-sm" />
-                <button
-                  type="button"
-                  onClick={() => setPreview("") || setPhoto(null)}
-                  className="absolute top-2 right-2 bg-black/50 p-1 rounded-full hover:bg-red-500 transition text-white"
-                >
-                  <X size={18} />
-                </button>
-              </div>
-            )}
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="space-y-3">
+            <label className="block text-xs font-black uppercase tracking-widest text-base-content/40 ml-1">Visual Asset</label>
+            <div className={`relative group transition-all duration-300 ${!preview ? 'border-2 border-dashed border-white/10 hover:border-primary-500/30 rounded-2xl p-8 text-center' : ''}`}>
+              {!preview ? (
+                <>
+                  <input type="file" accept="image/*" onChange={handlePhotoChange} className="absolute inset-0 opacity-0 cursor-pointer z-10" />
+                  <div className="flex flex-col items-center">
+                    <Plus className="w-10 h-10 text-primary-400/50 mb-2" />
+                    <p className="text-sm font-bold text-white/30">Drop your masterpiece here</p>
+                  </div>
+                </>
+              ) : (
+                <div className="relative rounded-2xl overflow-hidden border border-white/20 shadow-2xl">
+                  <img src={preview} alt="Preview" className="w-full h-64 object-cover" />
+                  <button
+                    type="button"
+                    onClick={() => { setPreview(""); setPhoto(null); }}
+                    className="absolute top-3 right-3 bg-black/60 backdrop-blur-md p-2 rounded-xl text-white hover:bg-red-500 transition-colors"
+                  >
+                    <X size={20} />
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
 
-          <div className="space-y-2">
-            <label className="block font-medium">Title</label>
-            <input
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className="w-full border border-base-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition text-black"
-              placeholder="Enter title"
-              maxLength={100}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <label className="block font-medium">Description</label>
-            <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className="w-full border border-base-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition text-black"
-              rows={2}
-              placeholder="Short description"
-              maxLength={300}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <label className="block font-medium">Story Behind the Picture</label>
-            <textarea
-              value={story}
-              onChange={(e) => setStory(e.target.value)}
-              className="w-full border border-base-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition text-black"
-              rows={3}
-              placeholder="Your story..."
-              maxLength={500}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <label className="block font-medium">Tags</label>
-            <div className="flex gap-2">
+          <div className="space-y-4">
+            <div>
+              <label className="block text-xs font-black uppercase tracking-widest text-base-content/40 mb-2 ml-1">Vision Title</label>
               <input
                 type="text"
-                value={tagInput}
-                onChange={handleTagInput}
-                className="flex-1 border border-base-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-500 transition text-black"
-                placeholder="Add tag"
-                maxLength={20}
-                onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), handleAddTag())}
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-500/50 outline-none transition-all text-white placeholder:text-white/20 font-medium"
+                placeholder="Name your creation..."
               />
-              <button type="button" onClick={handleAddTag} className="btn-primary px-4 py-2">Add</button>
             </div>
-            <div className="flex flex-wrap gap-2 mt-1">
-              {tags.map((tag) => (
-                <motion.span
-                  key={tag}
-                  className="bg-cyan-600 text-white px-3 py-1 rounded-full flex items-center gap-1 text-sm cursor-pointer hover:bg-cyan-700 transition"
-                  whileHover={{ scale: 1.05 }}
-                >
-                  {tag}
-                  <X size={16} onClick={() => handleRemoveTag(tag)} />
-                </motion.span>
-              ))}
+
+            <div>
+              <label className="block text-xs font-black uppercase tracking-widest text-base-content/40 mb-2 ml-1">Brief Insight</label>
+              <input
+                type="text"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-500/50 outline-none transition-all text-white placeholder:text-white/20 font-medium"
+                placeholder="A whisper of reality..."
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-black uppercase tracking-widest text-base-content/40 mb-2 ml-1">The Epic Story</label>
+              <textarea
+                value={story}
+                onChange={(e) => setStory(e.target.value)}
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-500/50 outline-none transition-all text-white placeholder:text-white/20 font-medium resize-none"
+                rows={4}
+                placeholder="Tell us about the light, the shadows, the soul..."
+              />
+            </div>
+
+            <div className="space-y-3">
+              <label className="block text-xs font-black uppercase tracking-widest text-base-content/40 ml-1">Universal Tags</label>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={tagInput}
+                  onChange={handleTagInput}
+                  className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-500/50 outline-none transition-all text-white placeholder:text-white/20"
+                  placeholder="Add dimension..."
+                  onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), handleAddTag())}
+                />
+                <button type="button" onClick={handleAddTag} className="bg-primary-500/20 text-primary-400 font-bold px-6 rounded-xl border border-primary-500/30 hover:bg-primary-500 hover:text-white transition-all">Add</button>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {tags.map((tag) => (
+                  <motion.span
+                    key={tag}
+                    className="px-4 py-1.5 rounded-full bg-white/10 border border-white/10 text-xs font-bold text-white flex items-center gap-2 group/tag"
+                    whileHover={{ scale: 1.05 }}
+                  >
+                    {tag}
+                    <X size={14} className="text-white/40 group-hover/tag:text-red-400 cursor-pointer" onClick={() => handleRemoveTag(tag)} />
+                  </motion.span>
+                ))}
+              </div>
             </div>
           </div>
 
-          {error && <div className="text-red-500 text-sm">{error}</div>}
+          {error && (
+            <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-bold text-center">
+              {error}
+            </div>
+          )}
 
-          <div className="flex justify-end gap-4 mt-4">
-            <button type="button" onClick={onClose} className="btn-outline px-6 py-2">Cancel</button>
-            <button type="submit" className="btn-primary px-6 py-2 flex items-center gap-2">
-              <Plus size={18} /> Post
+          <div className="flex items-center gap-4 pt-4">
+            <button type="button" onClick={onClose} className="flex-1 py-4 text-white/50 hover:text-white font-bold transition-colors">Discard</button>
+            <button type="submit" className="flex-[2] py-4 rounded-2xl bg-primary-500 hover:bg-primary-600 text-white font-black uppercase tracking-[0.2em] shadow-glow-primary active:scale-95 transition-all">
+              Initialize Post
             </button>
           </div>
         </form>

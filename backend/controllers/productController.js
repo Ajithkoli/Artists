@@ -38,7 +38,9 @@ exports.createProduct = async (req, res) => {
 
 exports.getProducts = async (req, res) => {
   try {
-    const products = await Product.find().sort({ createdAt: -1 });
+    const products = await Product.find()
+      .populate('user', 'name specialization')
+      .sort({ createdAt: -1 });
     res.json({ success: true, products });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
@@ -48,9 +50,60 @@ exports.getProducts = async (req, res) => {
 // ✅ Get Single Product by ID
 exports.getProductById = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id);
+    const product = await Product.findById(req.params.id)
+      .populate('user', 'name specialization bio')
+      .populate('comments.user', 'name');
+
     if (!product) return res.status(404).json({ success: false, message: "Not Found" });
+
+    // Increment views
+    product.views = (product.views || 0) + 1;
+    await product.save();
+
     res.json({ success: true, product });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+exports.toggleLikeProduct = async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product) return res.status(404).json({ success: false, message: "Product not found" });
+
+    const isLiked = product.likes.includes(req.user.id);
+
+    if (isLiked) {
+      product.likes = product.likes.filter(id => id.toString() !== req.user.id.toString());
+    } else {
+      product.likes.push(req.user.id);
+    }
+
+    await product.save();
+    res.json({ success: true, likes: product.likes.length, isLiked: !isLiked });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+exports.addCommentToProduct = async (req, res) => {
+  try {
+    const { text } = req.body;
+    if (!text) return res.status(400).json({ success: false, message: "Comment text is required" });
+
+    const product = await Product.findById(req.params.id);
+    if (!product) return res.status(404).json({ success: false, message: "Product not found" });
+
+    product.comments.push({
+      user: req.user.id,
+      text: text
+    });
+
+    await product.save();
+
+    const updatedProduct = await Product.findById(req.params.id).populate('comments.user', 'name');
+
+    res.json({ success: true, comments: updatedProduct.comments });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }

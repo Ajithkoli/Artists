@@ -41,7 +41,7 @@ const Navbar = () => {
     { name: "Community", href: "/community", icon: Users },
     { name: "Shop", href: "/shop", icon: ShoppingBag },
     { name: "About", href: "/about", icon: Info },
-    { name: "ArchiChat", href: "/ai-chat", icon: Bot },
+    { name: "CraftoChat", href: "/ai-chat", icon: Bot },
   ];
 
   const isActive = (path) => location.pathname === path;
@@ -52,46 +52,48 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-base-100 border-b border-base-300 sticky top-0 z-50">
-      <div className="w-full px-0">
-        <div className="flex items-center h-16 w-full">
-          {/* Logo - absolute far left, navbar full width */}
-          <div className="flex-shrink-0 pl-6 pr-10">
-            <Link to="/" className="flex items-center space-x-2">
-              <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-xl">A</span>
+    <nav className="sticky top-0 z-50 bg-base-100/80 backdrop-blur-xl border-b border-base-content/5">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-20">
+          {/* Logo */}
+          <div className="flex-shrink-0">
+            <Link to="/" className="flex items-center space-x-3 group">
+              <div className="w-12 h-12 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/20 group-hover:scale-110 transition-transform duration-300">
+                <span className="text-white font-bold text-2xl">C</span>
               </div>
-              <span className="text-2xl font-serif font-bold text-gradient">
-                ArchiCanvas
+              <span className="text-2xl font-serif font-bold text-gradient tracking-tight">
+                Crafto
               </span>
             </Link>
           </div>
 
-          {/* Desktop Navigation - centered and spaced */}
-          <div className="hidden md:flex flex-1 justify-center items-center space-x-8">
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-1">
             {navigation.map((item) => (
               <Link
                 key={item.name}
                 to={item.href}
-                className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive(item.href)
-                    ? "text-primary-600 bg-primary-50 dark:bg-primary-900/20"
-                    : "text-base-content hover:text-primary-600 hover:bg-base-200"
+                className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${isActive(item.href)
+                  ? "text-primary-600 bg-primary-500/10 shadow-inner"
+                  : "text-base-content/70 hover:text-base-content hover:bg-base-content/5"
                   }`}
               >
-                <item.icon className="w-4 h-4" />
+                <item.icon className={`w-4 h-4 ${isActive(item.href) ? "text-primary-400" : ""}`} />
                 <span>{item.name}</span>
               </Link>
             ))}
           </div>
 
           {/* Right side actions */}
-          <div className="flex items-center space-x-4 pr-6">
-
-            {/* Cart Link - ADDED HERE */}
-            <Link to="/cart" className="relative p-2 rounded-lg bg-base-200 hover:bg-base-300 transition-colors">
-              <ShoppingBag className="w-5 h-5" />
+          <div className="flex items-center space-x-4">
+            {/* Cart Link */}
+            <Link
+              to="/cart"
+              className="relative p-2.5 rounded-xl bg-base-content/5 hover:bg-base-content/10 border border-base-content/5 transition-all duration-300 group"
+            >
+              <ShoppingBag className="w-5 h-5 group-hover:text-primary-400 transition-colors" />
               {cart?.length > 0 && (
-                <span className="absolute -top-1 -right-1 bg-primary-500 text-white text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 bg-gradient-to-r from-primary-500 to-secondary-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center shadow-lg">
                   {cart.length}
                 </span>
               )}
@@ -100,13 +102,13 @@ const Navbar = () => {
             {/* Theme Toggle */}
             <button
               onClick={toggleTheme}
-              className="p-2 rounded-lg bg-base-200 hover:bg-base-300 transition-colors"
+              className="p-2.5 rounded-xl bg-base-content/5 hover:bg-base-content/10 border border-base-content/5 transition-all duration-300 group"
               aria-label="Toggle theme"
             >
               {isDark ? (
-                <Sun className="w-5 h-5" />
+                <Sun className="w-5 h-5 group-hover:text-yellow-400 transition-colors" />
               ) : (
-                <Moon className="w-5 h-5" />
+                <Moon className="w-5 h-5 group-hover:text-primary-400 transition-colors" />
               )}
             </button>
 
@@ -115,105 +117,112 @@ const Navbar = () => {
               <div className="relative">
                 <button
                   onClick={() => setIsProfileOpen(!isProfileOpen)}
-                  className="flex items-center space-x-2 p-2 rounded-lg bg-base-200 hover:bg-base-300 transition-colors"
+                  className="flex items-center space-x-3 p-1.5 pr-3 rounded-xl bg-base-content/5 hover:bg-base-content/10 border border-base-content/5 transition-all duration-300"
                 >
-                  <img
-                    src={
-                      user.avatar
-                        ? user.avatar
-                        : user.role === "admin"
-                          ? "https://cdn-icons-png.flaticon.com/512/1828/1828640.png"
-                          : user.role === "artist"
-                            ? "https://cdn-icons-png.flaticon.com/512/2922/2922510.png"
-                            : "https://cdn-icons-png.flaticon.com/512/1077/1077012.png"
-                    }
-                    alt={user.name}
-                    className="w-8 h-8 rounded-full"
-                  />
-                  <span className="hidden sm:block text-sm font-medium">
+                  <div className="relative">
+                    <img
+                      src={
+                        user.avatar
+                          ? user.avatar
+                          : user.role === "admin"
+                            ? "https://cdn-icons-png.flaticon.com/512/1828/1828640.png"
+                            : user.role === "artist"
+                              ? "https://cdn-icons-png.flaticon.com/512/2922/2922510.png"
+                              : "https://cdn-icons-png.flaticon.com/512/1077/1077012.png"
+                      }
+                      alt={user.name}
+                      className="w-8 h-8 rounded-lg object-cover"
+                    />
+                    <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-success rounded-full border-2 border-base-100"></div>
+                  </div>
+                  <span className="hidden lg:block text-sm font-medium">
                     {user.name}
                   </span>
-                  <ChevronDown className="w-4 h-4" />
+                  <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${isProfileOpen ? 'rotate-180' : ''}`} />
                 </button>
 
                 <AnimatePresence>
                   {isProfileOpen && (
                     <motion.div
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      className="absolute right-0 mt-2 w-56 bg-base-100 rounded-lg shadow-lg border border-base-300 py-2 z-50"
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      className="absolute right-0 mt-3 w-64 bg-base-100 rounded-2xl shadow-2xl border border-base-content/10 py-3 overflow-hidden"
                     >
-                      <div className="px-4 py-3 border-b border-base-300">
-                        <p className="text-sm font-medium">{user.name}</p>
-                        <p className="text-xs text-base-content/70">
+                      <div className="px-5 py-3 border-b border-base-content/5 bg-base-content/5">
+                        <p className="text-sm font-bold text-base-content tracking-tight">{user.name}</p>
+                        <p className="text-xs text-base-content/60 mt-0.5 truncate">
                           {user.email}
                         </p>
                       </div>
 
-                      <Link
-                        to="/profile"
-                        onClick={() => setIsProfileOpen(false)}
-                        className="flex items-center space-x-3 px-4 py-2 text-sm hover:bg-base-200 transition-colors"
-                      >
-                        <User className="w-4 h-4" />
-                        <span>Profile</span>
-                      </Link>
-
-                      {user.role === "artist" && (
-                        <>
-                          <button
-                            className="flex items-center space-x-3 px-4 py-2 text-sm hover:bg-base-200 transition-colors w-full text-left"
-                            onClick={() => {
-                              setShowPostModal(true);
-                              setIsProfileOpen(false);
-                            }}
-                          >
-                            <Plus className="w-4 h-4" />
-                            <span>Post</span>
-                          </button>
-                          <button
-                            className="flex items-center space-x-3 px-4 py-2 text-sm hover:bg-base-200 transition-colors w-full text-left"
-                            onClick={() => {
-                              setShowUploadProductModal(true);
-                              setIsProfileOpen(false);
-                            }}
-                          >
-                            <Plus className="w-4 h-4" />
-                            <span>Upload Product</span>
-                          </button>
-                        </>
-                      )}
-
-                      {user.role === "admin" && (
+                      <div className="p-2 space-y-1">
                         <Link
-                          to="/admin-dashboard"
+                          to="/profile"
                           onClick={() => setIsProfileOpen(false)}
-                          className="flex items-center space-x-3 px-4 py-2 text-sm hover:bg-base-200 transition-colors"
+                          className="flex items-center space-x-3 px-4 py-2.5 text-sm rounded-xl hover:bg-white/5 transition-colors"
                         >
-                          <Settings className="w-4 h-4" />
-                          <span>Admin Panel</span>
+                          <User className="w-4 h-4 text-primary-400" />
+                          <span>Profile View</span>
                         </Link>
-                      )}
 
-                      <button
-                        onClick={handleLogout}
-                        className="flex items-center space-x-3 px-4 py-2 text-sm hover:bg-base-200 transition-colors w-full text-left"
-                      >
-                        <LogOut className="w-4 h-4" />
-                        <span>Logout</span>
-                      </button>
+                        {user.role === "artist" && (
+                          <>
+                            <button
+                              className="flex items-center space-x-3 px-4 py-2.5 text-sm rounded-xl hover:bg-white/5 transition-colors w-full text-left"
+                              onClick={() => {
+                                setShowPostModal(true);
+                                setIsProfileOpen(false);
+                              }}
+                            >
+                              <Plus className="w-4 h-4 text-secondary-400" />
+                              <span>Create New Post</span>
+                            </button>
+                            <button
+                              className="flex items-center space-x-3 px-4 py-2.5 text-sm rounded-xl hover:bg-white/5 transition-colors w-full text-left"
+                              onClick={() => {
+                                setShowUploadProductModal(true);
+                                setIsProfileOpen(false);
+                              }}
+                            >
+                              <Plus className="w-4 h-4 text-accent" />
+                              <span>Upload Artwork</span>
+                            </button>
+                          </>
+                        )}
+
+                        {user.role === "admin" && (
+                          <Link
+                            to="/admin-dashboard"
+                            onClick={() => setIsProfileOpen(false)}
+                            className="flex items-center space-x-3 px-4 py-2.5 text-sm rounded-xl hover:bg-white/5 transition-colors"
+                          >
+                            <Settings className="w-4 h-4 text-warning" />
+                            <span>System Admin</span>
+                          </Link>
+                        )}
+
+                        <div className="pt-2 mt-2 border-t border-white/5">
+                          <button
+                            onClick={handleLogout}
+                            className="flex items-center space-x-3 px-4 py-2.5 text-sm rounded-xl hover:bg-error/10 text-error transition-colors w-full text-left"
+                          >
+                            <LogOut className="w-4 h-4" />
+                            <span>Sign Out</span>
+                          </button>
+                        </div>
+                      </div>
                     </motion.div>
                   )}
                 </AnimatePresence>
               </div>
             ) : (
               <div className="flex items-center space-x-3">
-                <Link to="/login" className="btn-outline text-sm px-4 py-2">
-                  Login
+                <Link to="/login" className="px-5 py-2 rounded-xl text-sm font-bold border border-base-content/10 hover:bg-base-content/5 transition-all">
+                  Sign In
                 </Link>
-                <Link to="/register" className="btn-primary text-sm px-4 py-2">
-                  Join as Artist
+                <Link to="/register" className="btn-primary text-sm px-6 py-2.5">
+                  Join Crafto
                 </Link>
               </div>
             )}
@@ -221,7 +230,7 @@ const Navbar = () => {
             {/* Mobile menu button */}
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="md:hidden p-2 rounded-lg bg-base-200 hover:bg-base-300 transition-colors"
+              className="md:hidden p-2.5 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors"
             >
               {isOpen ? (
                 <X className="w-6 h-6" />
@@ -267,8 +276,8 @@ const Navbar = () => {
                   to={item.href}
                   onClick={() => setIsOpen(false)}
                   className={`flex items-center space-x-3 px-3 py-2 rounded-md text-base font-medium transition-colors ${isActive(item.href)
-                      ? "text-primary-600 bg-primary-50 dark:bg-primary-900/20"
-                      : "text-base-content hover:text-primary-600 hover:bg-base-200"
+                    ? "text-primary-600 bg-primary-50 dark:bg-primary-900/20"
+                    : "text-base-content hover:text-primary-600 hover:bg-base-200"
                     }`}
                 >
                   <item.icon className="w-5 h-5" />

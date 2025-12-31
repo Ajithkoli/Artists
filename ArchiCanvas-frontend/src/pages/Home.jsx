@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import apiClient from '../api/axios'
 import { useAuth } from '../contexts/AuthContext'
 import {
   ArrowRight,
@@ -23,7 +23,7 @@ const Home = () => {
   useEffect(() => {
     const fetchFeatured = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/products`);
+        const response = await apiClient.get(`/products`);
         if (response.data?.products) {
           // Take only the first 4 products for the featured section
           // Transform if necessary to match the UI shape, though the ProductCard now handles the backend shape well.
@@ -35,10 +35,10 @@ const Home = () => {
             artist: p.user?.name || "Artist",
             price: `$${p.price}`,
             // Use the watermark path for the image
-            image: p.photo?.startsWith('http') ? p.photo : `${import.meta.env.VITE_API_BASE_URL}/watermark${p.photo}`,
+            image: p.photo?.startsWith('http') ? p.photo : `${apiClient.defaults.baseURL}/watermark${p.photo}`,
             category: p.tags?.[0] || "Art", // Use first tag as category or default
             rating: p.rating || 4.5,
-            likes: p.likes || 0,
+            likes: p.likes?.length || 0,
             views: p.views || 0
           }));
           setFeaturedArtworks(mapped);
@@ -82,102 +82,100 @@ const Home = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-primary-50 to-secondary-50 dark:from-primary-900/20 dark:to-secondary-900/20 overflow-hidden">
-        <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
+      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
+        {/* Background Gradients */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] pointer-events-none">
+          <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary-500/20 blur-[150px] rounded-full animate-pulse"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-secondary-500/20 blur-[150px] rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
+        </div>
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center z-10">
           <motion.div
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="text-center"
           >
+            <motion.div
+              variants={itemVariants}
+              className="inline-flex items-center space-x-2 px-4 py-2 rounded-full glass-card border border-white/10 mb-8"
+            >
+              <span className="relative flex h-3 w-3">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-primary-500"></span>
+              </span>
+              <span className="text-sm font-bold text-base-content tracking-widest uppercase">The Future of Art is Here</span>
+            </motion.div>
+
             <motion.h1
               variants={itemVariants}
-              className="text-4xl md:text-6xl lg:text-7xl font-serif font-bold text-base-content mb-6"
+              className="text-5xl md:text-8xl lg:text-9xl font-serif font-black text-base-content mb-8 leading-[0.9] tracking-tighter"
             >
-              Where{' '}
-              <span className="text-gradient">Art</span>
-              {' '}Meets{' '}
-              <span className="text-gradient">Culture</span>
+              Unleash Your <br />
+              <span className="text-gradient drop-shadow-[0_0_30px_rgba(6,182,212,0.3)]">Celestial</span>
+              {' '}Vision
             </motion.h1>
 
             <motion.p
               variants={itemVariants}
-              className="text-xl md:text-2xl text-base-content/70 max-w-3xl mx-auto mb-8"
+              className="text-xl md:text-2xl text-base-content/60 max-w-2xl mx-auto mb-12 font-medium leading-relaxed"
             >
-              Discover and collect unique artworks and architectural designs from talented artists worldwide.
-              Join our vibrant community of creators and collectors.
+              Experience the next generation of architectural digital art.
+              Discover, collect, and trade extraordinary pieces in a galaxy of creativity.
             </motion.p>
 
             <motion.div
               variants={itemVariants}
-              className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+              className="flex flex-col sm:flex-row gap-6 justify-center items-center"
             >
-              <Link to="/explore" className="btn-primary text-lg px-8 py-4">
-                Explore Art
-                <ArrowRight className="w-5 h-5 ml-2" />
+              <Link to="/explore" className="btn-primary text-xl px-10 py-5 group">
+                Enter the Gallery
+                <ArrowRight className="w-6 h-6 ml-3 group-hover:translate-x-2 transition-transform" />
               </Link>
-              <Link to="/community" className="btn-outline text-lg px-8 py-4">
-                Join Community
+              <Link to="/community" className="px-10 py-5 rounded-xl border-2 border-base-content/10 hover:border-primary-500/50 hover:bg-base-content/5 transition-all text-xl font-bold text-base-content">
+                Join the Fold
               </Link>
             </motion.div>
           </motion.div>
         </div>
 
-        {/* Floating Elements */}
-        <motion.div
-          animate={{
-            y: [0, -20, 0],
-            rotate: [0, 5, 0]
-          }}
-          transition={{
-            duration: 6,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-          className="absolute top-20 right-10 w-20 h-20 bg-primary-200 rounded-full opacity-20 hidden lg:block"
-        />
-        <motion.div
-          animate={{
-            y: [0, 20, 0],
-            rotate: [0, -5, 0]
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 2
-          }}
-          className="absolute bottom-20 left-10 w-16 h-16 bg-secondary-200 rounded-full opacity-20 hidden lg:block"
-        />
+        {/* Decorative Elements */}
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce-gentle">
+          <div className="w-6 h-10 border-2 border-base-content/20 rounded-full flex justify-center p-1">
+            <div className="w-1.5 h-3 bg-base-content/50 rounded-full animate-scroll"></div>
+          </div>
+        </div>
       </section>
 
       {/* Stats Banner */}
-      <section className="py-16 bg-base-100">
+      <section className="py-24 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-8"
+            className="grid grid-cols-2 md:grid-cols-4 gap-12"
           >
             {stats.map((stat, index) => (
               <motion.div
                 key={stat.label}
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="text-center"
+                transition={{ duration: 0.8, delay: index * 0.1 }}
+                className="text-center group"
               >
-                <div className="w-16 h-16 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <stat.icon className="w-8 h-8 text-primary-600" />
+                <div className="relative mb-6 inline-block">
+                  <div className="absolute inset-0 bg-primary-500/20 blur-2xl group-hover:bg-primary-500/40 transition-colors rounded-full"></div>
+                  <div className="relative w-20 h-20 bg-base-100 rounded-2xl flex items-center justify-center mx-auto border border-base-content/10 group-hover:border-primary-500/50 transition-all duration-500 transform group-hover:rotate-[10deg]">
+                    <stat.icon className="w-10 h-10 text-primary-400" />
+                  </div>
                 </div>
-                <div className="text-3xl md:text-4xl font-bold text-base-content mb-2">
+                <div className="text-4xl md:text-5xl font-black text-base-content mb-2 tracking-tighter">
                   {stat.number}
                 </div>
-                <div className="text-base-content/70">{stat.label}</div>
+                <div className="text-xs font-black text-base-content/50 uppercase tracking-[0.2em]">
+                  {stat.label}
+                </div>
               </motion.div>
             ))}
           </motion.div>
@@ -185,21 +183,27 @@ const Home = () => {
       </section>
 
       {/* Featured Artworks */}
-      <section className="py-20 bg-base-200">
+      <section className="py-32 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
+            transition={{ duration: 0.8 }}
+            className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8"
           >
-            <h2 className="text-3xl md:text-4xl font-serif font-bold text-base-content mb-4">
-              Featured Artworks
-            </h2>
-            <p className="text-xl text-base-content/70 max-w-2xl mx-auto">
-              Discover handpicked masterpieces from our talented community of artists and architects
-            </p>
+            <div className="max-w-2xl">
+              <h2 className="text-4xl md:text-6xl font-serif font-black text-base-content mb-6 tracking-tighter">
+                Stellar <span className="text-secondary-500">Masterpieces</span>
+              </h2>
+              <p className="text-xl text-base-content/60 font-medium">
+                Handpicked treasures from the most renowned digital architects in our ecosystem.
+              </p>
+            </div>
+            <Link to="/explore" className="group flex items-center space-x-3 text-base-content font-bold text-lg hover:text-primary-600 transition-colors">
+              <span>View All Treasures</span>
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
+            </Link>
           </motion.div>
 
           <motion.div
@@ -207,126 +211,115 @@ const Home = () => {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
           >
-            {featuredArtworks.map((artwork, index) => (
+            {featuredArtworks.map((artwork) => (
               <motion.div
                 key={artwork.id}
                 variants={itemVariants}
-                whileHover={{ y: -8 }}
-                className="bg-base-100 rounded-xl overflow-hidden shadow-lg card-hover"
               >
-                <div className="relative group">
-                  <img
-                    src={artwork.image}
-                    alt={artwork.title}
-                    className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
-                  <div className="absolute top-4 right-4">
-                    <button className="p-2 bg-white/20 backdrop-blur-sm rounded-full hover:bg-white/30 transition-colors">
-                      <Heart className="w-5 h-5 text-white" />
-                    </button>
-                  </div>
-                </div>
-
-                <div className="p-6">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm text-primary-600 font-medium">
-                      {artwork.category}
-                    </span>
-                    <div className="flex items-center space-x-1">
-                      <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                      <span className="text-sm font-medium">{artwork.rating}</span>
+                {/* We use the updated ProductCard here indirectly by mapping or directly if we wanted, 
+                    but Home.jsx has its own card implementation currently. 
+                    I'll update the inline card here to match the ProductCard aesthetic. */}
+                <div className="card-premium overflow-hidden group h-full flex flex-col p-1">
+                  <div className="relative h-64 overflow-hidden rounded-xl">
+                    <img
+                      src={artwork.image}
+                      alt={artwork.title}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
+                    <div className="absolute top-3 left-3 px-3 py-1 bg-base-100/10 backdrop-blur-md rounded-full border border-base-content/20">
+                      <span className="text-[10px] font-bold text-base-content tracking-widest uppercase">
+                        {artwork.category}
+                      </span>
                     </div>
                   </div>
-
-                  <h3 className="font-semibold text-lg text-base-content mb-2">
-                    {artwork.title}
-                  </h3>
-
-                  <p className="text-sm text-base-content/70 mb-4">
-                    by {artwork.artist}
-                  </p>
-
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-2xl font-bold text-primary-600">
-                      {artwork.price}
-                    </span>
-                    <div className="flex items-center space-x-4 text-sm text-base-content/70">
-                      <div className="flex items-center space-x-1">
-                        <Eye className="w-4 h-4" />
-                        <span>{artwork.views}</span>
+                  <div className="p-6">
+                    <h3 className="font-bold text-xl text-base-content mb-1 group-hover:text-primary-600 transition-colors truncate">
+                      {artwork.title}
+                    </h3>
+                    <p className="text-xs text-base-content/50 uppercase tracking-widest font-bold mb-6">
+                      by {artwork.artist}
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <div className="flex flex-col">
+                        <span className="text-[10px] text-base-content/40 font-black uppercase tracking-widest leading-none mb-1">Price</span>
+                        <span className="text-2xl font-black text-base-content tracking-tighter">{artwork.price}</span>
                       </div>
-                      <div className="flex items-center space-x-1">
-                        <Heart className="w-4 h-4" />
-                        <span>{artwork.likes}</span>
+                      <div className="flex items-center space-x-3 text-xs text-base-content/40 font-bold">
+                        <div className="flex items-center space-x-1">
+                          <Eye size={14} className="text-primary-500" />
+                          <span>{artwork.views}</span>
+                        </div>
+                        <div className="flex items-center space-x-1">
+                          <Heart size={14} className="text-secondary-500" />
+                          <span>{artwork.likes}</span>
+                        </div>
+                        <Link
+                          to={`/product/${artwork.id}`}
+                          className="w-10 h-10 rounded-lg bg-primary-500/10 border border-primary-500/30 flex items-center justify-center text-primary-400 hover:bg-primary-500 hover:text-white transition-all duration-300"
+                        >
+                          <ShoppingCart size={18} />
+                        </Link>
                       </div>
                     </div>
                   </div>
-
-                  <Link
-                    to={`/product/${artwork.id}`}
-                    className="btn-primary w-full flex items-center justify-center"
-                  >
-                    <ShoppingCart className="w-4 h-4 mr-2" />
-                    View Details
-                  </Link>
                 </div>
               </motion.div>
             ))}
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="text-center mt-12"
-          >
-            <Link to="/explore" className="btn-outline text-lg px-8 py-4">
-              View All Artworks
-              <ArrowRight className="w-5 h-5 ml-2" />
-            </Link>
           </motion.div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-primary-600 to-secondary-600">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            className="relative rounded-[40px] overflow-hidden bg-gradient-to-br from-primary-600 to-secondary-700 p-12 md:p-24 text-center group"
           >
-            <h2 className="text-3xl md:text-4xl font-serif font-bold text-white mb-6">
-              Ready to Start Your Creative Journey?
-            </h2>
-            <p className="text-xl text-white/90 mb-8">
-              Join thousands of artists and collectors in the world's most vibrant art and architecture marketplace
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              {!isAuthenticated ? (
-                <Link to="/register" className="bg-white text-primary-600 hover:bg-gray-100 font-semibold py-4 px-8 rounded-lg transition-colors">
-                  Become an Artist
-                </Link>
-              ) : (
-                <Link
-                  to={user?.role === 'artist' ? '/seller-dashboard' : '/profile'}
-                  className="bg-white text-primary-600 hover:bg-gray-100 font-semibold py-4 px-8 rounded-lg transition-colors"
-                >
-                  Go to Dashboard
-                </Link>
-              )}
-              <Link to="/explore" className="border-2 border-white text-white hover:bg-white hover:text-primary-600 font-semibold py-4 px-8 rounded-lg transition-colors">
-                Start Collecting
-              </Link>
+            {/* Background Texture */}
+            <div className="absolute inset-0 opacity-20 pointer-events-none mix-blend-overlay">
+              <div className="absolute inset-0 bg-grid-white"></div>
             </div>
+
+            <div className="relative z-10 max-w-3xl mx-auto">
+              <h2 className="text-4xl md:text-7xl font-serif font-black text-white mb-8 tracking-tighter leading-tight text-glow">
+                Ready to Join the <br />Elite Creators?
+              </h2>
+              <p className="text-xl text-white/80 font-medium mb-12">
+                Your journey into the celestial Crafto begins here.
+                Mint your legacy and connect with global collectors.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-6 justify-center">
+                {!isAuthenticated ? (
+                  <Link to="/register" className="bg-white text-primary-600 hover:scale-105 active:scale-95 font-bold py-5 px-10 rounded-2xl transition-all shadow-xl shadow-black/20">
+                    Get Started Now
+                  </Link>
+                ) : (
+                  <Link
+                    to={user?.role === 'artist' ? '/seller-dashboard' : '/profile'}
+                    className="bg-white text-primary-600 hover:scale-105 active:scale-95 font-bold py-5 px-10 rounded-2xl transition-all shadow-xl shadow-black/20"
+                  >
+                    Go to Dashboard
+                  </Link>
+                )}
+                <Link to="/explore" className="bg-black/20 backdrop-blur-md border-2 border-white/20 text-white hover:bg-white/10 hover:border-white/40 font-bold py-5 px-10 rounded-2xl transition-all">
+                  Browse Gallery
+                </Link>
+              </div>
+            </div>
+
+            {/* Floating Orbs in CTA */}
+            <div className="absolute -top-10 -left-10 w-40 h-40 bg-white/10 blur-3xl rounded-full"></div>
+            <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-black/20 blur-3xl rounded-full"></div>
           </motion.div>
         </div>
       </section>
+
     </div>
   )
 }

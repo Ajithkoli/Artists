@@ -44,7 +44,7 @@ const About = () => {
             transition={{ duration: 0.6 }}
             className="text-4xl md:text-6xl lg:text-7xl font-serif font-bold text-base-content mb-6"
           >
-            About <span className="text-gradient">ArchiCanvas</span>
+            About <span className="text-gradient">Crafto</span>
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -112,7 +112,7 @@ const About = () => {
             transition={{ duration: 0.6 }}
             className="text-3xl md:text-4xl font-serif font-bold text-white mb-6"
           >
-            Join the ArchiCanvas Community
+            Join the Crafto Community
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Award } from 'lucide-react';
-import axios from 'axios';
+import apiClient from '../api/axios';
 import { useAuth } from '../contexts/AuthContext'; // Assuming you use this
 import toast from 'react-hot-toast';
 
@@ -45,7 +45,7 @@ const Badges = () => {
             }
             try {
                 // The auth token is sent automatically by your axios setup in AuthContext
-                const response = await axios.get(API_URL,{ withCredentials: true });
+                const response = await apiClient.get('/badges');
                 setProductCount(response.data.productCount);
             } catch (error) {
                 toast.error("Could not fetch your badges.");
@@ -67,9 +67,9 @@ const Badges = () => {
     if (loading) {
         return <div className="text-center p-12">Loading Your Badges...</div>;
     }
-    
+
     if (!user) {
-         return <div className="text-center p-12">Please log in to see your badges.</div>;
+        return <div className="text-center p-12">Please log in to see your badges.</div>;
     }
 
     return (

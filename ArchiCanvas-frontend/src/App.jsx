@@ -20,7 +20,7 @@ import Register from "./pages/Auth/Register";
 import ProtectedRoute from "./components/Auth/ProtectedRoute";
 import Shop from "./pages/shop";
 import ViewPost from "./pages/viewpost.jsx";
-import ArchiChat from "./components/ArchiChat.jsx";
+import CraftoChat from "./components/CraftoChat.jsx";
 import Cart from "./pages/Cart.jsx";
 
 function App() {
@@ -67,8 +67,8 @@ function App() {
                     </ProtectedRoute>
                   }
                 />
-                <Route path="posts/:id" element={<ViewPost />} />
-                <Route path="ai-chat" element={<ArchiChat />} />
+                <Route path="explore/:id" element={<ViewPost />} />
+                <Route path="ai-chat" element={<CraftoChat />} />
               </Route>
             </Routes>
           </div>

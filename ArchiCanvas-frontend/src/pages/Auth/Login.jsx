@@ -44,9 +44,9 @@ const Login = () => {
 
   const getDemoCredentials = () => {
     const credentials = {
-      buyer: { email: 'collector@archicanvas.com', password: 'password123' },
-      artist: { email: 'artist@archicanvas.com', password: 'password123' },
-      admin: { email: 'admin@archicanvas.com', password: 'password123' }
+      buyer: { email: 'collector@crafto.com', password: 'password123' },
+      artist: { email: 'artist@crafto.com', password: 'password123' },
+      admin: { email: 'admin@crafto.com', password: 'password123' }
     }
     return credentials[formData.role]
   }
@@ -73,9 +73,9 @@ const Login = () => {
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center space-x-2">
             <div className="w-12 h-12 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-2xl">A</span>
+              <span className="text-white font-bold text-2xl">C</span>
             </div>
-            <span className="text-3xl font-serif font-bold text-gradient">ArchiCanvas</span>
+            <span className="text-3xl font-serif font-bold text-gradient">Crafto</span>
           </Link>
         </div>
 
@@ -97,11 +97,10 @@ const Login = () => {
                   key={role.value}
                   type="button"
                   onClick={() => setFormData(prev => ({ ...prev, role: role.value }))}
-                  className={`p-3 rounded-lg border-2 transition-all duration-200 text-center ${
-                    formData.role === role.value
+                  className={`p-3 rounded-lg border-2 transition-all duration-200 text-center ${formData.role === role.value
                       ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
                       : 'border-base-300 hover:border-primary-300'
-                  }`}
+                    }`}
                 >
                   <role.icon className="w-6 h-6 mx-auto mb-2 text-primary-600" />
                   <div className="text-sm font-medium">{role.label}</div>
