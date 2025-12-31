@@ -9,8 +9,10 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 // Middleware
+const frontendUrl = process.env.FRONTEND_URL ? process.env.FRONTEND_URL.replace(/\/$/, "") : "";
+
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' ? process.env.FRONTEND_URL : true,
+  origin: process.env.NODE_ENV === 'production' ? (frontendUrl || true) : true,
   credentials: true
 }));
 app.use(express.json());
