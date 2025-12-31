@@ -68,7 +68,7 @@ const PostCreator = ({ open, onClose, onSubmit }) => {
       exit={{ opacity: 0 }}
     >
       <motion.div
-        className="glass-card backdrop-blur-3xl rounded-[32px] shadow-2xl w-full max-w-lg relative p-8 md:p-10 max-h-[90vh] overflow-y-auto border border-white/10"
+        className="glass-card bg-base-100/90 dark:bg-base-100/80 backdrop-blur-3xl rounded-[32px] shadow-2xl w-full max-w-lg relative p-8 md:p-10 max-h-[90vh] overflow-y-auto border border-base-content/10"
         initial={{ scale: 0.9, y: 20 }}
         animate={{ scale: 1, y: 0 }}
         exit={{ scale: 0.9, y: 20 }}
@@ -79,7 +79,7 @@ const PostCreator = ({ open, onClose, onSubmit }) => {
         >
           <X size={24} />
         </button>
-        <h2 className="text-3xl font-serif font-black text-white text-center mb-8 tracking-tighter">
+        <h2 className="text-3xl font-serif font-black text-base-content text-center mb-8 tracking-tighter">
           Share Your <span className="text-gradient">Journey</span>
         </h2>
 
@@ -117,7 +117,7 @@ const PostCreator = ({ open, onClose, onSubmit }) => {
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-500/50 outline-none transition-all text-white placeholder:text-white/20 font-medium"
+                className="w-full bg-base-content/5 border border-base-content/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-500/50 outline-none transition-all text-base-content placeholder:text-base-content/20 font-medium"
                 placeholder="Name your creation..."
               />
             </div>
@@ -128,7 +128,7 @@ const PostCreator = ({ open, onClose, onSubmit }) => {
                 type="text"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-500/50 outline-none transition-all text-white placeholder:text-white/20 font-medium"
+                className="w-full bg-base-content/5 border border-base-content/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-500/50 outline-none transition-all text-base-content placeholder:text-base-content/20 font-medium"
                 placeholder="A whisper of reality..."
               />
             </div>
@@ -138,7 +138,7 @@ const PostCreator = ({ open, onClose, onSubmit }) => {
               <textarea
                 value={story}
                 onChange={(e) => setStory(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-500/50 outline-none transition-all text-white placeholder:text-white/20 font-medium resize-none"
+                className="w-full bg-base-content/5 border border-base-content/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-500/50 outline-none transition-all text-base-content placeholder:text-base-content/20 font-medium resize-none"
                 rows={4}
                 placeholder="Tell us about the light, the shadows, the soul..."
               />

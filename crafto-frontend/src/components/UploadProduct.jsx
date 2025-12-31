@@ -73,7 +73,7 @@ const ProductCreator = ({ open, onClose }) => {
       exit={{ opacity: 0 }}
     >
       <motion.div
-        className="glass-card backdrop-blur-3xl rounded-[32px] shadow-2xl w-full max-w-lg relative p-8 md:p-10 max-h-[90vh] overflow-y-auto border border-white/10"
+        className="glass-card bg-base-100/90 dark:bg-base-100/80 backdrop-blur-3xl rounded-[32px] shadow-2xl w-full max-w-lg relative p-8 md:p-10 max-h-[90vh] overflow-y-auto border border-base-content/10"
         initial={{ scale: 0.9, y: 20 }}
         animate={{ scale: 1, y: 0 }}
         exit={{ scale: 0.9, y: 20 }}
@@ -84,11 +84,11 @@ const ProductCreator = ({ open, onClose }) => {
         >
           <X size={24} />
         </button>
-        <h2 className="text-3xl font-serif font-black text-white text-center mb-8 tracking-tighter">
+        <h2 className="text-3xl font-serif font-black text-base-content text-center mb-8 tracking-tighter">
           Mint New <span className="text-gradient">Asset</span>
         </h2>
 
-        <form onSubmit={handleSubmit} className="space-y-6 text-white">
+        <form onSubmit={handleSubmit} className="space-y-6 text-base-content">
           {/* Photo Upload */}
           <div className="space-y-3">
             <label className="block text-xs font-black uppercase tracking-widest text-base-content/40 ml-1">Universal Asset (Photo)</label>
@@ -123,7 +123,7 @@ const ProductCreator = ({ open, onClose }) => {
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-500/50 outline-none transition-all text-white placeholder:text-white/20 font-medium"
+                className="w-full bg-base-content/5 border border-base-content/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-500/50 outline-none transition-all text-base-content placeholder:text-base-content/20 font-medium"
                 placeholder="Enter masterpiece title..."
               />
             </div>
@@ -133,7 +133,7 @@ const ProductCreator = ({ open, onClose }) => {
               <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-500/50 outline-none transition-all text-white placeholder:text-white/20 font-medium resize-none"
+                className="w-full bg-base-content/5 border border-base-content/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-500/50 outline-none transition-all text-base-content placeholder:text-base-content/20 font-medium resize-none"
                 rows={2}
                 placeholder="Tell the story of this creation..."
               />
@@ -146,7 +146,7 @@ const ProductCreator = ({ open, onClose }) => {
                   type="number"
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-500/50 outline-none transition-all text-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  className="w-full bg-base-content/5 border border-base-content/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-500/50 outline-none transition-all text-base-content [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   placeholder="0.00"
                 />
               </div>
@@ -191,7 +191,7 @@ const ProductCreator = ({ open, onClose }) => {
                   type="text"
                   value={tagInput}
                   onChange={(e) => setTagInput(e.target.value)}
-                  className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-500/50 outline-none transition-all text-white placeholder:text-white/20"
+                  className="flex-1 bg-base-content/5 border border-base-content/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-500/50 outline-none transition-all text-base-content placeholder:text-base-content/20"
                   placeholder="Add hashtag..."
                   onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), handleAddTag())}
                 />
