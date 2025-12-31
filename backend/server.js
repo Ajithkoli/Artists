@@ -12,7 +12,18 @@ const port = process.env.PORT || 5000;
 const frontendUrl = process.env.FRONTEND_URL ? process.env.FRONTEND_URL.replace(/\/$/, "") : "";
 
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' ? (frontendUrl || true) : true,
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl)
+    if (!origin) return callback(null, true);
+
+    const isVercelPreview = origin.endsWith(".vercel.app") && origin.includes("ajithkolis-projects");
+
+    if (process.env.NODE_ENV !== 'production' || origin === frontendUrl || isVercelPreview) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
 app.use(express.json());
