@@ -14,7 +14,9 @@ const createPost = async (req, res) => {
       title,
       description,
       story,
+      story,
       tags: JSON.parse(tags), // comes as string from frontend
+      user: req.user.id
     });
 
     const savedPost = await post.save();

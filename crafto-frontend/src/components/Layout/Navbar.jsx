@@ -166,7 +166,7 @@ const Navbar = () => {
                           <span>Profile View</span>
                         </Link>
 
-                        {user.role === "artist" && (
+                        {(user.role === "artist" || user.role === "admin") && (
                           <>
                             <button
                               className="flex items-center space-x-3 px-4 py-2.5 text-sm rounded-xl hover:bg-white/5 transition-colors w-full text-left"
@@ -243,7 +243,7 @@ const Navbar = () => {
       </div>
 
       {/* Post Creator Modal */}
-      {isAuthenticated && user.role === "artist" && (
+      {isAuthenticated && (user.role === "artist" || user.role === "admin") && (
         <>
           <PostCreator
             open={showPostModal}

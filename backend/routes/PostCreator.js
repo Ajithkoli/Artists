@@ -7,7 +7,7 @@ const router = express.Router();
 router.get("/", getPosts);
 
 router.get("/:id", getPostById);
-router.post("/", upload.single("photo"), createPost);
+router.post("/", isAuthenticatedUser, upload.single("photo"), createPost);
 
 // Engagement routes
 const { isAuthenticatedUser } = require("../middleware/auth");
