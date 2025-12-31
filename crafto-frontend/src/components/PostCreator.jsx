@@ -68,7 +68,7 @@ const PostCreator = ({ open, onClose, onSubmit }) => {
       exit={{ opacity: 0 }}
     >
       <motion.div
-        className="glass-card bg-base-100/90 dark:bg-base-100/80 backdrop-blur-3xl rounded-[32px] shadow-2xl w-full max-w-lg relative p-8 md:p-10 max-h-[90vh] overflow-y-auto border border-base-content/10"
+        className="bg-white dark:bg-[#121212] rounded-[32px] shadow-[0_0_0_1px_rgba(255,255,255,0.1),0_32px_128px_-16px_rgba(0,0,0,0.5)] w-full max-w-lg relative p-8 md:p-10 max-h-[90vh] overflow-y-auto border-4 border-primary-500"
         initial={{ scale: 0.9, y: 20 }}
         animate={{ scale: 1, y: 0 }}
         exit={{ scale: 0.9, y: 20 }}
@@ -92,7 +92,7 @@ const PostCreator = ({ open, onClose, onSubmit }) => {
                   <input type="file" accept="image/*" onChange={handlePhotoChange} className="absolute inset-0 opacity-0 cursor-pointer z-10" />
                   <div className="flex flex-col items-center">
                     <Plus className="w-10 h-10 text-primary-400/50 mb-2" />
-                    <p className="text-sm font-bold text-white/30">Drop your masterpiece here</p>
+                    <p className="text-sm font-bold text-base-content/30">Drop your masterpiece here</p>
                   </div>
                 </>
               ) : (
@@ -151,7 +151,7 @@ const PostCreator = ({ open, onClose, onSubmit }) => {
                   type="text"
                   value={tagInput}
                   onChange={handleTagInput}
-                  className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-500/50 outline-none transition-all text-white placeholder:text-white/20"
+                  className="flex-1 bg-base-content/10 border border-base-content/20 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-500/50 outline-none transition-all text-base-content placeholder:text-base-content/40"
                   placeholder="Add dimension..."
                   onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), handleAddTag())}
                 />
@@ -161,11 +161,11 @@ const PostCreator = ({ open, onClose, onSubmit }) => {
                 {tags.map((tag) => (
                   <motion.span
                     key={tag}
-                    className="px-4 py-1.5 rounded-full bg-white/10 border border-white/10 text-xs font-bold text-white flex items-center gap-2 group/tag"
+                    className="px-4 py-1.5 rounded-full bg-base-content/10 border border-base-content/20 text-xs font-bold text-base-content flex items-center gap-2 group/tag"
                     whileHover={{ scale: 1.05 }}
                   >
                     {tag}
-                    <X size={14} className="text-white/40 group-hover/tag:text-red-400 cursor-pointer" onClick={() => handleRemoveTag(tag)} />
+                    <X size={14} className="text-base-content/40 group-hover/tag:text-red-400 cursor-pointer" onClick={() => handleRemoveTag(tag)} />
                   </motion.span>
                 ))}
               </div>
@@ -179,7 +179,7 @@ const PostCreator = ({ open, onClose, onSubmit }) => {
           )}
 
           <div className="flex items-center gap-4 pt-4">
-            <button type="button" onClick={onClose} className="flex-1 py-4 text-white/50 hover:text-white font-bold transition-colors">Discard</button>
+            <button type="button" onClick={onClose} className="flex-1 py-4 text-base-content/50 hover:text-base-content font-bold transition-colors">Discard</button>
             <button type="submit" className="flex-[2] py-4 rounded-2xl bg-primary-500 hover:bg-primary-600 text-white font-black uppercase tracking-[0.2em] shadow-glow-primary active:scale-95 transition-all">
               Initialize Post
             </button>

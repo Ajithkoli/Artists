@@ -73,7 +73,7 @@ const ProductCreator = ({ open, onClose }) => {
       exit={{ opacity: 0 }}
     >
       <motion.div
-        className="glass-card bg-base-100/90 dark:bg-base-100/80 backdrop-blur-3xl rounded-[32px] shadow-2xl w-full max-w-lg relative p-8 md:p-10 max-h-[90vh] overflow-y-auto border border-base-content/10"
+        className="bg-white dark:bg-[#121212] rounded-[32px] shadow-[0_0_0_1px_rgba(255,255,255,0.1),0_32px_128px_-16px_rgba(0,0,0,0.5)] w-full max-w-lg relative p-8 md:p-10 max-h-[90vh] overflow-y-auto border-4 border-primary-500"
         initial={{ scale: 0.9, y: 20 }}
         animate={{ scale: 1, y: 0 }}
         exit={{ scale: 0.9, y: 20 }}
@@ -98,7 +98,7 @@ const ProductCreator = ({ open, onClose }) => {
                   <input type="file" accept="image/*" onChange={handlePhotoChange} className="absolute inset-0 opacity-0 cursor-pointer z-10" />
                   <div className="flex flex-col items-center">
                     <Plus className="w-10 h-10 text-primary-400/50 mb-2" />
-                    <p className="text-sm font-bold text-white/30">Drop your file into the galaxy</p>
+                    <p className="text-sm font-bold text-base-content/30">Drop your file into the galaxy</p>
                   </div>
                 </>
               ) : (
@@ -160,7 +160,7 @@ const ProductCreator = ({ open, onClose }) => {
                   <div className={`w-5 h-5 rounded-md border-2 mr-3 transition-all flex items-center justify-center ${isBiddable ? 'bg-primary-400 border-primary-400' : 'border-white/20'}`}>
                     {isBiddable && <Check size={14} className="text-black" />}
                   </div>
-                  <span className={`text-sm font-bold ${isBiddable ? 'text-primary-400' : 'text-white/40'}`}>Enable Bidding</span>
+                  <span className={`text-sm font-bold ${isBiddable ? 'text-primary-400' : 'text-base-content/40'}`}>Enable Bidding</span>
                 </div>
               </div>
             </div>
@@ -176,7 +176,7 @@ const ProductCreator = ({ open, onClose }) => {
                   onChange={(e) => setBiddingDays(e.target.value)}
                   className="w-full accent-primary-500"
                 />
-                <div className="flex justify-between text-[10px] font-black text-white/40 px-1 mt-1">
+                <div className="flex justify-between text-[10px] font-black text-base-content/40 px-1 mt-1">
                   <span>1 CYCLE</span>
                   <span>2 CYCLES</span>
                   <span>3 CYCLES</span>
@@ -201,10 +201,10 @@ const ProductCreator = ({ open, onClose }) => {
                 {tags.map((tag) => (
                   <span
                     key={tag}
-                    className="px-3 py-1 bg-white/10 border border-white/10 rounded-full flex items-center gap-2 text-xs font-bold"
+                    className="px-3 py-1 bg-base-content/10 border border-base-content/20 rounded-full flex items-center gap-2 text-xs font-bold"
                   >
                     {tag}
-                    <X size={14} className="cursor-pointer text-white/40 hover:text-red-400" onClick={() => handleRemoveTag(tag)} />
+                    <X size={14} className="cursor-pointer text-base-content/40 hover:text-red-400" onClick={() => handleRemoveTag(tag)} />
                   </span>
                 ))}
               </div>
@@ -218,7 +218,7 @@ const ProductCreator = ({ open, onClose }) => {
           )}
 
           <div className="flex gap-4 pt-4">
-            <button type="button" onClick={onClose} className="flex-1 py-4 text-white/50 hover:text-white font-bold transition-colors">Discard</button>
+            <button type="button" onClick={onClose} className="flex-1 py-4 text-base-content/50 hover:text-base-content font-bold transition-colors">Discard</button>
             <button type="submit" className="flex-[2] py-4 rounded-2xl bg-primary-500 hover:bg-primary-600 text-white font-black uppercase tracking-[0.2em] shadow-glow-primary active:scale-95 transition-all">
               Initialize Mint
             </button>
