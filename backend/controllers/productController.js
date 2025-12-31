@@ -138,7 +138,7 @@ exports.notifyArtistForPurchase = async (req, res, next) => {
             You can contact them directly to arrange the sale.
             Buyer's Name: ${buyer.name}
             Buyer's Email: ${buyer.email}
-            - The ArchiCanvas Team
+            - The Crafto Team
         `;
 
     await sendEmail({

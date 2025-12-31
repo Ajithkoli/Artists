@@ -10,7 +10,7 @@ const watermarkMiddleware = async (req, res, next) => {
         // req.file.path is the original Cloudinary URL
         // req.file.filename is the public_id (including folder)
 
-        const artistName = req.user?.name || "Archicanvas";
+        const artistName = req.user?.name || "Crafto";
         const watermarkText = `© ${artistName}`;
 
         // Construct a transformed URL

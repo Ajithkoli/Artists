@@ -41,7 +41,7 @@ app.use("/api/v1/news", require("./routes/news.routes"));
 app.use("/api/v1/image", express.static(`./uploads`));
 // app.use("/images", express.static(path.join(__dirname, "public")));
 app.use("/api/v1/upload", express.static("upload"));
-app.use("/api/v1/artworkRoutes", require("./routes/artworkroutes.js"));
+app.use("/api/v1/artworks", require("./routes/artworkroutes.js"));
 
 // app.use("/api/v1/ai", require("./routes/ai"));
 // app.use("/api/v1/user", require("./routes/"));

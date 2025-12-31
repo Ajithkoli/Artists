@@ -74,7 +74,7 @@ exports.chat = async (req, res, next) => {
     // If DNS/name resolution failed, return a canned mock reply so the frontend remains functional during network outages
     const isDnsError = err.code === 'ENOTFOUND' || (err.message && err.message.includes('getaddrinfo ENOTFOUND'));
     if (isDnsError) {
-      const mockText = "Hi — Archi (offline). I can't reach the AI service right now, but I can answer basic questions about ArchiCanvas: registration, communities, products, and uploading artworks. Try asking about those.";
+      const mockText = "Hi — Crafto (offline). I can't reach the AI service right now, but I can answer basic questions about Crafto: registration, communities, products, and uploading artworks. Try asking about those.";
       return res.status(200).json({ success: true, text: mockText, raw: { error: 'DNS resolution failed (mock response returned)' } });
     }
 
