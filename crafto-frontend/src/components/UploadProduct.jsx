@@ -73,7 +73,7 @@ const ProductCreator = ({ open, onClose }) => {
       exit={{ opacity: 0 }}
     >
       <motion.div
-        className="bg-white dark:bg-[#121212] rounded-[32px] shadow-[0_0_0_1px_rgba(255,255,255,0.1),0_32px_128px_-16px_rgba(0,0,0,0.5)] w-full max-w-lg relative p-8 md:p-10 max-h-[90vh] overflow-y-auto border-4 border-primary-500"
+        className="bg-white rounded-[32px] shadow-[0_32px_128px_-16px_rgba(0,0,0,0.5)] w-full max-w-lg relative p-8 md:p-10 max-h-[90vh] overflow-y-auto border-4 border-primary-600"
         initial={{ scale: 0.9, y: 20 }}
         animate={{ scale: 1, y: 0 }}
         exit={{ scale: 0.9, y: 20 }}
@@ -84,11 +84,11 @@ const ProductCreator = ({ open, onClose }) => {
         >
           <X size={24} />
         </button>
-        <h2 className="text-3xl font-serif font-black text-base-content text-center mb-8 tracking-tighter">
+        <h2 className="text-3xl font-serif font-black text-slate-900 text-center mb-8 tracking-tighter">
           Mint New <span className="text-gradient">Asset</span>
         </h2>
 
-        <form onSubmit={handleSubmit} className="space-y-6 text-base-content">
+        <form onSubmit={handleSubmit} className="space-y-6 text-slate-900">
           {/* Photo Upload */}
           <div className="space-y-3">
             <label className="block text-xs font-black uppercase tracking-widest text-base-content/40 ml-1">Universal Asset (Photo)</label>
@@ -118,22 +118,22 @@ const ProductCreator = ({ open, onClose }) => {
 
           <div className="space-y-4">
             <div>
-              <label className="block text-xs font-black uppercase tracking-widest text-base-content/40 mb-2 ml-1">Asset Name</label>
+              <label className="block text-xs font-black uppercase tracking-widest text-slate-400 mb-2 ml-1">Asset Name</label>
               <input
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full bg-base-content/5 border border-base-content/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-500/50 outline-none transition-all text-base-content placeholder:text-base-content/20 font-medium"
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-500/50 outline-none transition-all text-slate-900 placeholder:text-slate-300 font-medium"
                 placeholder="Enter masterpiece title..."
               />
             </div>
 
             <div>
-              <label className="block text-xs font-black uppercase tracking-widest text-base-content/40 mb-2 ml-1">Description</label>
+              <label className="block text-xs font-black uppercase tracking-widest text-slate-400 mb-2 ml-1">Description</label>
               <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full bg-base-content/5 border border-base-content/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-500/50 outline-none transition-all text-base-content placeholder:text-base-content/20 font-medium resize-none"
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-500/50 outline-none transition-all text-slate-900 placeholder:text-slate-300 font-medium resize-none"
                 rows={2}
                 placeholder="Tell the story of this creation..."
               />
@@ -146,7 +146,7 @@ const ProductCreator = ({ open, onClose }) => {
                   type="number"
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}
-                  className="w-full bg-base-content/5 border border-base-content/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-500/50 outline-none transition-all text-base-content [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-500/50 outline-none transition-all text-slate-900 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   placeholder="0.00"
                 />
               </div>
@@ -160,7 +160,7 @@ const ProductCreator = ({ open, onClose }) => {
                   <div className={`w-5 h-5 rounded-md border-2 mr-3 transition-all flex items-center justify-center ${isBiddable ? 'bg-primary-400 border-primary-400' : 'border-white/20'}`}>
                     {isBiddable && <Check size={14} className="text-black" />}
                   </div>
-                  <span className={`text-sm font-bold ${isBiddable ? 'text-primary-400' : 'text-base-content/40'}`}>Enable Bidding</span>
+                  <span className={`text-sm font-bold ${isBiddable ? 'text-primary-600' : 'text-slate-400'}`}>Enable Bidding</span>
                 </div>
               </div>
             </div>
@@ -176,7 +176,7 @@ const ProductCreator = ({ open, onClose }) => {
                   onChange={(e) => setBiddingDays(e.target.value)}
                   className="w-full accent-primary-500"
                 />
-                <div className="flex justify-between text-[10px] font-black text-base-content/40 px-1 mt-1">
+                <div className="flex justify-between text-[10px] font-black text-slate-400 px-1 mt-1">
                   <span>1 CYCLE</span>
                   <span>2 CYCLES</span>
                   <span>3 CYCLES</span>
@@ -191,7 +191,7 @@ const ProductCreator = ({ open, onClose }) => {
                   type="text"
                   value={tagInput}
                   onChange={(e) => setTagInput(e.target.value)}
-                  className="flex-1 bg-base-content/5 border border-base-content/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-500/50 outline-none transition-all text-base-content placeholder:text-base-content/20"
+                  className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-500/50 outline-none transition-all text-slate-900 placeholder:text-slate-300"
                   placeholder="Add hashtag..."
                   onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), handleAddTag())}
                 />
@@ -201,7 +201,7 @@ const ProductCreator = ({ open, onClose }) => {
                 {tags.map((tag) => (
                   <span
                     key={tag}
-                    className="px-3 py-1 bg-base-content/10 border border-base-content/20 rounded-full flex items-center gap-2 text-xs font-bold"
+                    className="px-3 py-1 bg-slate-100 border border-slate-200 rounded-full flex items-center gap-2 text-xs font-bold text-slate-700"
                   >
                     {tag}
                     <X size={14} className="cursor-pointer text-base-content/40 hover:text-red-400" onClick={() => handleRemoveTag(tag)} />
@@ -218,7 +218,7 @@ const ProductCreator = ({ open, onClose }) => {
           )}
 
           <div className="flex gap-4 pt-4">
-            <button type="button" onClick={onClose} className="flex-1 py-4 text-base-content/50 hover:text-base-content font-bold transition-colors">Discard</button>
+            <button type="button" onClick={onClose} className="flex-1 py-4 text-slate-400 hover:text-slate-600 font-bold transition-colors">Discard</button>
             <button type="submit" className="flex-[2] py-4 rounded-2xl bg-primary-500 hover:bg-primary-600 text-white font-black uppercase tracking-[0.2em] shadow-glow-primary active:scale-95 transition-all">
               Initialize Mint
             </button>

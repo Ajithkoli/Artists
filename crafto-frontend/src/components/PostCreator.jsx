@@ -68,7 +68,7 @@ const PostCreator = ({ open, onClose, onSubmit }) => {
       exit={{ opacity: 0 }}
     >
       <motion.div
-        className="bg-white dark:bg-[#121212] rounded-[32px] shadow-[0_0_0_1px_rgba(255,255,255,0.1),0_32px_128px_-16px_rgba(0,0,0,0.5)] w-full max-w-lg relative p-8 md:p-10 max-h-[90vh] overflow-y-auto border-4 border-primary-500"
+        className="bg-white rounded-[32px] shadow-[0_32px_128px_-16px_rgba(0,0,0,0.5)] w-full max-w-lg relative p-8 md:p-10 max-h-[90vh] overflow-y-auto border-4 border-primary-600"
         initial={{ scale: 0.9, y: 20 }}
         animate={{ scale: 1, y: 0 }}
         exit={{ scale: 0.9, y: 20 }}
@@ -79,7 +79,7 @@ const PostCreator = ({ open, onClose, onSubmit }) => {
         >
           <X size={24} />
         </button>
-        <h2 className="text-3xl font-serif font-black text-base-content text-center mb-8 tracking-tighter">
+        <h2 className="text-3xl font-serif font-black text-slate-900 text-center mb-8 tracking-tighter">
           Share Your <span className="text-gradient">Journey</span>
         </h2>
 
@@ -112,18 +112,18 @@ const PostCreator = ({ open, onClose, onSubmit }) => {
 
           <div className="space-y-4">
             <div>
-              <label className="block text-xs font-black uppercase tracking-widest text-base-content/40 mb-2 ml-1">Vision Title</label>
+              <label className="block text-xs font-black uppercase tracking-widest text-slate-400 mb-2 ml-1">Vision Title</label>
               <input
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full bg-base-content/5 border border-base-content/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-500/50 outline-none transition-all text-base-content placeholder:text-base-content/20 font-medium"
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-500/50 outline-none transition-all text-slate-900 placeholder:text-slate-300 font-medium"
                 placeholder="Name your creation..."
               />
             </div>
 
             <div>
-              <label className="block text-xs font-black uppercase tracking-widest text-base-content/40 mb-2 ml-1">Brief Insight</label>
+              <label className="block text-xs font-black uppercase tracking-widest text-slate-400 mb-2 ml-1">Brief Insight</label>
               <input
                 type="text"
                 value={description}
@@ -134,24 +134,24 @@ const PostCreator = ({ open, onClose, onSubmit }) => {
             </div>
 
             <div>
-              <label className="block text-xs font-black uppercase tracking-widest text-base-content/40 mb-2 ml-1">The Epic Story</label>
+              <label className="block text-xs font-black uppercase tracking-widest text-slate-400 mb-2 ml-1">The Epic Story</label>
               <textarea
                 value={story}
                 onChange={(e) => setStory(e.target.value)}
-                className="w-full bg-base-content/5 border border-base-content/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-500/50 outline-none transition-all text-base-content placeholder:text-base-content/20 font-medium resize-none"
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-500/50 outline-none transition-all text-slate-900 placeholder:text-slate-300 font-medium resize-none"
                 rows={4}
                 placeholder="Tell us about the light, the shadows, the soul..."
               />
             </div>
 
             <div className="space-y-3">
-              <label className="block text-xs font-black uppercase tracking-widest text-base-content/40 ml-1">Universal Tags</label>
+              <label className="block text-xs font-black uppercase tracking-widest text-slate-400 ml-1">Universal Tags</label>
               <div className="flex gap-2">
                 <input
                   type="text"
                   value={tagInput}
                   onChange={handleTagInput}
-                  className="flex-1 bg-base-content/10 border border-base-content/20 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-500/50 outline-none transition-all text-base-content placeholder:text-base-content/40"
+                  className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-500/50 outline-none transition-all text-slate-900 placeholder:text-slate-300"
                   placeholder="Add dimension..."
                   onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), handleAddTag())}
                 />
@@ -161,7 +161,7 @@ const PostCreator = ({ open, onClose, onSubmit }) => {
                 {tags.map((tag) => (
                   <motion.span
                     key={tag}
-                    className="px-4 py-1.5 rounded-full bg-base-content/10 border border-base-content/20 text-xs font-bold text-base-content flex items-center gap-2 group/tag"
+                    className="px-4 py-1.5 rounded-full bg-slate-100 border border-slate-200 text-xs font-bold text-slate-700 flex items-center gap-2 group/tag"
                     whileHover={{ scale: 1.05 }}
                   >
                     {tag}
@@ -179,7 +179,7 @@ const PostCreator = ({ open, onClose, onSubmit }) => {
           )}
 
           <div className="flex items-center gap-4 pt-4">
-            <button type="button" onClick={onClose} className="flex-1 py-4 text-base-content/50 hover:text-base-content font-bold transition-colors">Discard</button>
+            <button type="button" onClick={onClose} className="flex-1 py-4 text-slate-400 hover:text-slate-600 font-bold transition-colors">Discard</button>
             <button type="submit" className="flex-[2] py-4 rounded-2xl bg-primary-500 hover:bg-primary-600 text-white font-black uppercase tracking-[0.2em] shadow-glow-primary active:scale-95 transition-all">
               Initialize Post
             </button>
