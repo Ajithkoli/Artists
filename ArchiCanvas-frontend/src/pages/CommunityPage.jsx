@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import axios from 'axios';
+import apiClient from '../api/axios';
 import toast from 'react-hot-toast';
 import PendingRequests from '../components/PendingRequests';
 
-const API_URL = `${import.meta.env.VITE_API_BASE_URL}/communities`;
+const API_URL = `/communities`;
 
 const CommunityPage = () => {
     const { id } = useParams();
@@ -22,14 +22,14 @@ const CommunityPage = () => {
 
     const fetchData = async () => {
         try {
-            const communityRes = await axios.get(`${API_URL}/${id}`,{ withCredentials: true });
+            const communityRes = await apiClient.get(`${API_URL}/${id}`);
             console.log("jii",communityRes);
             const fetchedCommunity = communityRes.data.data.community;
             setCommunity(fetchedCommunity);
 
             const isUserMember = fetchedCommunity.members.some(member => member._id === user?._id);
             if (isUserMember) {
-                const messagesRes = await axios.get(`${API_URL}/${id}/messages`,{ withCredentials: true });
+                const messagesRes = await apiClient.get(`${API_URL}/${id}/messages`);
                 setMessages(messagesRes.data.data.messages);
             }
         } catch (error) {
@@ -49,7 +49,7 @@ const CommunityPage = () => {
         if (!isUserMember) return;
 
         const interval = setInterval(async () => {
-            const res = await axios.get(`${API_URL}/${id}/messages`,{ withCredentials: true });
+            const res = await apiClient.get(`${API_URL}/${id}/messages`);
             setMessages(res.data.data.messages);
         }, 3000);
 
@@ -60,7 +60,7 @@ const CommunityPage = () => {
 
     const handleRequestJoin = async () => {
         try {
-            const res = await axios.post(`${API_URL}/${id}/request-join`,{ withCredentials: true });
+            const res = await apiClient.post(`${API_URL}/${id}/request-join`);
             toast.success(res.data.message);
             fetchData();
         } catch (error) {
@@ -70,7 +70,7 @@ const CommunityPage = () => {
     
     const handleLeave = async () => {
         try {
-            await axios.post(`${API_URL}/${id}/leave`,{ withCredentials: true });
+            await apiClient.post(`${API_URL}/${id}/leave`);
             toast.success(`You have left ${community.name}.`);
             fetchData();
         } catch (error) {
@@ -82,9 +82,9 @@ const CommunityPage = () => {
         e.preventDefault();
         if (!newMessage.trim()) return;
         try {
-            await axios.post(`${API_URL}/${id}/messages`, { content: newMessage },{ withCredentials: true });
+            await apiClient.post(`${API_URL}/${id}/messages`, { content: newMessage });
             setNewMessage('');
-            const res = await axios.get(`${API_URL}/${id}/messages`,{ withCredentials: true });
+            const res = await apiClient.get(`${API_URL}/${id}/messages`);
             setMessages(res.data.data.messages);
         } catch (error) {
             toast.error("Failed to send message.");

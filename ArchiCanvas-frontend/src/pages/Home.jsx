@@ -1,10 +1,13 @@
+import { useState, useEffect } from 'react'
+import axios from 'axios'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { 
-  ArrowRight, 
-  Palette, 
-  Building2, 
-  Users, 
+import { useAuth } from '../contexts/AuthContext'
+import {
+  ArrowRight,
+  Palette,
+  Building2,
+  Users,
   Star,
   Heart,
   Eye,
@@ -12,53 +15,40 @@ import {
 } from 'lucide-react'
 
 const Home = () => {
+  const { user, isAuthenticated } = useAuth()
   // Mock featured artworks data
-  const featuredArtworks = [
-    {
-      id: 1,
-      title: "Abstract Harmony",
-      artist: "Sarah Artist",
-      price: "$2,500",
-      image: "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=400&h=400&fit=crop",
-      category: "Painting",
-      rating: 4.8,
-      likes: 156,
-      views: 1200
-    },
-    {
-      id: 2,
-      title: "Modern Architecture",
-      artist: "Mike Designer",
-      price: "$5,000",
-      image: "https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=400&h=400&fit=crop",
-      category: "Architecture",
-      rating: 4.9,
-      likes: 203,
-      views: 1800
-    },
-    {
-      id: 3,
-      title: "Sculptural Dreams",
-      artist: "Emma Sculptor",
-      price: "$3,800",
-      image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=400&fit=crop",
-      category: "Sculpture",
-      rating: 4.7,
-      likes: 134,
-      views: 950
-    },
-    {
-      id: 4,
-      title: "Digital Art",
-      artist: "Alex Digital",
-      price: "$1,200",
-      image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop",
-      category: "Digital",
-      rating: 4.6,
-      likes: 98,
-      views: 750
-    }
-  ]
+  // Products state to replace mock data
+  const [featuredArtworks, setFeaturedArtworks] = useState([]);
+
+  useEffect(() => {
+    const fetchFeatured = async () => {
+      try {
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/products`);
+        if (response.data?.products) {
+          // Take only the first 4 products for the featured section
+          // Transform if necessary to match the UI shape, though the ProductCard now handles the backend shape well.
+          // The backend returns: { _id, title, price, photo, user: {name}, rating, etc. }
+          // We map it to what the UI expects if fields differ
+          const mapped = response.data.products.slice(0, 4).map(p => ({
+            id: p._id,
+            title: p.title,
+            artist: p.user?.name || "Artist",
+            price: `$${p.price}`,
+            // Use the watermark path for the image
+            image: p.photo?.startsWith('http') ? p.photo : `${import.meta.env.VITE_API_BASE_URL}/watermark${p.photo}`,
+            category: p.tags?.[0] || "Art", // Use first tag as category or default
+            rating: p.rating || 4.5,
+            likes: p.likes || 0,
+            views: p.views || 0
+          }));
+          setFeaturedArtworks(mapped);
+        }
+      } catch (error) {
+        console.error("Failed to fetch featured products", error);
+      }
+    };
+    fetchFeatured();
+  }, []);
 
   const stats = [
     { number: "500+", label: "Artists", icon: Palette },
@@ -101,7 +91,7 @@ const Home = () => {
             animate="visible"
             className="text-center"
           >
-            <motion.h1 
+            <motion.h1
               variants={itemVariants}
               className="text-4xl md:text-6xl lg:text-7xl font-serif font-bold text-base-content mb-6"
             >
@@ -110,16 +100,16 @@ const Home = () => {
               {' '}Meets{' '}
               <span className="text-gradient">Culture</span>
             </motion.h1>
-            
-            <motion.p 
+
+            <motion.p
               variants={itemVariants}
               className="text-xl md:text-2xl text-base-content/70 max-w-3xl mx-auto mb-8"
             >
-              Discover and collect unique artworks and architectural designs from talented artists worldwide. 
+              Discover and collect unique artworks and architectural designs from talented artists worldwide.
               Join our vibrant community of creators and collectors.
             </motion.p>
-            
-            <motion.div 
+
+            <motion.div
               variants={itemVariants}
               className="flex flex-col sm:flex-row gap-4 justify-center items-center"
             >
@@ -133,14 +123,14 @@ const Home = () => {
             </motion.div>
           </motion.div>
         </div>
-        
+
         {/* Floating Elements */}
         <motion.div
-          animate={{ 
+          animate={{
             y: [0, -20, 0],
             rotate: [0, 5, 0]
           }}
-          transition={{ 
+          transition={{
             duration: 6,
             repeat: Infinity,
             ease: "easeInOut"
@@ -148,11 +138,11 @@ const Home = () => {
           className="absolute top-20 right-10 w-20 h-20 bg-primary-200 rounded-full opacity-20 hidden lg:block"
         />
         <motion.div
-          animate={{ 
+          animate={{
             y: [0, 20, 0],
             rotate: [0, -5, 0]
           }}
-          transition={{ 
+          transition={{
             duration: 8,
             repeat: Infinity,
             ease: "easeInOut",
@@ -239,7 +229,7 @@ const Home = () => {
                     </button>
                   </div>
                 </div>
-                
+
                 <div className="p-6">
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-sm text-primary-600 font-medium">
@@ -250,15 +240,15 @@ const Home = () => {
                       <span className="text-sm font-medium">{artwork.rating}</span>
                     </div>
                   </div>
-                  
+
                   <h3 className="font-semibold text-lg text-base-content mb-2">
                     {artwork.title}
                   </h3>
-                  
+
                   <p className="text-sm text-base-content/70 mb-4">
                     by {artwork.artist}
                   </p>
-                  
+
                   <div className="flex items-center justify-between mb-4">
                     <span className="text-2xl font-bold text-primary-600">
                       {artwork.price}
@@ -274,7 +264,7 @@ const Home = () => {
                       </div>
                     </div>
                   </div>
-                  
+
                   <Link
                     to={`/product/${artwork.id}`}
                     className="btn-primary w-full flex items-center justify-center"
@@ -318,9 +308,18 @@ const Home = () => {
               Join thousands of artists and collectors in the world's most vibrant art and architecture marketplace
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/register" className="bg-white text-primary-600 hover:bg-gray-100 font-semibold py-4 px-8 rounded-lg transition-colors">
-                Become an Artist
-              </Link>
+              {!isAuthenticated ? (
+                <Link to="/register" className="bg-white text-primary-600 hover:bg-gray-100 font-semibold py-4 px-8 rounded-lg transition-colors">
+                  Become an Artist
+                </Link>
+              ) : (
+                <Link
+                  to={user?.role === 'artist' ? '/seller-dashboard' : '/profile'}
+                  className="bg-white text-primary-600 hover:bg-gray-100 font-semibold py-4 px-8 rounded-lg transition-colors"
+                >
+                  Go to Dashboard
+                </Link>
+              )}
               <Link to="/explore" className="border-2 border-white text-white hover:bg-white hover:text-primary-600 font-semibold py-4 px-8 rounded-lg transition-colors">
                 Start Collecting
               </Link>

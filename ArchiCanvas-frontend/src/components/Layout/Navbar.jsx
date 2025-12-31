@@ -1,10 +1,9 @@
-import React from "react";
-
-import { useState } from "react";
+import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../../contexts/AuthContext";
 import { useTheme } from "../../contexts/ThemeContext";
+import { useCart } from "../../contexts/CartContext";
 import uploadproduct from "../UploadProduct";
 
 import {
@@ -15,7 +14,6 @@ import {
   Home,
   Search,
   Users,
-  BookOpen,
   Info,
   User,
   Settings,
@@ -23,7 +21,6 @@ import {
   ChevronDown,
   Plus,
   ShoppingBag,
-  Newspaper,
   Bot,
 } from "lucide-react";
 import PostCreator from "../PostCreator";
@@ -35,15 +32,14 @@ const Navbar = () => {
   const [showPostModal, setShowPostModal] = useState(false);
   const [showUploadProductModal, setShowUploadProductModal] = useState(false);
   const { isDark, toggleTheme } = useTheme();
+  const { cart } = useCart();
   const location = useLocation();
 
   const navigation = [
     { name: "Home", href: "/", icon: Home },
-    // { name: 'Latest News', href: '/news', icon: Newspaper },
     { name: "Explore", href: "/explore", icon: Search },
     { name: "Community", href: "/community", icon: Users },
     { name: "Shop", href: "/shop", icon: ShoppingBag },
-    // { name: 'Learn', href: '/learn', icon: BookOpen },
     { name: "About", href: "/about", icon: Info },
     { name: "ArchiChat", href: "/ai-chat", icon: Bot },
   ];
@@ -73,62 +69,34 @@ const Navbar = () => {
 
           {/* Desktop Navigation - centered and spaced */}
           <div className="hidden md:flex flex-1 justify-center items-center space-x-8">
-            {navigation.slice(0, 2).map((item) => (
+            {navigation.map((item) => (
               <Link
                 key={item.name}
                 to={item.href}
-                className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  isActive(item.href)
+                className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive(item.href)
                     ? "text-primary-600 bg-primary-50 dark:bg-primary-900/20"
                     : "text-base-content hover:text-primary-600 hover:bg-base-200"
-                }`}
-              >
-                <item.icon className="w-4 h-4" />
-                <span>{item.name}</span>
-              </Link>
-            ))}
-
-            {navigation.slice(2).map((item) => (
-              <Link
-                key={item.name}
-                to={item.href}
-                className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  isActive(item.href)
-                    ? "text-primary-600 bg-primary-50 dark:bg-primary-900/20"
-                    : "text-base-content hover:text-primary-600 hover:bg-base-200"
-                }`}
+                  }`}
               >
                 <item.icon className="w-4 h-4" />
                 <span>{item.name}</span>
               </Link>
             ))}
           </div>
-          {/* Post Button for Artists (styled like nav item) */}
-          {/* {isAuthenticated && user.role === 'artist' && (
-              <>
-                <button
-                  className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors text-base-content hover:text-primary-600 hover:bg-base-200`}
-                  style={{ marginLeft: 0, marginRight: 0 }}
-                  onClick={() => setShowPostModal(true)}
-                  aria-label="Create Post"
-                >
-                  <Plus className="w-4 h-4" />
-                  <span>Post</span>
-                </button>
-                <button
-                  className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors text-base-content hover:text-primary-600 hover:bg-base-200`}
-                  style={{ marginLeft: 0, marginRight: 0 }}
-                  onClick={() => setShowUploadProductModal(true)}
-                  aria-label="Upload Product"
-                >
-                  <Plus className="w-4 h-4" />
-                  <span>Upload Product</span>
-                </button>
-              </>
-            )} */}
 
           {/* Right side actions */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4 pr-6">
+
+            {/* Cart Link - ADDED HERE */}
+            <Link to="/cart" className="relative p-2 rounded-lg bg-base-200 hover:bg-base-300 transition-colors">
+              <ShoppingBag className="w-5 h-5" />
+              {cart?.length > 0 && (
+                <span className="absolute -top-1 -right-1 bg-primary-500 text-white text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                  {cart.length}
+                </span>
+              )}
+            </Link>
+
             {/* Theme Toggle */}
             <button
               onClick={toggleTheme}
@@ -154,12 +122,10 @@ const Navbar = () => {
                       user.avatar
                         ? user.avatar
                         : user.role === "admin"
-                        ? "https://cdn-icons-png.flaticon.com/512/1828/1828640.png" // admin icon
-                        : user.role === "artist"
-                        ? "https://cdn-icons-png.flaticon.com/512/2922/2922510.png" // artist icon
-                        : user.role === "buyer"
-                        ? "https://cdn-icons-png.flaticon.com/512/1077/1077012.png" // buyer icon
-                        : "https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
+                          ? "https://cdn-icons-png.flaticon.com/512/1828/1828640.png"
+                          : user.role === "artist"
+                            ? "https://cdn-icons-png.flaticon.com/512/2922/2922510.png"
+                            : "https://cdn-icons-png.flaticon.com/512/1077/1077012.png"
                     }
                     alt={user.name}
                     className="w-8 h-8 rounded-full"
@@ -183,11 +149,6 @@ const Navbar = () => {
                         <p className="text-xs text-base-content/70">
                           {user.email}
                         </p>
-                        {user.specialization && (
-                          <p className="text-xs text-primary-600">
-                            {user.specialization}
-                          </p>
-                        )}
                       </div>
 
                       <Link
@@ -199,7 +160,6 @@ const Navbar = () => {
                         <span>Profile</span>
                       </Link>
 
-                      {/* Post and Upload Product for Artists above Dashboard */}
                       {user.role === "artist" && (
                         <>
                           <button
@@ -224,17 +184,6 @@ const Navbar = () => {
                           </button>
                         </>
                       )}
-
-                      {/* {user.role === 'artist' && (
-                        <Link
-                          to="/seller-dashboard"
-                          onClick={() => setIsProfileOpen(false)}
-                          className="flex items-center space-x-3 px-4 py-2 text-sm hover:bg-base-200 transition-colors"
-                        >
-                          <Settings className="w-4 h-4" />
-                          <span>Dashboard</span>
-                        </Link>
-                      )} */}
 
                       {user.role === "admin" && (
                         <Link
@@ -291,7 +240,6 @@ const Navbar = () => {
             open={showPostModal}
             onClose={() => setShowPostModal(false)}
             onSubmit={(postData) => {
-              // TODO: Save postData to backend or global state for Explore page
               setShowPostModal(false);
             }}
           />
@@ -318,11 +266,10 @@ const Navbar = () => {
                   key={item.name}
                   to={item.href}
                   onClick={() => setIsOpen(false)}
-                  className={`flex items-center space-x-3 px-3 py-2 rounded-md text-base font-medium transition-colors ${
-                    isActive(item.href)
+                  className={`flex items-center space-x-3 px-3 py-2 rounded-md text-base font-medium transition-colors ${isActive(item.href)
                       ? "text-primary-600 bg-primary-50 dark:bg-primary-900/20"
                       : "text-base-content hover:text-primary-600 hover:bg-base-200"
-                  }`}
+                    }`}
                 >
                   <item.icon className="w-5 h-5" />
                   <span>{item.name}</span>

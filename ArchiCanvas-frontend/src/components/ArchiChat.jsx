@@ -1,17 +1,12 @@
 // File: src/components/ArchiChat.jsx
 
 import { useState } from 'react';
-import { GoogleGenerativeAI } from '@google/generative-ai';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Bot, User } from 'lucide-react';
 import { MessageCircle } from 'lucide-react';
+import apiClient from '../api/axios';
 
-// Access your API key from the .env file
-const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
-
-// Initialize the Gemini AI model
-const genAI = new GoogleGenerativeAI(API_KEY);
-const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+// This component now calls the server-side AI proxy at `/api/v1/ai/chat`.
 
 const ArchiChat = () => {
     const [messages, setMessages] = useState([]);
@@ -21,21 +16,10 @@ const ArchiChat = () => {
 
     // This function initializes the chat with the system prompt
     const initializeChat = () => {
-        const systemPrompt = `
-            You are "Archi," an expert and friendly guide for the ArchiCanvas digital art platform. Your knowledge is strictly limited to ArchiCanvas, its features, and the traditional Indian art it promotes.
-            Your rules are:
-            1. Only answer questions about ArchiCanvas features (like artist registration, communities, watermarking, AI tools), traditional Indian art (like Madhubani and Warli), and how to use the platform.
-            2. If you are asked about anything else (e.g., the weather, politics, programming, general knowledge), you must politely decline and guide the user back to the topic of ArchiCanvas.
-            3. Be helpful, concise, and encouraging to artists and buyers.
-        `;
-        
-        const newChat = model.startChat({
-            history: [{ role: 'user', parts: [{ text: systemPrompt }] }, { role: 'model', parts: [{ text: 'Hello! I am Archi, your guide to the ArchiCanvas platform. How can I help you explore the world of traditional art today?' }] }],
-            generationConfig: { maxOutputTokens: 1000 },
-        });
-
-        setMessages([{ role: 'model', text: 'Hello! I am Archi, your guide to the ArchiCanvas platform. How can I help you explore the world of traditional art today?' }]);
-        return newChat;
+        // Local system prompt is kept in frontend but the server-side model can also apply its own prompt.
+        const greeting = 'Hello! I am Archi, your guide to the ArchiCanvas platform. How can I help you explore the world of traditional art today?';
+        setMessages([{ role: 'model', text: greeting }]);
+        return null; // chat state not needed when using server proxy
     };
     
     const sendMessage = async (e) => {
@@ -43,30 +27,18 @@ const ArchiChat = () => {
         if (!input.trim() || isLoading) return;
 
         const currentChat = chat || initializeChat();
-        if (!chat) setChat(currentChat);
-
         const userMessage = { role: 'user', text: input };
         setMessages(prev => [...prev, userMessage]);
         setIsLoading(true);
         setInput('');
 
         try {
-            const result = await currentChat.sendMessageStream(input);
-            
-            let modelResponse = '';
-            setMessages(prev => [...prev, { role: 'model', text: '' }]);
-
-            for await (const chunk of result.stream) {
-                const chunkText = chunk.text();
-                modelResponse += chunkText;
-                setMessages(prev => {
-                    const newMessages = [...prev];
-                    newMessages[newMessages.length - 1].text = modelResponse;
-                    return newMessages;
-                });
-            }
+            // Call server-side AI proxy. Backend will add GEMINI_API_KEY server-side.
+            const resp = await apiClient.post('/ai/chat', { message: input });
+            const text = resp?.data?.text || 'Sorry, I could not get a response.';
+            setMessages(prev => [...prev, { role: 'model', text }]);
         } catch (error) {
-            console.error("Gemini API Error:", error);
+            console.error('AI proxy error:', error);
             setMessages(prev => [...prev, { role: 'model', text: 'Sorry, I seem to be having some trouble right now. Please try again later.' }]);
         } finally {
             setIsLoading(false);

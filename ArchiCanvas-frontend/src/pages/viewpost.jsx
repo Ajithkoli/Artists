@@ -15,7 +15,7 @@ const ViewPost = () => {
     const fetchPost = async () => {
       try {
         setLoading(true);
-        const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/posts/${id}`,{ withCredentials: true });
+        const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/posts/${id}`, { withCredentials: true });
         setPost(res.data);
       } catch (err) {
         setError('Failed to load post.');
@@ -51,11 +51,11 @@ const ViewPost = () => {
 
         {/* Post Card */}
         <div className="flex flex-col md:flex-row gap-8 bg-white rounded-2xl shadow-lg border border-base-300 p-6">
-          
+
           {/* Image */}
           <div className="md:w-1/2 flex justify-center items-start">
             <img
-              src={`${import.meta.env.VITE_API_BASE_URL}${post.photoUrl}`}
+              src={post.photoUrl?.startsWith('http') ? post.photoUrl : `${import.meta.env.VITE_API_BASE_URL}${post.photoUrl}`}
               alt={post.title}
               className="rounded-xl w-full max-w-md object-cover"
             />

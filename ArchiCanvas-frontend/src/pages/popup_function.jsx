@@ -1,86 +1,128 @@
 import React, { useState } from 'react';
-import { X } from 'lucide-react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useAuth } from '../contexts/AuthContext';
+import apiClient from '../api/axios';
 
-const API_URL = `${import.meta.env.VITE_API_BASE_URL}/products`;
-
-// --- The Popup Component (No changes needed) ---
-const BuyNowPopup = ({ artist, isOpen, onClose }) => {
-    if (!isOpen || !artist) return null;
-
-    return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-white rounded-xl shadow-lg p-6 w-full max-w-md relative text-black">
-                <button className="absolute top-4 right-4 text-gray-700 hover:text-black" onClick={onClose}>
-                    <X className="w-5 h-5" />
-                </button>
-                <h2 className="text-xl font-bold mb-4">Inquiry Sent!</h2>
-                <p className="mb-4">The artist has been notified of your interest and will respond shortly.</p>
-                <p className="mb-4">Thank you for your request.</p>
-
-                {/* <div className="border-t pt-4">
-                    <h3 className="font-semibold mb-2">Artist Details:</h3>
-                    <p><span className="font-medium">Name:</span> {artist.name}</p>
-                    <p><span className="font-medium">Email:</span> {artist.email}</p>
-                </div> */}
-                <button className="mt-6 w-full bg-primary-500 hover:bg-primary-600 text-white py-2 rounded-lg" onClick={onClose}>
-                    Close
-                </button>
-            </div>
-        </div>
-    );
-};
-
-
-// --- The Main Component that USES the popup ---
-// It needs the selectedProduct passed in as a prop
+// --- Main Buy Button Component with Razorpay Logic ---
 const Bynow = ({ selectedProduct }) => {
-    const [popupOpen, setPopupOpen] = useState(false);
-    const { user } = useAuth(); // Get the logged-in user
+    const { user } = useAuth();
+    const [loading, setLoading] = useState(false);
+
+    // Helper to load Razorpay SDK dynamically
+    const loadRazorpay = () => {
+        return new Promise((resolve) => {
+            const script = document.createElement('script');
+            script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+            script.onload = () => resolve(true);
+            script.onerror = () => resolve(false);
+            document.body.appendChild(script);
+        });
+    };
 
     const handleBuyNow = async () => {
-        // 1. Check if user is logged in
-                   
-
         if (!user) {
-            toast.error("You must be logged in to contact the artist.");
+            toast.error("You must be logged in to purchase.");
             return;
         }
-       console.log("hiii",selectedProduct);
-        if (!selectedProduct) return;
-  
+
+        if (selectedProduct?.user?._id === user._id) {
+            toast.error("You cannot buy your own artwork.");
+            return;
+        }
+
+        setLoading(true);
+
         try {
-            // 2. Call the backend to send the email
-            const response = await axios.post(`${API_URL}/${selectedProduct._id}/buy-request`,{ withCredentials: true });
-            
-            // 3. On success, show a toast and open the popup
-            toast.success(response.data.message);
-            setPopupOpen(true);
-            console.log(response.data);
+            console.log("Selected Product for BuyNow:", selectedProduct);
+            // 1. Load Razorpay SDK
+            const isLoaded = await loadRazorpay();
+            if (!isLoaded) {
+                toast.error("Razorpay SDK failed to load. Are you online?");
+                setLoading(false);
+                return;
+            }
+
+            // 2. Create Order on Backend
+            const { data: { order, product } } = await apiClient.post("/payment/process",
+                { productId: selectedProduct._id },
+                { headers: { 'Content-Type': 'application/json' } }
+            );
+
+            // 3. Get Key ID
+            const { data: { key } } = await apiClient.get("/payment/razorpaykey");
+
+            // 4. Configure Razorpay Options
+            const options = {
+                key: key,
+                amount: order.amount,
+                currency: "INR",
+                name: "ArchiCanvas",
+                description: `Purchase: ${product.title}`,
+                image: "https://via.placeholder.com/150",
+                order_id: order.id,
+                handler: async function (response) {
+                    try {
+                        // 5. Verify Payment on Backend
+                        const verifyUrl = "/payment/order";
+                        const { data } = await apiClient.post(verifyUrl, {
+                            productId: selectedProduct._id,
+                            razorpayOrderId: response.razorpay_order_id,
+                            razorpayPaymentId: response.razorpay_payment_id,
+                            razorpaySignature: response.razorpay_signature,
+                        });
+
+                        toast.success("Payment Successful! Order placed.");
+                        console.log("Order Success:", data);
+
+                    } catch (error) {
+                        console.error("Payment verification failed", error);
+                        toast.error("Payment verification failed. Please contact support.");
+                    }
+                },
+                prefill: {
+                    name: user.name,
+                    email: user.email,
+                    contact: ""
+                },
+                notes: {
+                    address: "ArchiCanvas Corporate Office"
+                },
+                theme: {
+                    color: "#3399cc"
+                }
+            };
+
+            // 5. Open Razorpay Modal
+            const rzp1 = new window.Razorpay(options);
+            rzp1.on('payment.failed', function (response) {
+                toast.error(response.error.description || "Payment Failed");
+            });
+            rzp1.open();
 
         } catch (error) {
-            toast.error(error.response?.data?.message || "you cannot buy your own ArtWork.");
-            console.log(error);
-
+            console.error("Purchase error:", error);
+            const msg = error.response?.data?.message || "Could not initiate payment.";
+            toast.error(msg);
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
         <div>
             <button
-                className="btn btn-primary"
+                className="btn btn-primary w-full shadow-lg hover:shadow-xl transition-all"
                 onClick={handleBuyNow}
+                disabled={loading}
             >
-                Buy Now
+                {loading ? (
+                    <>
+                        <span className="loading loading-spinner loading-xs mr-2"></span>
+                        Processing...
+                    </>
+                ) : "Buy Now"}
             </button>
-
-            <BuyNowPopup
-                artist={selectedProduct?.user} 
-                isOpen={popupOpen}
-                onClose={() => setPopupOpen(false)}
-            />
         </div>
     );
 };

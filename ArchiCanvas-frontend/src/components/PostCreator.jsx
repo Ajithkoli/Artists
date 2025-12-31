@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { X, Plus } from "lucide-react";
 import { motion } from "framer-motion";
-import axios from "axios";
+import apiClient from '../api/axios'
 const MAX_TAGS = 10;
 
 const PostCreator = ({ open, onClose, onSubmit }) => {
@@ -36,30 +36,27 @@ const PostCreator = ({ open, onClose, onSubmit }) => {
   const handleRemoveTag = (tag) => setTags(tags.filter((t) => t !== tag));
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  if (!photo || !title || !description || !story) return setError("All fields are required");
-  if (tags.length === 0) return setError("At least one tag is required");
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+    e.preventDefault();
+    if (!photo || !title || !description || !story) return setError("All fields are required");
+    if (tags.length === 0) return setError("At least one tag is required");
 
-  const formData = new FormData();
-  formData.append("photo", photo);
-  formData.append("title", title);
-  formData.append("description", description);
-  formData.append("story", story);
-  formData.append("tags", JSON.stringify(tags));
+    const formData = new FormData();
+    formData.append("photo", photo);
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("story", story);
+    formData.append("tags", JSON.stringify(tags));
 
-  try {
-    const res = await axios.post(`${API_BASE_URL}/posts`, formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
+    try {
+      const res = await apiClient.post('/posts', formData);
 
-    onSubmit(res.data);
-    onClose();
-  } catch (err) {
-    console.error(err);
-    setError(err.response?.data?.error || "Failed to submit post");
-  }
-};
+      onSubmit(res.data);
+      onClose();
+    } catch (err) {
+      console.error(err);
+      setError(err.response?.data?.error || "Failed to submit post");
+    }
+  };
 
   if (!open) return null;
 
@@ -71,7 +68,7 @@ const PostCreator = ({ open, onClose, onSubmit }) => {
       exit={{ opacity: 0 }}
     >
       <motion.div
-        className="bg-base-100 rounded-2xl shadow-2xl w-full max-w-lg relative p-6 md:p-8"
+        className="bg-base-100 rounded-2xl shadow-2xl w-full max-w-lg relative p-6 md:p-8 max-h-[90vh] overflow-y-auto"
         initial={{ scale: 0.9 }}
         animate={{ scale: 1 }}
         exit={{ scale: 0.9 }}

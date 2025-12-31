@@ -1,13 +1,14 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
+import apiClient from "../api/axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 // --- Configuration ---
 // The base URL for your backend API.
 // It's best practice to store this in a .env file for production.
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-const API_URL = `${API_BASE_URL}/users`;
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api/v1";
+const API_URL = `/users`; // use relative path against apiClient baseURL
 
 const AuthContext = createContext();
 
@@ -63,7 +64,7 @@ export const AuthProvider = ({ children }) => {
       const { confirmPassword, ...registerData } = formData;
 
       // Make the actual API call to your backend's register endpoint
-      const response = await axios.post(`${API_URL}/register`, registerData);
+      const response = await apiClient.post(`${API_URL}/register`, registerData);
 
       // The backend handles the success message, but we can still show a toast
       toast.success("Registration successful! Please wait for admin approval.");
@@ -84,7 +85,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password, selectedRole) => {
     try {
       console.log("hi", selectedRole);
-      const response = await axios.post(`${API_URL}/login`, {
+      const response = await apiClient.post(`${API_URL}/login`, {
         email,
         password,
       });
@@ -143,8 +144,38 @@ export const AuthProvider = ({ children }) => {
   };
 
   // You can build out these functions to make API calls as well
-  const updateProfile = (updates) => {
-    /* ... API call to a /profile/update endpoint ... */
+  const updateProfile = async (updates) => {
+    try {
+      // Only send allowed fields
+      const allowed = ['name', 'bio', 'specialization', 'avatar', 'interestedIn'];
+      const payload = {};
+      Object.keys(updates || {}).forEach((k) => {
+        if (allowed.includes(k)) payload[k] = updates[k];
+      });
+
+      if (Object.keys(payload).length === 0) {
+        throw new Error('No valid fields to update');
+      }
+
+      const response = await apiClient.patch(`${API_URL}/me`, payload);
+
+      const updatedUser = response.data?.data?.user || response.data?.user || null;
+      if (!updatedUser) {
+        toast.error('Failed to update profile');
+        throw new Error('Invalid update response');
+      }
+
+      // Update context and localStorage
+      setUser(updatedUser);
+      localStorage.setItem('archicanvas-user', JSON.stringify(updatedUser));
+
+      toast.success('Profile updated successfully');
+      return updatedUser;
+    } catch (error) {
+      const msg = error.response?.data?.message || error.message || 'Update failed';
+      toast.error(msg);
+      throw error;
+    }
   };
   const approveSeller = (sellerId) => {
     /* ... API call to an /admin/approve endpoint ... */

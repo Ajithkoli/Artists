@@ -9,12 +9,20 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 // Middleware
+app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.use(cors({ origin: true, credentials: true }));
+// Debug Middleware to log requests
+app.use((req, res, next) => {
+  console.log(`[${req.method}] ${req.url}`);
+  console.log("Headers Content-Type:", req.headers['content-type']);
+  console.log("Body:", req.body);
+  next();
+});
+
 app.use(express.static(path.join(__dirname, "public")));
 
 // Database connection
@@ -45,6 +53,10 @@ app.use("/api/v1/posts", require("./routes/PostCreator"));
 app.use("/api/v1/products", require("./routes/productRoutes"));
 
 app.use("/api/v1/communities", require("./routes/community.routes"));
+app.use("/api/v1/payment", require("./routes/payment.routes"));
+
+// AI proxy routes (server-side generative AI calls)
+app.use('/api/v1/ai', require('./routes/ai.routes'));
 
 // With your other app.use() calls
 app.use("/api/v1/admin", require("./routes/admin.routes.js"));

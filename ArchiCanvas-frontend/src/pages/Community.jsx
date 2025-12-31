@@ -4,10 +4,11 @@ import { Search, SlidersHorizontal, Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext'; // We'll use this to get the user role
 import CreateCommunity from '../components/createcommunity';
-import axios from 'axios'; // For making API calls
+import apiClient from '../api/axios'; // Centralized axios instance
 import toast from 'react-hot-toast';
 
-const API_URL = `${import.meta.env.VITE_API_BASE_URL}/communities`; // Your backend URL
+// Use relative path against apiClient base URL (handles fallback + credentials)
+const API_URL = `/communities`;
 
 const Community = () => {
     const [communities, setCommunities] = useState([]); // State to hold communities from the backend
@@ -23,11 +24,16 @@ const Community = () => {
             try {
                 setLoading(true);
                 // The auth token is sent automatically by the axios config in your AuthContext
-                const response = await axios.get(API_URL, {
-                    params: { search: searchTerm } ,
-                     withCredentials: true // Add search term as a query parameter
+                const response = await apiClient.get(API_URL, {
+                    params: { search: searchTerm }
                 });
-                setCommunities(response.data.data.communities);
+                const list = response?.data?.data?.communities;
+                if (Array.isArray(list)) {
+                    setCommunities(list);
+                } else {
+                    console.warn('Unexpected communities response shape:', response.data);
+                    setCommunities([]);
+                }
             } catch (error) {
                 toast.error('Failed to fetch communities.');
                 console.error("Fetch communities error:", error);

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import apiClient from '../api/axios'
 import { X } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -53,11 +53,7 @@ const ProductCreator = ({ open, onClose }) => {
       }
       formData.append("tags", JSON.stringify(tags));
 
-      const res = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/products`,
-        formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
+      const res = await apiClient.post(`/products`, formData);
 
       console.log("Uploaded:", res.data);
       onClose();
@@ -77,7 +73,7 @@ const ProductCreator = ({ open, onClose }) => {
       exit={{ opacity: 0 }}
     >
       <motion.div
-        className="bg-white rounded-2xl shadow-2xl w-full max-w-lg relative p-6 md:p-8"
+        className="bg-white rounded-2xl shadow-2xl w-full max-w-lg relative p-6 md:p-8 max-h-[90vh] overflow-y-auto"
         initial={{ scale: 0.9 }}
         animate={{ scale: 1 }}
         exit={{ scale: 0.9 }}

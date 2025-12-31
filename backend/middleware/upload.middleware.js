@@ -1,8 +1,17 @@
 // File: middleware/upload.middleware.js
 const multer = require("multer");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const cloudinary = require("../config/cloudinary");
 
-// Configure Multer to save uploaded files to a temporary 'uploads/' directory
-const upload = multer({ dest: "uploads/" });
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: "archicanvas", // The folder in Cloudinary
+        allowed_formats: ["jpg", "png", "jpeg", "webp"],
+    },
+});
 
-// We export the middleware for a single file upload with the field name 'image'
+const upload = multer({ storage: storage });
+
 module.exports = upload.single("image");
+

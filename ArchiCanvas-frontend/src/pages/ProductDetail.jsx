@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { 
-  Heart, 
-  Share2, 
-  MessageCircle, 
-  Star, 
-  Eye, 
-  ShoppingCart, 
+import {
+  Heart,
+  Share2,
+  MessageCircle,
+  Star,
+  Eye,
+  ShoppingCart,
   DollarSign,
   Sparkles,
   ChevronLeft,
@@ -16,8 +16,11 @@ import {
   Check
 } from 'lucide-react'
 import toast from 'react-hot-toast'
+import { useCart } from '../contexts/CartContext';
+import Bynow from './popup_function';
 
 const ProductDetail = () => {
+  const { addToCart } = useCart();
   const { id } = useParams()
   const [product, setProduct] = useState(null)
   const [selectedImage, setSelectedImage] = useState(0)
@@ -27,46 +30,36 @@ const ProductDetail = () => {
   const [isGenerating, setIsGenerating] = useState(false)
   const [copied, setCopied] = useState(false)
 
-  // Mock product data
   useEffect(() => {
-    const mockProduct = {
-      id: parseInt(id),
-      title: "Abstract Harmony",
-      artist: "Sarah Artist",
-      price: 2500,
-      images: [
-        "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=800&h=800&fit=crop",
-        "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=800&fit=crop",
-        "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=800&fit=crop"
-      ],
-      category: "Painting",
-      rating: 4.8,
-      likes: 156,
-      views: 1200,
-      tags: ["Abstract", "Contemporary", "Colorful", "Expressionism"],
-      description: "A vibrant abstract painting that explores the harmony between contrasting colors and dynamic brushstrokes. This piece represents the artist's journey through emotional landscapes, where each stroke tells a story of inner discovery and artistic evolution.",
-      dimensions: "36\" x 48\"",
-      medium: "Acrylic on Canvas",
-      year: "2024",
-      story: "This artwork was inspired by a transformative period in the artist's life, where she discovered the power of color to express complex emotions. The piece evolved over several months, with each layer representing a different phase of personal growth.",
-      reviews: [
-        {
-          id: 1,
-          user: "Art Collector",
-          rating: 5,
-          comment: "Absolutely stunning piece! The colors are so vibrant and the composition is perfect.",
-          date: "2024-01-15"
-        },
-        {
-          id: 2,
-          user: "Gallery Owner",
-          rating: 4,
-          comment: "Beautiful work with great technique. The artist has a unique style.",
-          date: "2024-01-10"
+    const fetchProduct = async () => {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/products/${id}`);
+        const data = await response.json();
+
+        if (data.product) {
+          const p = data.product;
+          setProduct({
+            ...p,
+            images: p.images || (p.photo ? [p.photo.startsWith('http') ? p.photo : `${import.meta.env.VITE_API_BASE_URL}/watermark${p.photo}`] : []),
+            artist: p.user?.name || 'Artist',
+            tags: p.tags || [],
+            reviews: p.reviews || [],
+            rating: p.rating || 4.5,
+            views: p.views || 0,
+            likes: p.likes || 0,
+            dimensions: p.dimensions || "Unknown",
+            medium: p.medium || "Digital",
+            year: p.year || "2024",
+            story: p.story || "No story provided.",
+          });
         }
-      ]
-    }
-    setProduct(mockProduct)
+      } catch (error) {
+        console.error("Error fetching product:", error);
+        toast.error("Failed to load product details");
+      }
+    };
+
+    if (id) fetchProduct();
   }, [id])
 
   const handleLike = () => {
@@ -82,7 +75,6 @@ const ProductDetail = () => {
         url: window.location.href
       })
     } catch (error) {
-      // Fallback to copying URL
       navigator.clipboard.writeText(window.location.href)
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
@@ -92,11 +84,11 @@ const ProductDetail = () => {
 
   const generateAIDescription = async () => {
     setIsGenerating(true)
-    // Simulate AI API call
     await new Promise(resolve => setTimeout(resolve, 2000))
-    
-    const aiText = `"Abstract Harmony" is a masterful exploration of chromatic relationships and emotional depth. The artist employs a sophisticated palette of complementary and analogous colors to create visual tension and resolution. The dynamic brushwork demonstrates advanced technical skill, with each stroke contributing to the overall narrative of balance and contrast. This contemporary abstract piece successfully bridges traditional painting techniques with modern artistic sensibilities, making it a compelling addition to any serious art collection.`
-    
+
+    // In a real app, you would call your AI endpoint here
+    const aiText = `"Abstract Harmony" is a masterful exploration of chromatic relationships and emotional depth. The artist employs a sophisticated palette of complementary and analogous colors to create visual tension and resolution. The dynamic brushwork demonstrates advanced technical skill, with each stroke contributing to the overall narrative of balance and contrast.`
+
     setAiDescription(aiText)
     setShowAI(true)
     setIsGenerating(false)
@@ -136,22 +128,17 @@ const ProductDetail = () => {
               transition={{ duration: 0.6 }}
               className="relative"
             >
-              {/* Main Image */}
               <div className="relative rounded-xl overflow-hidden bg-base-200 mb-4">
                 <img
                   src={product.images[selectedImage]}
                   alt={product.title}
                   className="w-full h-96 lg:h-[500px] object-cover"
                 />
-                
-                {/* Watermark */}
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                   <div className="text-white/20 text-6xl font-bold select-none">
                     ArchiCanvas
                   </div>
                 </div>
-
-                {/* Navigation Arrows */}
                 {product.images.length > 1 && (
                   <>
                     <button
@@ -170,18 +157,16 @@ const ProductDetail = () => {
                 )}
               </div>
 
-              {/* Thumbnail Images */}
               {product.images.length > 1 && (
                 <div className="flex space-x-2">
                   {product.images.map((image, index) => (
                     <button
                       key={index}
                       onClick={() => setSelectedImage(index)}
-                      className={`w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${
-                        selectedImage === index 
-                          ? 'border-primary-500' 
-                          : 'border-base-300 hover:border-primary-300'
-                      }`}
+                      className={`w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${selectedImage === index
+                        ? 'border-primary-500'
+                        : 'border-base-300 hover:border-primary-300'
+                        }`}
                     >
                       <img
                         src={image}
@@ -202,7 +187,6 @@ const ProductDetail = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="space-y-6"
           >
-            {/* Header */}
             <div>
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm text-primary-600 font-medium">
@@ -214,34 +198,32 @@ const ProductDetail = () => {
                   <span className="text-base-content/70">({product.reviews.length} reviews)</span>
                 </div>
               </div>
-              
+
               <h1 className="text-3xl lg:text-4xl font-serif font-bold text-base-content mb-2">
                 {product.title}
               </h1>
-              
+
               <p className="text-lg text-base-content/70">
                 by <span className="text-primary-600 font-medium">{product.artist}</span>
               </p>
             </div>
 
-            {/* Price and Actions */}
             <div className="flex items-center justify-between">
               <div className="text-3xl font-bold text-primary-600">
-                ${product.price.toLocaleString()}
+                ${product.price ? product.price.toLocaleString() : '0'}
               </div>
-              
+
               <div className="flex items-center space-x-3">
                 <button
                   onClick={handleLike}
-                  className={`p-3 rounded-lg transition-colors ${
-                    isLiked 
-                      ? 'bg-red-100 text-red-600 dark:bg-red-900/20' 
-                      : 'bg-base-200 hover:bg-base-300'
-                  }`}
+                  className={`p-3 rounded-lg transition-colors ${isLiked
+                    ? 'bg-red-100 text-red-600 dark:bg-red-900/20'
+                    : 'bg-base-200 hover:bg-base-300'
+                    }`}
                 >
                   <Heart className={`w-5 h-5 ${isLiked ? 'fill-current' : ''}`} />
                 </button>
-                
+
                 <button
                   onClick={handleShare}
                   className="p-3 rounded-lg bg-base-200 hover:bg-base-300 transition-colors"
@@ -251,7 +233,6 @@ const ProductDetail = () => {
               </div>
             </div>
 
-            {/* Quick Stats */}
             <div className="flex items-center space-x-6 text-sm text-base-content/70">
               <div className="flex items-center space-x-1">
                 <Eye className="w-4 h-4" />
@@ -263,25 +244,26 @@ const ProductDetail = () => {
               </div>
             </div>
 
-            {/* Purchase Button */}
-            <button className="btn-primary w-full py-4 text-lg flex items-center justify-center">
-              <ShoppingCart className="w-5 h-5 mr-2" />
-              Purchase Artwork
-            </button>
+            {/* Buttons */}
+            <div className="flex flex-col gap-3">
+              <Bynow selectedProduct={product} />
 
-            {/* Donate Button */}
-            <button className="btn-outline w-full py-4 text-lg flex items-center justify-center">
-              <DollarSign className="w-5 h-5 mr-2" />
-              Support Artist
-            </button>
+              <button
+                onClick={() => addToCart(product)}
+                className="btn btn-primary w-full py-4 text-lg flex items-center justify-center uppercase font-bold tracking-wider text-white"
+              >
+                <ShoppingCart className="w-5 h-5 mr-2" />
+                Add to Cart
+              </button>
+            </div>
 
-            {/* AI Rewrite Feature */}
+            {/* AI Section */}
             <div className="p-4 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 rounded-lg border border-purple-200 dark:border-purple-800">
               <div className="flex items-center space-x-2 mb-3">
                 <Sparkles className="w-5 h-5 text-purple-600" />
                 <span className="font-medium text-purple-700 dark:text-purple-300">AI-Powered Description</span>
               </div>
-              
+
               {!showAI ? (
                 <button
                   onClick={generateAIDescription}
@@ -315,7 +297,7 @@ const ProductDetail = () => {
               )}
             </div>
 
-            {/* Product Details */}
+            {/* Details Grid */}
             <div className="space-y-4">
               <h3 className="text-lg font-semibold text-base-content">Details</h3>
               <div className="grid grid-cols-2 gap-4 text-sm">
@@ -355,27 +337,20 @@ const ProductDetail = () => {
           </motion.div>
         </div>
 
-        {/* Description and Story */}
+        {/* Lower Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
           className="mt-16 space-y-8"
         >
-          {/* Description */}
           <div>
             <h2 className="text-2xl font-serif font-bold text-base-content mb-4">Description</h2>
-            <p className="text-base-content/80 leading-relaxed text-lg">
-              {product.description}
-            </p>
+            <p className="text-base-content/80 leading-relaxed text-lg">{product.description}</p>
           </div>
-
-          {/* Artist's Story */}
           <div>
             <h2 className="text-2xl font-serif font-bold text-base-content mb-4">Artist's Story</h2>
-            <p className="text-base-content/80 leading-relaxed text-lg">
-              {product.story}
-            </p>
+            <p className="text-base-content/80 leading-relaxed text-lg">{product.story}</p>
           </div>
         </motion.div>
 
@@ -395,7 +370,6 @@ const ProductDetail = () => {
               Write Review
             </button>
           </div>
-
           <div className="space-y-4">
             {product.reviews.map((review, index) => (
               <motion.div
@@ -412,9 +386,7 @@ const ProductDetail = () => {
                       {[...Array(5)].map((_, i) => (
                         <Star
                           key={i}
-                          className={`w-4 h-4 ${
-                            i < review.rating ? 'text-yellow-500 fill-current' : 'text-base-content/30'
-                          }`}
+                          className={`w-4 h-4 ${i < review.rating ? 'text-yellow-500 fill-current' : 'text-base-content/30'}`}
                         />
                       ))}
                     </div>

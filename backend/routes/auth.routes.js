@@ -7,6 +7,9 @@ router.post('/register', authController.register);
 router.post('/login', authController.login);
 router.get('/my-badges', isAuthenticatedUser, authController.getMyBadges);
 
+// Update current user's profile
+router.patch('/me', isAuthenticatedUser, authController.updateProfile);
+
 // You would also have your login route here
 // router.post('/login', authController.login);
 

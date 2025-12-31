@@ -1,7 +1,3 @@
-// File: controllers/artwork.controller.js
-const { addWatermark } = require("../utils/watermark");
-const path = require("path");
-const fs = require("fs");
 const User = require("../models/user.model");
 
 const uploadArtwork = async (req, res) => {
@@ -12,13 +8,12 @@ const uploadArtwork = async (req, res) => {
 
     const artistName = req.body.username || "Anonymous Artist";
     const watermarkText = `© ${artistName}`;
+    const encodedText = encodeURIComponent(watermarkText);
 
-    const originalTempPath = req.file.path;
-    const finalFileName = `watermarked-${Date.now()}.png`;
-    const finalPath = path.join(__dirname, "..", "public", finalFileName);
-
-    await addWatermark(originalTempPath, finalPath, watermarkText);
-    fs.unlinkSync(originalTempPath);
+    // Construction of watermarked URL via Cloudinary transformations
+    const urlParts = req.file.path.split('/upload/');
+    const transformation = `l_text:Arial_80_bold:${encodedText},o_30,g_center/`;
+    const finalUrl = `${urlParts[0]}/upload/${transformation}${urlParts[1]}`;
 
     // Update artworkCount and badges for artist
     if (req.body.userId) {
@@ -32,7 +27,7 @@ const uploadArtwork = async (req, res) => {
 
     res.status(200).json({
       message: "File uploaded and watermarked successfully!",
-      imageUrl: `/images/${finalFileName}`,
+      imageUrl: finalUrl,
     });
   } catch (error) {
     console.error("Error during upload:", error);
@@ -41,3 +36,4 @@ const uploadArtwork = async (req, res) => {
 };
 
 module.exports = { uploadArtwork };
+

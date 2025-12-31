@@ -101,3 +101,33 @@ exports.getMyBadges = async (req, res, next) => {
     next(error);
   }
 };
+
+// Update logged-in user's profile (name, bio, specialization, avatar URL, etc.)
+exports.updateProfile = async (req, res, next) => {
+  try {
+    const userId = req.user._id;
+
+    // Prevent role changes or sensitive fields from being updated here
+    const allowedFields = ['name', 'bio', 'specialization', 'avatar', 'interestedIn'];
+    const updates = {};
+    Object.keys(req.body || {}).forEach((key) => {
+      if (allowedFields.includes(key)) updates[key] = req.body[key];
+    });
+
+    if (Object.keys(updates).length === 0) {
+      return res.status(400).json({ success: false, message: 'No valid fields provided to update.' });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(userId, updates, {
+      new: true,
+      runValidators: true,
+      select: '-password'
+    });
+
+    if (!updatedUser) return next(new ErrorHandler('User not found', 404));
+
+    res.status(200).json({ success: true, data: { user: updatedUser } });
+  } catch (error) {
+    next(error);
+  }
+};

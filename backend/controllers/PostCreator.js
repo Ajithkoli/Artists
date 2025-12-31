@@ -10,7 +10,7 @@ const createPost = async (req, res) => {
     }
 
     const post = new Post({
-      photoUrl: `/upload/${req.file.filename}`,
+      photoUrl: req.file.path,
       title,
       description,
       story,
@@ -45,4 +45,4 @@ const getPostById = async (req, res) => {
   }
 };
 
-module.exports = { createPost, getPosts ,getPostById};
+module.exports = { createPost, getPosts, getPostById };

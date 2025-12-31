@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import axios from 'axios'
+import apiClient from '../api/axios'
 import { Star, Heart, Eye, ShoppingCart } from 'lucide-react'
 import { FileText, LayoutGrid } from 'lucide-react'
 
@@ -16,10 +16,9 @@ const Explore = () => {
     const fetchPosts = async () => {
       try {
         setLoading(true)
-        const res = await axios.get(
-          `${import.meta.env.VITE_API_BASE_URL}/posts`
-        )
-        setPosts(res.data || []) // backend returns array of posts
+        const res = await apiClient.get('/posts')
+        // backend returns { data: [...posts] } or array; handle both
+        setPosts(res.data?.data || res.data || [])
       } catch (err) {
         console.error(err)
         setError("Failed to load posts. Please try again later.")
@@ -34,7 +33,7 @@ const Explore = () => {
     return () => clearInterval(interval);
   }, [])
   //const img = ;
-  console.log("hiii",posts)
+  console.log("hiii", posts)
 
   return (
     <div className="min-h-screen bg-base-100">
@@ -68,57 +67,57 @@ const Explore = () => {
           {posts
             .filter(post => post.title?.toLowerCase().includes(search.toLowerCase()))
             .map((post, index) => (
-            <motion.div
-              key={post._id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              whileHover={{ y: -8 }}
-              className="bg-base-100 rounded-xl overflow-hidden shadow-lg border border-base-300"
-            >
-              <div className="relative">
-                <img
-                    src={`${import.meta.env.VITE_API_BASE_URL}${post.photoUrl}`}
-                  alt={post.title}
-                  className="w-full h-64 object-cover"
-                />
-              </div>
-
-              <div className="p-6">
-                <h3 className="font-semibold text-lg mb-2">{post.title}</h3>
-                <p className="text-sm text-base-content/70 mb-2">
-                  {post.description}
-                </p>
-                <p className="text-sm text-base-content/50 mb-4">
-                  {post.story}
-                </p>
-
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {post.tags?.map((tag, i) => (
-                    <span
-                      key={i}
-                      className="px-2 py-1 bg-base-200 rounded-full text-xs"
-                    >
-                      #{tag}
-                    </span>
-                  ))}
+              <motion.div
+                key={post._id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                whileHover={{ y: -8 }}
+                className="bg-base-100 rounded-xl overflow-hidden shadow-lg border border-base-300"
+              >
+                <div className="relative">
+                  <img
+                    src={post.photoUrl?.startsWith('http') ? post.photoUrl : `${import.meta.env.VITE_API_BASE_URL}${post.photoUrl}`}
+                    alt={post.title}
+                    className="w-full h-64 object-cover"
+                  />
                 </div>
 
-                <Link
-                  to={`/posts/${post._id}`}
-                  className="btn-primary w-full flex items-center justify-center"
-                >
-                  <FileText className="w-4 h-4 mr-2" />
-                  View Post
-                </Link>
-                {/* View Type Icon Example (next to View Post) */}
-                <div className="mt-2 flex items-center justify-center text-base-content/70">
-                  <LayoutGrid className="w-4 h-4 mr-1" />
-                  View Type
+                <div className="p-6">
+                  <h3 className="font-semibold text-lg mb-2">{post.title}</h3>
+                  <p className="text-sm text-base-content/70 mb-2">
+                    {post.description}
+                  </p>
+                  <p className="text-sm text-base-content/50 mb-4">
+                    {post.story}
+                  </p>
+
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {post.tags?.map((tag, i) => (
+                      <span
+                        key={i}
+                        className="px-2 py-1 bg-base-200 rounded-full text-xs"
+                      >
+                        #{tag}
+                      </span>
+                    ))}
+                  </div>
+
+                  <Link
+                    to={`/posts/${post._id}`}
+                    className="btn-primary w-full flex items-center justify-center"
+                  >
+                    <FileText className="w-4 h-4 mr-2" />
+                    View Post
+                  </Link>
+                  {/* View Type Icon Example (next to View Post) */}
+                  <div className="mt-2 flex items-center justify-center text-base-content/70">
+                    <LayoutGrid className="w-4 h-4 mr-1" />
+                    View Type
+                  </div>
                 </div>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            ))}
         </div>
       )}
     </div>
