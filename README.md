@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # ArchiCanvas - Art & Architecture Marketplace
 
 A modern, responsive, and animated web application frontend for ArchiCanvas, a digital marketplace for art & architecture. Built with React, Vite, TailwindCSS, DaisyUI, and Framer Motion.
@@ -260,3 +261,6 @@ For support and questions:
 *Built with ❤ by the ArchiCanvas Team*
 
 Where Art Meets Architecture
+=======
+# Artists
+>>>>>>> 41cd3cad404a765a1e492cc55d54d04ec0cd76a7
