@@ -1,0 +1,43 @@
+services:
+  - type: web
+    name: crafto-backend
+    env: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 5000
+      - key: NODE_ENV
+        value: production
+      - key: DB_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: COOKIE_LOGIN_EXPIRES
+        value: 864000000
+      - key: SMPT_HOST
+        sync: false
+      - key: SMPT_PORT
+        value: 587
+      - key: SMPT_USER
+        sync: false
+      - key: SMPT_PASSWORD
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: RAZORPAY_KEY_ID
+        sync: false
+      - key: RAZORPAY_KEY_SECRET
+        sync: false
+      - key: CLOUDINARY_CLOUD_NAME
+        value: dkb31wtsy
+      - key: CLOUDINARY_API_KEY
+        value: "441492238815243"
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
