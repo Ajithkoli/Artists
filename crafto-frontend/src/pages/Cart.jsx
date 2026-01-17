@@ -1,13 +1,109 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useCart } from '../contexts/CartContext';
 import { Trash2, ArrowLeft } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import Bynow from './popup_function';
+import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '../contexts/AuthContext';
+import apiClient from '../api/axios';
+import toast from 'react-hot-toast';
 
 const Cart = () => {
     const { t } = useTranslation();
     const { cart, removeFromCart, clearCart, cartTotal } = useCart();
+    const { user, isAuthenticated } = useAuth();
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+
+    // Helper to load Razorpay SDK dynamically
+    const loadRazorpay = () => {
+        return new Promise((resolve) => {
+            const script = document.createElement('script');
+            script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+            script.onload = () => resolve(true);
+            script.onerror = () => resolve(false);
+            document.body.appendChild(script);
+        });
+    };
+
+    const handleCheckout = async () => {
+        if (!isAuthenticated) {
+            toast.error(t('view_post.comment_login') || "Please login to checkout");
+            return;
+        }
+
+        setLoading(true);
+
+        try {
+            // 1. Load Razorpay SDK
+            const isLoaded = await loadRazorpay();
+            if (!isLoaded) {
+                toast.error("Razorpay SDK failed to load. Are you online?");
+                setLoading(false);
+                return;
+            }
+
+            // 2. Create Order on Backend
+            const { data: { order } } = await apiClient.post("/payment/process-cart",
+                { items: cart },
+                { headers: { 'Content-Type': 'application/json' } }
+            );
+
+            // 3. Get Key ID
+            const { data: { key } } = await apiClient.get("/payment/razorpaykey");
+
+            // 4. Configure Razorpay Options
+            const options = {
+                key: key,
+                amount: order.amount,
+                currency: "INR",
+                name: "Crafto",
+                description: `Payment for ${cart.length} items`,
+                image: "https://via.placeholder.com/150",
+                order_id: order.id,
+                handler: async function (response) {
+                    try {
+                        // 5. Verify Payment on Backend
+                        const verifyUrl = "/payment/verify-cart";
+                        await apiClient.post(verifyUrl, {
+                            items: cart,
+                            razorpayOrderId: response.razorpay_order_id,
+                            razorpayPaymentId: response.razorpay_payment_id,
+                            razorpaySignature: response.razorpay_signature,
+                        });
+
+                        toast.success("Payment Successful! Orders placed.");
+                        clearCart();
+                        navigate('/profile'); // Redirect to profile to see orders
+
+                    } catch (error) {
+                        console.error("Payment verification failed", error);
+                        toast.error("Payment verification failed. Please contact support.");
+                    }
+                },
+                prefill: {
+                    name: user?.name || "",
+                    email: user?.email || "",
+                    contact: ""
+                },
+                theme: {
+                    color: "#3399cc"
+                }
+            };
+
+            const rzp = new window.Razorpay(options);
+            rzp.on('payment.failed', function (response) {
+                toast.error(response.error.description || "Payment Failed");
+            });
+            rzp.open();
+
+        } catch (error) {
+            console.error("Checkout error:", error);
+            const msg = error.response?.data?.message || "Could not initiate checkout.";
+            toast.error(msg);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     if (cart.length === 0) {
         return (
@@ -80,23 +176,18 @@ const Cart = () => {
                             <span>${cartTotal}</span>
                         </div>
 
-                        {/* 
-                            Note: The current 'Bynow' (Razorpay) component only handles SINGLE products based on ID.
-                            For now, since we haven't refactored the backend to accept 'Cart Orders',
-                            we will prompt the user that Bulk Checkout is coming soon, or we can iterate.
-                            
-                            Temporary Limit: Cart Checkout not fully supported by backend payment controller (single product expected).
-                            We will just show a button that says "Checkout" and maybe alerts.
-                            
-                            Actually, let's just reuse Bynow for the FIRST item if there is only one, 
-                            or disable it if multiple for this MVP step.
-                        */}
-                        <button className="btn btn-primary w-full" disabled>
-                            {t('cart.checkout')}
+                        <button
+                            className="btn btn-primary w-full"
+                            onClick={handleCheckout}
+                            disabled={loading}
+                        >
+                            {loading ? (
+                                <>
+                                    <span className="loading loading-spinner loading-xs mr-2"></span>
+                                    {t('cart.processing') || "Processing..."}
+                                </>
+                            ) : t('cart.checkout')}
                         </button>
-                        <p className="text-xs text-gray-400 mt-2 text-center">
-                            {t('cart.limit_note')}
-                        </p>
                     </div>
                 </div>
             </div>

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useAuth } from '../contexts/AuthContext'
 import {
@@ -24,6 +24,8 @@ import PostCreator from '../components/PostCreator'
 import UploadProduct from '../components/UploadProduct'
 import toast from 'react-hot-toast'
 import Badges from './Badges'
+import apiClient from '../api/axios'
+import { useNavigate } from 'react-router-dom'
 
 const Profile = () => {
   const { t } = useTranslation()
@@ -37,6 +39,35 @@ const Profile = () => {
     bio: user?.bio || '',
     specialization: user?.specialization || ''
   })
+  const [orderStats, setOrderStats] = useState({ buyerCount: 0, sellerCount: 0 })
+  const [myArtworks, setMyArtworks] = useState([])
+  const [myOrders, setMyOrders] = useState([])
+  const [activeTab, setActiveTab] = useState('activity') // 'activity', 'artworks', 'orders'
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [statsRes, artworksRes, ordersRes] = await Promise.all([
+          apiClient.get('/payment/stats'),
+          apiClient.get('/payment/my-artworks'),
+          apiClient.get('/payment/my-orders')
+        ])
+
+        if (statsRes.data.success) {
+          setOrderStats({
+            buyerCount: statsRes.data.buyerCount,
+            sellerCount: statsRes.data.sellerCount
+          })
+        }
+        if (artworksRes.data.success) setMyArtworks(artworksRes.data.artworks)
+        if (ordersRes.data.success) setMyOrders(ordersRes.data.orders)
+      } catch (error) {
+        console.error("Failed to fetch profile data:", error)
+      }
+    }
+    if (user) fetchData()
+  }, [user])
 
   const handleSave = async () => {
     try {
@@ -64,8 +95,10 @@ const Profile = () => {
   }
 
   const stats = [
-    { label: t('profile.stats.artworks'), value: user?.artworkCount || 10, icon: Palette, color: 'text-primary-600' },
-    { label: t('profile.stats.collections'), value: '12', icon: BookOpen, color: 'text-success-600' }
+    { label: t('profile.stats.artworks'), value: user?.artworkCount || 0, icon: Palette, color: 'text-primary-600' },
+    { label: t('profile.stats.purchases') || t('cart.title'), value: orderStats.buyerCount, icon: ShoppingBag, color: 'text-success-600' },
+    { label: t('profile.stats.collections') || 'Sales', value: orderStats.sellerCount, icon: BookOpen, color: 'text-blue-600' },
+    { label: t('profile.stats.communities') || 'Communities', value: 3, icon: Users, color: 'text-purple-600' }
   ]
 
   const recentActivity = [
@@ -314,28 +347,108 @@ const Profile = () => {
               </div>
             )}
 
-            {/* Recent Activity */}
-            <div className="bg-base-100 rounded-2xl border border-base-300 p-6">
-              <h3 className="text-xl font-semibold text-base-content mb-4">
+            {/* Tabs */}
+            <div className="flex space-x-4 border-b border-base-300">
+              <button
+                onClick={() => setActiveTab('activity')}
+                className={`pb-4 px-4 font-medium transition-colors relative ${activeTab === 'activity' ? 'text-primary-600' : 'text-base-content/50'}`}
+              >
                 {t('profile.recent')}
-              </h3>
-              <div className="space-y-4">
-                {recentActivity.map((activity, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.5, delay: 0.1 * index }}
-                    className="flex items-center space-x-3 p-3 rounded-lg hover:bg-base-200 transition-colors"
-                  >
-                    {getActivityIcon(activity.type)}
-                    <div className="flex-1">
-                      <p className="text-sm text-base-content">{activity.text}</p>
-                      <p className="text-xs text-base-content/50">{activity.time}</p>
+                {activeTab === 'activity' && <motion.div layoutId="activeTab" className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-600" />}
+              </button>
+              <button
+                onClick={() => setActiveTab('artworks')}
+                className={`pb-4 px-4 font-medium transition-colors relative ${activeTab === 'artworks' ? 'text-primary-600' : 'text-base-content/50'}`}
+              >
+                {t('profile.stats.artworks')}
+                {activeTab === 'artworks' && <motion.div layoutId="activeTab" className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-600" />}
+              </button>
+              <button
+                onClick={() => setActiveTab('orders')}
+                className={`pb-4 px-4 font-medium transition-colors relative ${activeTab === 'orders' ? 'text-primary-600' : 'text-base-content/50'}`}
+              >
+                {t('profile.actions.purchases')}
+                {activeTab === 'orders' && <motion.div layoutId="activeTab" className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-600" />}
+              </button>
+            </div>
+
+            {/* Tab Content */}
+            <div className="space-y-8">
+              {activeTab === 'activity' && (
+                <div className="bg-base-100 rounded-2xl border border-base-300 p-6">
+                  <div className="space-y-4">
+                    {recentActivity.map((activity, index) => (
+                      <motion.div
+                        key={index}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.5, delay: 0.1 * index }}
+                        className="flex items-center space-x-3 p-3 rounded-lg hover:bg-base-200 transition-colors"
+                      >
+                        {getActivityIcon(activity.type)}
+                        <div className="flex-1">
+                          <p className="text-sm text-base-content">{activity.text}</p>
+                          <p className="text-xs text-base-content/50">{activity.time}</p>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'artworks' && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {myArtworks.length > 0 ? (
+                    myArtworks.map((artwork) => (
+                      <div key={artwork._id} className="bg-base-100 rounded-xl overflow-hidden border border-base-300 group">
+                        <div className="aspect-square overflow-hidden">
+                          <img
+                            src={artwork.photo?.startsWith('http') ? artwork.photo : `${apiClient.defaults.baseURL}${artwork.photo}`}
+                            alt={artwork.title}
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                          />
+                        </div>
+                        <div className="p-4">
+                          <h4 className="font-bold text-base-content">{artwork.title}</h4>
+                          <p className="text-primary-600 font-bold">${artwork.price}</p>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="col-span-2 text-center py-12 text-base-content/50 italic">
+                      No artworks uploaded yet.
                     </div>
-                  </motion.div>
-                ))}
-              </div>
+                  )}
+                </div>
+              )}
+
+              {activeTab === 'orders' && (
+                <div className="space-y-4">
+                  {myOrders.length > 0 ? (
+                    myOrders.map((order) => (
+                      <div key={order._id} className="flex items-center gap-4 bg-base-100 p-4 rounded-xl border border-base-300">
+                        <img
+                          src={order.product?.photo?.startsWith('http') ? order.product.photo : `${apiClient.defaults.baseURL}${order.product?.photo}`}
+                          alt={order.product?.title}
+                          className="w-16 h-16 rounded-lg object-cover"
+                        />
+                        <div className="flex-1">
+                          <h4 className="font-bold text-base-content">{order.product?.title}</h4>
+                          <p className="text-xs text-base-content/50">Bought from {order.seller?.name}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-bold text-primary-600">${order.amount}</p>
+                          <p className="text-[10px] uppercase font-bold text-success-600">{order.paymentStatus}</p>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-center py-12 text-base-content/50 italic">
+                      You haven't purchased anything yet.
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
             {/* Quick Actions */}
@@ -343,23 +456,44 @@ const Profile = () => {
               <h3 className="text-xl font-semibold text-base-content mb-4">
                 {t('profile.quick')}
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <button className="p-4 border border-base-300 rounded-lg hover:bg-base-200 transition-colors text-left">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <button
+                  onClick={() => setShowUploadProductModal(true)}
+                  className="p-4 border border-base-300 rounded-lg hover:bg-base-200 transition-colors text-left"
+                >
                   <div className="flex items-center space-x-3">
                     <div className="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
-                      <Heart className="w-5 h-5 text-primary-600" />
+                      <Plus className="w-5 h-5 text-primary-600" />
                     </div>
                     <div>
-                      <div className="font-medium text-base-content">{t('profile.actions.favorites')}</div>
-                      <div className="text-sm text-base-content/70">{t('profile.actions.favorites_desc')}</div>
+                      <div className="font-medium text-base-content">{t('upload_artwork.title') || 'New Artwork'}</div>
+                      <div className="text-sm text-base-content/70">Upload your work</div>
                     </div>
                   </div>
                 </button>
 
-                <button className="p-4 border border-base-300 rounded-lg hover:bg-base-200 transition-colors text-left">
+                <button
+                  onClick={() => setShowPostModal(true)}
+                  className="p-4 border border-base-300 rounded-lg hover:bg-base-200 transition-colors text-left"
+                >
                   <div className="flex items-center space-x-3">
                     <div className="w-10 h-10 bg-secondary-100 rounded-lg flex items-center justify-center">
-                      <ShoppingBag className="w-5 h-5 text-secondary-600" />
+                      <Edit3 className="w-5 h-5 text-secondary-600" />
+                    </div>
+                    <div>
+                      <div className="font-medium text-base-content">{t('post_creator.title') || 'New Post'}</div>
+                      <div className="text-sm text-base-content/70">Share your journey</div>
+                    </div>
+                  </div>
+                </button>
+
+                <button
+                  onClick={() => setActiveTab('orders')}
+                  className="p-4 border border-base-300 rounded-lg hover:bg-base-200 transition-colors text-left"
+                >
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-accent-100 rounded-lg flex items-center justify-center">
+                      <ShoppingBag className="w-5 h-5 text-accent-600" />
                     </div>
                     <div>
                       <div className="font-medium text-base-content">{t('profile.actions.purchases')}</div>
@@ -368,10 +502,13 @@ const Profile = () => {
                   </div>
                 </button>
 
-                <button className="p-4 border border-base-300 rounded-lg hover:bg-base-200 transition-colors text-left">
+                <button
+                  onClick={() => navigate('/learn')}
+                  className="p-4 border border-base-300 rounded-lg hover:bg-base-200 transition-colors text-left"
+                >
                   <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-accent-100 rounded-lg flex items-center justify-center">
-                      <BookOpen className="w-5 h-5 text-accent-600" />
+                    <div className="w-10 h-10 bg-info-100 rounded-lg flex items-center justify-center">
+                      <BookOpen className="w-5 h-5 text-info-600" />
                     </div>
                     <div>
                       <div className="font-medium text-base-content">{t('profile.actions.courses')}</div>
@@ -380,7 +517,10 @@ const Profile = () => {
                   </div>
                 </button>
 
-                <button className="p-4 border border-base-300 rounded-lg hover:bg-base-200 transition-colors text-left">
+                <button
+                  onClick={() => navigate('/community')}
+                  className="p-4 border border-base-300 rounded-lg hover:bg-base-200 transition-colors text-left"
+                >
                   <div className="flex items-center space-x-3">
                     <div className="w-10 h-10 bg-success-100 rounded-lg flex items-center justify-center">
                       <Users className="w-5 h-5 text-success-600" />
@@ -443,6 +583,10 @@ const Profile = () => {
           </motion.div>
         </div>
       </div>
+
+      {/* Modals */}
+      <PostCreator open={showPostModal} onClose={() => setShowPostModal(false)} />
+      <UploadProduct open={showUploadProductModal} onClose={() => setShowUploadProductModal(false)} />
     </div>
   )
 }
