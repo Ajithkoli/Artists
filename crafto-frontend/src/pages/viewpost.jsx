@@ -25,9 +25,10 @@ const ViewPost = () => {
       try {
         setLoading(true);
         const res = await apiClient.get(`/explore/${id}`);
-        setPost(res.data);
-        if (user) {
-          setIsLiked(res.data.likes?.some(l => (l._id || l) === user._id));
+        const receivedPost = res.data?.post || res.data;
+        setPost(receivedPost);
+        if (user && receivedPost) {
+          setIsLiked(receivedPost.likes?.some(l => (l._id || l) === user._id));
         }
       } catch (err) {
         setError(t('view_post.load_fail'));

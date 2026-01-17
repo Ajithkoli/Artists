@@ -20,8 +20,9 @@ const Explore = () => {
       try {
         setLoading(true)
         const res = await apiClient.get('/explore')
-        // backend returns { data: [...posts] } or array; handle both
-        setPosts(res.data?.data || res.data || [])
+        // backend returns { success: true, posts: [...] }
+        const receivedPosts = res.data?.posts || res.data?.data || (Array.isArray(res.data) ? res.data : []);
+        setPosts(receivedPosts);
       } catch (err) {
         console.error(err)
         setError(t('explore.error.desc'))
