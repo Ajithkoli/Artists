@@ -24,7 +24,6 @@ import PostCreator from '../components/PostCreator'
 import UploadProduct from '../components/UploadProduct'
 import toast from 'react-hot-toast'
 import Badges from './Badges'
-import { useTranslation } from 'react-i18next'
 
 const Profile = () => {
   const { t } = useTranslation()
