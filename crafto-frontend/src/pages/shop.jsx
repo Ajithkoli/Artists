@@ -36,10 +36,16 @@ const Shop = () => {
         fetchProducts();
     }, []);
 
-    const filteredProducts = products.filter(p =>
-        p.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.description?.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const filteredProducts = products.filter(p => {
+        const search = searchTerm.toLowerCase();
+        return (
+            p.title?.toLowerCase().includes(search) ||
+            p.description?.toLowerCase().includes(search) ||
+            p.origin?.toLowerCase().includes(search) ||
+            p.user?.name?.toLowerCase().includes(search) ||
+            p.tags?.some(tag => tag.toLowerCase().includes(search))
+        );
+    });
 
     if (loading) return (
         <div className="flex justify-center items-center h-[60vh]">
@@ -61,7 +67,7 @@ const Shop = () => {
                 <div className="flex items-center gap-6 w-full md:w-auto">
                     {/* Search */}
                     <div className="relative flex-grow md:flex-grow-0 md:w-96 group">
-                        <div className="absolute inset-0 bg-primary-500/10 blur-xl opacity-0 group-focus-within:opacity-100 transition-opacity rounded-xl"></div>
+                        <div className="absolute inset-0 bg-primary-500/10 blur-xl opacity-0 group-focus-within:opacity-100 transition-opacity rounded-xl pointer-events-none"></div>
                         <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-base-content/40 group-focus-within:text-primary-400 transition-colors" size={20} />
                         <input
                             type="text"
