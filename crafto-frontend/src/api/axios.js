@@ -1,8 +1,9 @@
 import axios from "axios";
 
 // Provide a fallback so baseURL is never 'undefined' and prevent malformed requests
+const baseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api/v1";
 const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api/v1",
+  baseURL: baseUrl.endsWith("/api/v1") ? baseUrl : `${baseUrl}/api/v1`,
   withCredentials: true,
 });
 
