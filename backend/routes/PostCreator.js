@@ -1,6 +1,13 @@
 const express = require("express");
-const { createPost, getPosts, getPostById } = require("../controllers/PostCreator");
+const {
+    createPost,
+    getPosts,
+    getPostById,
+    toggleLikePost,
+    addCommentToPost
+} = require("../controllers/PostCreator");
 const upload = require("../middleware/multur");
+const { isAuthenticatedUser } = require("../middleware/auth");
 
 const router = express.Router();
 
@@ -10,8 +17,7 @@ router.get("/:id", getPostById);
 router.post("/", isAuthenticatedUser, upload.single("photo"), createPost);
 
 // Engagement routes
-const { isAuthenticatedUser } = require("../middleware/auth");
-router.post("/:id/like", isAuthenticatedUser, require("../controllers/PostCreator").toggleLikePost);
-router.post("/:id/comment", isAuthenticatedUser, require("../controllers/PostCreator").addCommentToPost);
+router.post("/:id/like", isAuthenticatedUser, toggleLikePost);
+router.post("/:id/comment", isAuthenticatedUser, addCommentToPost);
 
 module.exports = router;
