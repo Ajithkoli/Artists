@@ -16,8 +16,12 @@ import {
   Users,
   Shield,
   Bell,
-  Globe
+  Globe,
+  Plus
 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+import PostCreator from '../components/PostCreator'
+import UploadProduct from '../components/UploadProduct'
 import toast from 'react-hot-toast'
 import Badges from './Badges'
 import { useTranslation } from 'react-i18next'
@@ -26,6 +30,8 @@ const Profile = () => {
   const { t } = useTranslation()
   const { user, updateProfile } = useAuth()
   const [isEditing, setIsEditing] = useState(false)
+  const [showPostModal, setShowPostModal] = useState(false)
+  const [showUploadProductModal, setShowUploadProductModal] = useState(false)
   const [showBadgesModal, setShowBadgesModal] = useState(false)
   const [editForm, setEditForm] = useState({
     name: user?.name || '',
@@ -223,10 +229,10 @@ const Profile = () => {
               {/* Badges */}
               <div className="mt-6 text-center">
                 <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${user?.role === 'admin'
-                    ? 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300'
-                    : user?.role === 'seller'
-                      ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300'
-                      : 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300'
+                  ? 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300'
+                  : user?.role === 'seller'
+                    ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300'
+                    : 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300'
                   }`}>
                   {user?.role === 'admin' && <Shield className="w-3 h-3 mr-1" />}
                   {user?.role === 'seller' && <Palette className="w-3 h-3 mr-1" />}

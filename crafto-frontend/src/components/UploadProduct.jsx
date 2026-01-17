@@ -71,20 +71,19 @@ const ProductCreator = ({ open, onClose }) => {
 
   return (
     <motion.div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
+      className="fixed inset-0 z-[100] grid place-items-center bg-black/70 backdrop-blur-sm p-4"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
       <motion.div
-        className="bg-white rounded-[32px] shadow-[0_32px_128px_-16px_rgba(0,0,0,0.5)] w-full max-w-lg relative p-8 md:p-10 max-h-[90vh] overflow-y-auto border-4 border-primary-600"
-        style={{ backgroundColor: 'white', opacity: 1, backdropFilter: 'none' }}
+        className="bg-base-100 text-base-content rounded-[32px] shadow-[0_32px_128px_-16px_rgba(0,0,0,0.5)] w-full max-w-lg relative p-8 md:p-10 max-h-[90vh] overflow-y-auto border-4 border-primary-600"
         initial={{ scale: 0.9, y: 20 }}
         animate={{ scale: 1, y: 0 }}
         exit={{ scale: 0.9, y: 20 }}
       >
         <button
-          className="absolute top-6 right-6 text-white/40 hover:text-white transition-colors"
+          className="absolute top-6 right-6 text-base-content/40 hover:text-base-content transition-colors z-[110]"
           onClick={onClose}
         >
           <X size={24} />
@@ -97,7 +96,7 @@ const ProductCreator = ({ open, onClose }) => {
           {/* Photo Upload */}
           <div className="space-y-3">
             <label className="block text-xs font-black uppercase tracking-widest text-base-content/40 ml-1">{t('upload.photo_label')}</label>
-            <div className={`relative group transition-all duration-300 ${!preview ? 'border-2 border-dashed border-white/10 hover:border-primary-500/30 rounded-2xl p-8 text-center' : ''}`}>
+            <div className={`relative group transition-all duration-300 ${!preview ? 'border-2 border-dashed border-base-content/10 hover:border-primary-500/30 rounded-2xl p-8 text-center' : ''}`}>
               {!preview ? (
                 <>
                   <input type="file" accept="image/*" onChange={handlePhotoChange} className="absolute inset-0 opacity-0 cursor-pointer z-10" />
@@ -107,7 +106,7 @@ const ProductCreator = ({ open, onClose }) => {
                   </div>
                 </>
               ) : (
-                <div className="relative rounded-2xl overflow-hidden border border-white/20 shadow-2xl">
+                <div className="relative rounded-2xl overflow-hidden border border-base-content/20 shadow-2xl">
                   <img src={preview} alt="Preview" className="w-full h-48 object-cover" />
                   <button
                     type="button"
@@ -172,9 +171,9 @@ const ProductCreator = ({ open, onClose }) => {
                 <label className="block text-xs font-black uppercase tracking-widest text-base-content/40 mb-2 ml-1">{t('upload.negotiable')}</label>
                 <div
                   onClick={() => setIsBiddable(!isBiddable)}
-                  className={`w-full h-[52px] cursor-pointer rounded-xl border border-white/10 flex items-center px-4 transition-all ${isBiddable ? 'bg-primary-500/20 border-primary-500/40' : 'bg-white/5'}`}
+                  className={`w-full h-[52px] cursor-pointer rounded-xl border border-base-content/10 flex items-center px-4 transition-all ${isBiddable ? 'bg-primary-500/20 border-primary-500/40' : 'bg-white/5'}`}
                 >
-                  <div className={`w-5 h-5 rounded-md border-2 mr-3 transition-all flex items-center justify-center ${isBiddable ? 'bg-primary-400 border-primary-400' : 'border-white/20'}`}>
+                  <div className={`w-5 h-5 rounded-md border-2 mr-3 transition-all flex items-center justify-center ${isBiddable ? 'bg-primary-400 border-primary-400' : 'border-base-content/20'}`}>
                     {isBiddable && <Check size={14} className="text-black" />}
                   </div>
                   <span className={`text-sm font-bold ${isBiddable ? 'text-primary-600' : 'text-slate-400'}`}>{t('upload.enable_bidding')}</span>

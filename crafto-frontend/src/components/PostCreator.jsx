@@ -62,20 +62,19 @@ const PostCreator = ({ open, onClose, onSubmit }) => {
 
   return (
     <motion.div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
+      className="fixed inset-0 z-[100] grid place-items-center bg-black/70 backdrop-blur-sm p-4"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
       <motion.div
-        className="bg-white rounded-[32px] shadow-[0_32px_128px_-16px_rgba(0,0,0,0.5)] w-full max-w-lg relative p-8 md:p-10 max-h-[90vh] overflow-y-auto border-4 border-primary-600"
-        style={{ backgroundColor: 'white', opacity: 1, backdropFilter: 'none' }}
+        className="bg-base-100 text-base-content rounded-[32px] shadow-[0_32px_128px_-16px_rgba(0,0,0,0.5)] w-full max-w-lg relative p-8 md:p-10 max-h-[90vh] overflow-y-auto border-4 border-primary-600"
         initial={{ scale: 0.9, y: 20 }}
         animate={{ scale: 1, y: 0 }}
         exit={{ scale: 0.9, y: 20 }}
       >
         <button
-          className="absolute top-6 right-6 text-white/40 hover:text-white transition-colors"
+          className="absolute top-6 right-6 text-base-content/40 hover:text-base-content transition-colors z-[110]"
           onClick={onClose}
         >
           <X size={24} />
@@ -87,7 +86,7 @@ const PostCreator = ({ open, onClose, onSubmit }) => {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-3">
             <label className="block text-xs font-black uppercase tracking-widest text-base-content/40 ml-1">Visual Asset</label>
-            <div className={`relative group transition-all duration-300 ${!preview ? 'border-2 border-dashed border-white/10 hover:border-primary-500/30 rounded-2xl p-8 text-center' : ''}`}>
+            <div className={`relative group transition-all duration-300 ${!preview ? 'border-2 border-dashed border-base-content/10 hover:border-primary-500/30 rounded-2xl p-8 text-center' : ''}`}>
               {!preview ? (
                 <>
                   <input type="file" accept="image/*" onChange={handlePhotoChange} className="absolute inset-0 opacity-0 cursor-pointer z-10" />
@@ -97,7 +96,7 @@ const PostCreator = ({ open, onClose, onSubmit }) => {
                   </div>
                 </>
               ) : (
-                <div className="relative rounded-2xl overflow-hidden border border-white/20 shadow-2xl">
+                <div className="relative rounded-2xl overflow-hidden border border-base-content/20 shadow-2xl">
                   <img src={preview} alt="Preview" className="w-full h-64 object-cover" />
                   <button
                     type="button"
