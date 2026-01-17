@@ -6,11 +6,13 @@ import { useTheme } from "../../contexts/ThemeContext";
 import { useCart } from "../../contexts/CartContext";
 import uploadproduct from "../UploadProduct";
 
+import { useTranslation } from "react-i18next";
 import {
   Menu,
   X,
   Sun,
   Moon,
+  Globe,
   Home,
   Search,
   Users,
@@ -34,13 +36,19 @@ const Navbar = () => {
   const { isDark, toggleTheme } = useTheme();
   const { cart } = useCart();
   const location = useLocation();
+  const { t, i18n } = useTranslation();
+
+  const toggleLanguage = () => {
+    const newLang = i18n.language === 'en' ? 'kn' : 'en';
+    i18n.changeLanguage(newLang);
+  };
 
   const navigation = [
-    { name: "Home", href: "/", icon: Home },
-    { name: "Explore", href: "/explore", icon: Search },
-    { name: "Community", href: "/community", icon: Users },
-    { name: "Shop", href: "/shop", icon: ShoppingBag },
-    { name: "About", href: "/about", icon: Info },
+    { name: t('navbar.home'), href: "/", icon: Home },
+    { name: t('navbar.explore'), href: "/explore", icon: Search },
+    { name: t('navbar.community'), href: "/community", icon: Users },
+    { name: t('navbar.dashboard'), href: "/shop", icon: ShoppingBag }, // Adjusted key based on translation file or use shop
+    { name: t('navbar.about'), href: "/about", icon: Info },
     { name: "CraftoChat", href: "/ai-chat", icon: Bot },
   ];
 
@@ -98,6 +106,16 @@ const Navbar = () => {
                 </span>
               )}
             </Link>
+
+            {/* Language Toggle */}
+            <button
+              onClick={toggleLanguage}
+              className="p-2.5 rounded-xl bg-base-content/5 hover:bg-base-content/10 border border-base-content/5 transition-all duration-300 group flex items-center gap-2"
+              aria-label="Toggle language"
+            >
+              <Globe className="w-5 h-5 group-hover:text-primary-400 transition-colors" />
+              <span className="text-xs font-bold">{i18n.language?.toUpperCase()}</span>
+            </button>
 
             {/* Theme Toggle */}
             <button

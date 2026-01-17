@@ -6,11 +6,13 @@ import { useAuth } from '../contexts/AuthContext'; // We'll use this to get the 
 import CreateCommunity from '../components/createcommunity';
 import apiClient from '../api/axios'; // Centralized axios instance
 import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 // Use relative path against apiClient base URL (handles fallback + credentials)
 const API_URL = `/communities`;
 
 const Community = () => {
+    const { t } = useTranslation()
     const [communities, setCommunities] = useState([]); // State to hold communities from the backend
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
@@ -59,13 +61,13 @@ const Community = () => {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                     <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}
                         className="text-4xl md:text-5xl font-serif font-bold text-base-content mb-4">
-                        Community
+                        {t('community.title')}
                     </motion.h1>
                     <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.6 }}
                         className="text-xl text-base-content/70 max-w-2xl mx-auto">
-                        Join vibrant discussions, share your work, and connect with fellow artists and collectors
+                        {t('community.subtitle')}
                     </motion.p>
-                    
+
                     {/* Create Community Button for artists */}
                     {user?.role === 'artist' && (
                         <div className="flex justify-center">
@@ -74,7 +76,7 @@ const Community = () => {
                                 className="btn-primary mt-6 flex items-center space-x-2"
                             >
                                 <Plus className="w-4 h-4" />
-                                <span>Create Community</span>
+                                <span>{t('community.create_btn')}</span>
                             </button>
                         </div>
                     )}
@@ -91,7 +93,7 @@ const Community = () => {
                         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-base-content/40" />
                         <input
                             type="text"
-                            placeholder="Search communities by name or description..."
+                            placeholder={t('community.search_placeholder')}
                             value={searchTerm}
                             onChange={e => setSearchTerm(e.target.value)}
                             className="w-full pl-10 pr-4 py-3 border border-base-300 rounded-lg focus:ring-2 focus:ring-primary-500"
@@ -101,22 +103,22 @@ const Community = () => {
 
                 {/* Communities Grid */}
                 {loading ? (
-                    <div className="text-center">Loading communities...</div>
+                    <div className="text-center">{t('community.loading')}</div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {displayedCommunities.length === 0 ? (
-                            <div className="col-span-3 text-center text-base-content/70 py-12">No communities found. Try a different search.</div>
+                            <div className="col-span-3 text-center text-base-content/70 py-12">{t('community.no_results')}</div>
                         ) : (
                             displayedCommunities.map(comm => (
                                 <div key={comm._id} className="bg-base-200 rounded-xl shadow-lg p-6 flex flex-col">
                                     <h2 className="text-xl font-bold mb-2">{comm.name}</h2>
                                     <p className="mb-4 text-base-content/70 flex-grow">{comm.description}</p>
-                                    <div className="mb-4 text-base-content/60">Members: {comm.memberCount}</div>
+                                    <div className="mb-4 text-base-content/60">{t('community.members')}: {comm.memberCount}</div>
                                     <button
                                         className="btn-primary mt-auto"
                                         onClick={() => navigate(`/community/${comm._id}`)}
                                     >
-                                        View Community
+                                        {t('community.view_btn')}
                                     </button>
                                 </div>
                             ))

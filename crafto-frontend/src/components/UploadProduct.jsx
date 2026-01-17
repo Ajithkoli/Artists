@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import apiClient from '../api/axios'
 import { X, Plus, Check } from "lucide-react";
 import { motion } from "framer-motion";
@@ -6,9 +7,11 @@ import { motion } from "framer-motion";
 const MAX_TAGS = 10;
 
 const ProductCreator = ({ open, onClose }) => {
+  const { t } = useTranslation();
   const [photo, setPhoto] = useState(null);
   const [preview, setPreview] = useState("");
   const [title, setTitle] = useState("");
+  const [origin, setOrigin] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [isBiddable, setIsBiddable] = useState(false);
@@ -45,6 +48,7 @@ const ProductCreator = ({ open, onClose }) => {
       const formData = new FormData();
       formData.append("photo", photo);
       formData.append("title", title);
+      formData.append("origin", origin);
       formData.append("description", description);
       formData.append("price", price);
       formData.append("isBiddable", isBiddable);
@@ -86,20 +90,20 @@ const ProductCreator = ({ open, onClose }) => {
           <X size={24} />
         </button>
         <h2 className="text-3xl font-serif font-black text-slate-900 text-center mb-8 tracking-tighter">
-          Mint New <span className="text-gradient">Asset</span>
+          {t('upload.title')}
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-6 text-slate-900">
           {/* Photo Upload */}
           <div className="space-y-3">
-            <label className="block text-xs font-black uppercase tracking-widest text-base-content/40 ml-1">Universal Asset (Photo)</label>
+            <label className="block text-xs font-black uppercase tracking-widest text-base-content/40 ml-1">{t('upload.photo_label')}</label>
             <div className={`relative group transition-all duration-300 ${!preview ? 'border-2 border-dashed border-white/10 hover:border-primary-500/30 rounded-2xl p-8 text-center' : ''}`}>
               {!preview ? (
                 <>
                   <input type="file" accept="image/*" onChange={handlePhotoChange} className="absolute inset-0 opacity-0 cursor-pointer z-10" />
                   <div className="flex flex-col items-center">
                     <Plus className="w-10 h-10 text-primary-400/50 mb-2" />
-                    <p className="text-sm font-bold text-base-content/30">Drop your file into the galaxy</p>
+                    <p className="text-sm font-bold text-base-content/30">{t('upload.drop_text')}</p>
                   </div>
                 </>
               ) : (
@@ -119,7 +123,7 @@ const ProductCreator = ({ open, onClose }) => {
 
           <div className="space-y-4">
             <div>
-              <label className="block text-xs font-black uppercase tracking-widest text-slate-400 mb-2 ml-1">Asset Name</label>
+              <label className="block text-xs font-black uppercase tracking-widest text-slate-400 mb-2 ml-1">{t('upload.name_label')}</label>
               <input
                 type="text"
                 value={title}
@@ -130,19 +134,31 @@ const ProductCreator = ({ open, onClose }) => {
             </div>
 
             <div>
-              <label className="block text-xs font-black uppercase tracking-widest text-slate-400 mb-2 ml-1">Description</label>
+              <label className="block text-xs font-black uppercase tracking-widest text-slate-400 mb-2 ml-1">{t('upload.desc_label')}</label>
               <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-500/50 outline-none transition-all text-slate-900 placeholder:text-slate-300 font-medium resize-none"
                 rows={2}
-                placeholder="Tell the story of this creation..."
+                placeholder={t('upload.desc_placeholder')}
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-black uppercase tracking-widest text-slate-400 mb-2 ml-1">{t('upload.origin_label')}</label>
+              <input
+                type="text"
+                value={origin}
+                onChange={(e) => setOrigin(e.target.value)}
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-500/50 outline-none transition-all text-slate-900 placeholder:text-slate-300 font-medium"
+                placeholder="e.g. Mysuru, Bidar..."
+                required
               />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-black uppercase tracking-widest text-base-content/40 mb-2 ml-1">Price (Credits)</label>
+                <label className="block text-xs font-black uppercase tracking-widest text-base-content/40 mb-2 ml-1">{t('upload.price_label')}</label>
                 <input
                   type="number"
                   value={price}
@@ -153,7 +169,7 @@ const ProductCreator = ({ open, onClose }) => {
               </div>
 
               <div>
-                <label className="block text-xs font-black uppercase tracking-widest text-base-content/40 mb-2 ml-1">Negotiable</label>
+                <label className="block text-xs font-black uppercase tracking-widest text-base-content/40 mb-2 ml-1">{t('upload.negotiable')}</label>
                 <div
                   onClick={() => setIsBiddable(!isBiddable)}
                   className={`w-full h-[52px] cursor-pointer rounded-xl border border-white/10 flex items-center px-4 transition-all ${isBiddable ? 'bg-primary-500/20 border-primary-500/40' : 'bg-white/5'}`}
@@ -161,7 +177,7 @@ const ProductCreator = ({ open, onClose }) => {
                   <div className={`w-5 h-5 rounded-md border-2 mr-3 transition-all flex items-center justify-center ${isBiddable ? 'bg-primary-400 border-primary-400' : 'border-white/20'}`}>
                     {isBiddable && <Check size={14} className="text-black" />}
                   </div>
-                  <span className={`text-sm font-bold ${isBiddable ? 'text-primary-600' : 'text-slate-400'}`}>Enable Bidding</span>
+                  <span className={`text-sm font-bold ${isBiddable ? 'text-primary-600' : 'text-slate-400'}`}>{t('upload.enable_bidding')}</span>
                 </div>
               </div>
             </div>
@@ -186,7 +202,7 @@ const ProductCreator = ({ open, onClose }) => {
             )}
 
             <div className="space-y-3">
-              <label className="block text-xs font-black uppercase tracking-widest text-base-content/40 ml-1">Keywords</label>
+              <label className="block text-xs font-black uppercase tracking-widest text-base-content/40 ml-1">{t('upload.keywords')}</label>
               <div className="flex gap-2">
                 <input
                   type="text"
@@ -219,9 +235,9 @@ const ProductCreator = ({ open, onClose }) => {
           )}
 
           <div className="flex gap-4 pt-4">
-            <button type="button" onClick={onClose} className="flex-1 py-4 text-slate-400 hover:text-slate-600 font-bold transition-colors">Discard</button>
+            <button type="button" onClick={onClose} className="flex-1 py-4 text-slate-400 hover:text-slate-600 font-bold transition-colors">{t('upload.discard')}</button>
             <button type="submit" className="flex-[2] py-4 rounded-2xl bg-primary-500 hover:bg-primary-600 text-white font-black uppercase tracking-[0.2em] shadow-glow-primary active:scale-95 transition-all">
-              Initialize Mint
+              {t('upload.submit')}
             </button>
           </div>
         </form>

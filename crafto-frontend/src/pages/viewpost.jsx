@@ -5,8 +5,10 @@ import { Heart, Share2, MessageCircle, ArrowLeft, Eye, Bookmark, Send } from 'lu
 import { useAuth } from '../contexts/AuthContext';
 import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 const ViewPost = () => {
+  const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuth();
@@ -28,7 +30,7 @@ const ViewPost = () => {
           setIsLiked(res.data.likes?.some(l => (l._id || l) === user._id));
         }
       } catch (err) {
-        setError('Failed to load post.');
+        setError(t('view_post.load_fail'));
       } finally {
         setLoading(false);
       }
@@ -38,7 +40,7 @@ const ViewPost = () => {
 
   const handleLike = async () => {
     if (!isAuthenticated) {
-      toast.error("Please login to like posts");
+      toast.error(t('view_post.like_login'));
       return;
     }
     try {
@@ -58,7 +60,7 @@ const ViewPost = () => {
   const handleComment = async (e) => {
     e.preventDefault();
     if (!isAuthenticated) {
-      toast.error("Please login to comment");
+      toast.error(t('view_post.comment_login'));
       return;
     }
     if (!commentText.trim()) return;
@@ -68,15 +70,15 @@ const ViewPost = () => {
       const res = await apiClient.post(`/explore/${id}/comment`, { text: commentText });
       setPost(prev => ({ ...prev, comments: res.data.comments }));
       setCommentText("");
-      toast.success("Comment added!");
+      toast.success(t('view_post.comment_success'));
     } catch (err) {
-      toast.error("Failed to add comment");
+      toast.error(t('view_post.comment_fail'));
     } finally {
       setIsSubmittingComment(false);
     }
   };
 
-  if (loading) return <div className="text-center py-20">Loading post...</div>;
+  if (loading) return <div className="text-center py-20">{t('view_post.loading')}</div>;
   if (error) return <div className="text-center py-20 text-red-500">{error}</div>;
   if (!post) return null;
 
@@ -98,7 +100,7 @@ const ViewPost = () => {
           onClick={() => navigate('/explore')}
         >
           <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-          <span>Back to Explore</span>
+          <span>{t('view_post.back')}</span>
         </motion.button>
 
         {/* Post Container */}
@@ -128,17 +130,17 @@ const ViewPost = () => {
             <div>
               <div className="flex items-center space-x-3 mb-6">
                 <span className="px-3 py-1 bg-primary-500/10 border border-primary-500/20 rounded-full text-[10px] font-black tracking-widest uppercase text-primary-400">
-                  Community Story
+                  {t('view_post.badge')}
                 </span>
                 <div className="h-1 w-1 bg-white/20 rounded-full"></div>
                 <div className="flex items-center space-x-1.5 text-xs font-bold text-base-content/40 uppercase tracking-widest">
                   <Eye size={14} className="text-secondary-400" />
-                  <span>{post.views || 0} Views</span>
+                  <span>{post.views || 0} {t('view_post.views')}</span>
                 </div>
                 <div className="h-1 w-1 bg-white/20 rounded-full"></div>
                 <div className="flex items-center space-x-1.5 text-xs font-bold text-base-content/40 uppercase tracking-widest">
                   <Heart size={14} className="text-red-400" />
-                  <span>{post.likes?.length || 0} Likes</span>
+                  <span>{post.likes?.length || 0} {t('view_post.likes')}</span>
                 </div>
               </div>
 
@@ -156,10 +158,10 @@ const ViewPost = () => {
                 <div className="space-y-4">
                   <p className="text-xs font-black uppercase tracking-widest text-base-content/40 flex items-center space-x-2">
                     <span className="h-2 w-2 rounded-full bg-secondary-500"></span>
-                    <span>The Narrative</span>
+                    <span>{t('view_post.narrative')}</span>
                   </p>
                   <p className="text-base-content/70 leading-relaxed font-medium">
-                    {displayedStory || 'The full story remains an enigma.'}
+                    {displayedStory || t('view_post.enigma')}
                   </p>
 
                   {isLongStory && (
@@ -167,7 +169,7 @@ const ViewPost = () => {
                       className="text-primary-600 hover:text-primary-700 text-sm font-bold uppercase tracking-widest transition-colors"
                       onClick={() => setShowFullStory(!showFullStory)}
                     >
-                      {showFullStory ? 'Close Fold' : 'Unravel Story'}
+                      {showFullStory ? t('view_post.close') : t('view_post.unravel')}
                     </button>
                   )}
                 </div>
@@ -179,19 +181,19 @@ const ViewPost = () => {
               <button
                 onClick={handleLike}
                 className={`flex-1 py-4 rounded-2xl border transition-all font-bold flex items-center justify-center space-x-3 ${isLiked
-                    ? 'bg-red-500/10 border-red-500/20 text-red-500'
-                    : 'bg-base-content/5 border-base-content/10 hover:bg-base-content/10 text-base-content'
+                  ? 'bg-red-500/10 border-red-500/20 text-red-500'
+                  : 'bg-base-content/5 border-base-content/10 hover:bg-base-content/10 text-base-content'
                   }`}
               >
                 <Heart size={20} className={isLiked ? 'fill-current' : ''} />
-                <span>{isLiked ? 'Liked' : 'Like'}</span>
+                <span>{isLiked ? t('view_post.liked') : t('view_post.like')}</span>
               </button>
               <button
                 className="flex-1 py-4 rounded-2xl bg-base-content/5 border border-base-content/10 hover:bg-base-content/10 transition-all font-bold text-base-content flex items-center justify-center space-x-3"
                 onClick={() => document.getElementById('comment-input')?.focus()}
               >
                 <MessageCircle size={20} className="text-primary-600" />
-                <span>Comment</span>
+                <span>{t('view_post.comment_btn')}</span>
               </button>
               <button className="p-4 rounded-2xl bg-base-content/5 border border-base-content/10 hover:bg-base-content/10 transition-all text-base-content">
                 <Bookmark size={20} />
@@ -201,7 +203,7 @@ const ViewPost = () => {
             {/* Comments Section */}
             <div className="mt-12 space-y-8">
               <h3 className="text-2xl font-serif font-black text-base-content tracking-tighter">
-                Comments ({post.comments?.length || 0})
+                {t('view_post.comments_count', { count: post.comments?.length || 0 })}
               </h3>
 
               {/* Add Comment */}
@@ -211,7 +213,7 @@ const ViewPost = () => {
                   type="text"
                   value={commentText}
                   onChange={(e) => setCommentText(e.target.value)}
-                  placeholder="Share your thoughts..."
+                  placeholder={t('view_post.comment_placeholder')}
                   className="flex-1 bg-base-200 border border-base-content/10 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary-500/50 transition-all text-base-content"
                 />
                 <button
@@ -243,7 +245,7 @@ const ViewPost = () => {
                     </div>
                   ))
                 ) : (
-                  <p className="text-base-content/40 italic text-sm">No comments yet. Be the first to start the conversation!</p>
+                  <p className="text-base-content/40 italic text-sm">{t('view_post.no_comments')}</p>
                 )}
               </div>
             </div>

@@ -21,6 +21,9 @@ const ProductSchema = new mongoose.Schema({
     ],
     views: { type: Number, default: 0 },
 
+    // Origin of the product (e.g., Mysuru, Bidar)
+    origin: { type: String, required: true },
+
     // --- ADD THIS FIELD ---
     user: {
         type: mongoose.Schema.ObjectId,

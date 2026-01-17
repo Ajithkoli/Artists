@@ -1,0 +1,383 @@
+{
+    "navbar": {
+        "home": "Home",
+        "explore": "Explore",
+        "community": "Community",
+        "learn": "Learn",
+        "about": "About",
+        "login": "Login",
+        "dashboard": "Dashboard"
+    },
+    "hero": {
+        "tagline": "The Future of Art is Here",
+        "title": "Unleash Your <br /> Celestial Vision",
+        "description": "Experience the next generation of architectural digital art. Discover, collect, and trade extraordinary pieces in a galaxy of creativity.",
+        "enter_gallery": "Enter the Gallery",
+        "join_fold": "Join the Fold"
+    },
+    "stats": {
+        "artists": "Artists",
+        "buyers": "Buyers",
+        "communities": "Communities",
+        "artworks": "Artworks"
+    },
+    "featured": {
+        "title": "Stellar Masterpieces",
+        "subtitle": "Handpicked treasures from the most renowned digital architects in our ecosystem.",
+        "view_all": "View All Treasures",
+        "by": "by {{artist}}",
+        "price": "Price"
+    },
+    "cta": {
+        "title": "Ready to Join the <br />Elite Creators?",
+        "subtitle": "Your journey into the celestial Crafto begins here. Mint your legacy and connect with global collectors.",
+        "get_started": "Get Started Now",
+        "dashboard": "Go to Dashboard",
+        "browse": "Browse Gallery"
+    },
+    "footer": {
+        "desc": "Discover and collect unique artworks and architectural designs from talented artists worldwide. Join our vibrant community of creators and collectors.",
+        "company": "Company",
+        "marketplace": "Marketplace",
+        "support": "Support",
+        "community": "Community",
+        "links": {
+            "about": "About Us",
+            "careers": "Careers",
+            "press": "Press",
+            "blog": "Blog",
+            "explore": "Explore Art",
+            "artists": "Artists",
+            "collections": "Collections",
+            "auctions": "Auctions",
+            "help": "Help Center",
+            "contact": "Contact Us",
+            "privacy": "Privacy Policy",
+            "terms": "Terms of Service",
+            "join": "Join Community",
+            "live": "Live Streams",
+            "courses": "Courses",
+            "events": "Events"
+        },
+        "rights": "© {{year}} Crafto. All rights reserved."
+    },
+    "explore": {
+        "title": "Community Stories",
+        "subtitle": "Explore the latest updates, stories, and inspirations from our global architectural community.",
+        "search_placeholder": "Search conversations...",
+        "loading": "Syncing with the galaxy...",
+        "error": {
+            "title": "Network Disruption",
+            "desc": "Failed to load posts. Please try again later."
+        },
+        "architecture": "Architecture",
+        "view_story": "View Full Story"
+    },
+    "product_detail": {
+        "architect": "Architect",
+        "current_value": "Current Value",
+        "engagement": "Engagement",
+        "add_collection": "Add to Collection",
+        "neural_insight": "Neural Insight",
+        "unlock_ai": "Unlock Deep Dive",
+        "ai_generated": "AI-generated architectural analysis is available for this piece.",
+        "year": "Year",
+        "medium": "Medium",
+        "dimensions": "Dimensions",
+        "format": "Format",
+        "vision": "The Vision",
+        "spread_vision": "Spread the vision",
+        "share": "Share",
+        "copied": "Copied",
+        "comments": "Collector Comments",
+        "comment_placeholder": "Engage with this vision...",
+        "no_comments": "No thoughts shared yet. Be the first to engage."
+    },
+    "upload": {
+        "title": "Mint New Asset",
+        "photo_label": "Universal Asset (Photo)",
+        "drop_text": "Drop your file into the galaxy",
+        "name_label": "Asset Name",
+        "desc_label": "Description",
+        "desc_placeholder": "Tell the story of this creation...",
+        "price_label": "Price (Credits)",
+        "negotiable": "Negotiable",
+        "enable_bidding": "Enable Bidding",
+        "origin_label": "Place of Origin",
+        "keywords": "Keywords",
+        "discard": "Discard",
+        "submit": "Initialize Mint",
+        "error_required": "All fields are required"
+    },
+    "origin": "Origin: {{place}}",
+    "auth": {
+        "welcome_back": "Welcome Back",
+        "sign_in_text": "Sign in to your account",
+        "i_am_a": "I am a...",
+        "roles": {
+            "buyer": "Buyer",
+            "artist": "Artist",
+            "admin": "Admin",
+            "desc_buyer": "Browse and collect artworks",
+            "desc_artist": "Sell your creations",
+            "desc_admin": "Manage platform"
+        },
+        "fill_demo": "Fill Demo Credentials",
+        "email_label": "Email Address",
+        "password_label": "Password",
+        "confirm_password_label": "Confirm Password",
+        "email_placeholder": "Enter your email",
+        "password_placeholder": "Enter your password",
+        "confirm_password_placeholder": "Confirm your password",
+        "sign_in_btn": "Sign In",
+        "signing_in": "Signing in...",
+        "no_account": "Don't have an account?",
+        "sign_up_here": "Sign up here",
+        "back_home": "← Back to Home",
+        "join_as_artist": "Join as an Artist",
+        "join_as_buyer": "Join as a Buyer",
+        "join_desc_artist": "Create your artist profile and start sharing your work",
+        "join_desc_buyer": "Sign up as a buyer to explore and purchase art",
+        "full_name": "Full Name",
+        "full_name_placeholder": "Enter your full name",
+        "interested_in": "Interested In",
+        "interested_placeholder": "Select your Interested Topic",
+        "specialization": "Specialization",
+        "specialization_placeholder": "Select your specialization",
+        "bio": "Bio",
+        "bio_placeholder": "Tell us about yourself and your artistic journey...",
+        "create_account": "Create Account",
+        "creating_account": "Creating Account...",
+        "approval_title": "Account Approval Required",
+        "approval_text": "Your account will be reviewed by our admin team. You'll receive an email notification once approved.",
+        "already_account": "Already have an account?",
+        "sign_in_here": "Sign in here",
+        "password_min": "Create a password (min. 8 characters)"
+    },
+    "community": {
+        "title": "Community",
+        "subtitle": "Join vibrant discussions, share your work, and connect with fellow artists and collectors",
+        "create_btn": "Create Community",
+        "search_placeholder": "Search communities by name or description...",
+        "loading": "Loading communities...",
+        "no_results": "No communities found. Try a different search.",
+        "members": "Members",
+        "view_btn": "View Community"
+    },
+    "about": {
+        "title": "About Crafto",
+        "subtitle": "We're on a mission to democratize art and architecture, connecting talented creators with passionate collectors worldwide.",
+        "values": {
+            "passion": "Passion for Art",
+            "passion_desc": "We believe in the transformative power of art and its ability to inspire, heal, and connect people across cultures.",
+            "community": "Community First",
+            "community_desc": "Building a supportive ecosystem where artists and collectors can thrive together, sharing knowledge and experiences.",
+            "global": "Global Reach",
+            "global_desc": "Connecting artists and collectors worldwide, breaking down geographical barriers to celebrate creativity.",
+            "quality": "Quality & Authenticity",
+            "quality_desc": "Ensuring every artwork meets our high standards of quality and authenticity through rigorous verification processes."
+        },
+        "stats": {
+            "artworks": "Artworks",
+            "artists": "Artists",
+            "countries": "Countries",
+            "visitors": "Visitors"
+        },
+        "cta": {
+            "title": "Join the Crafto Community",
+            "subtitle": "Whether you're an artist looking to showcase your work or a collector seeking unique pieces, we'd love to have you join our growing community.",
+            "artist_btn": "Become an Artist",
+            "explore_btn": "Start Exploring"
+        }
+    },
+    "dashboard": {
+        "title": "Seller Dashboard",
+        "subtitle": "Track your sales, manage your artworks, and grow your artistic business",
+        "coming_soon": "Seller Dashboard Coming Soon",
+        "coming_soon_desc": "We're building a comprehensive dashboard with analytics, inventory management, and sales tracking."
+    },
+    "admin": {
+        "sidebar": {
+            "title": "ArtAdmin",
+            "dashboard": "Dashboard",
+            "pending": "Pending Requests",
+            "listings": "Art Listings"
+        },
+        "topbar": {
+            "admin_label": "Admin"
+        },
+        "stats": {
+            "buyers": "Total Buyers",
+            "artists": "Total Artists",
+            "products": "Total Products",
+            "communities": "Total Communities"
+        },
+        "requests": {
+            "community": "Community Requests",
+            "artist": "Artist Requests",
+            "loading": "Loading requests...",
+            "by": "by",
+            "approve": "Approve",
+            "reject": "Reject",
+            "no_pending": "No pending requests.",
+            "success": "Request {{action}}ed successfully!",
+            "fail": "Failed to {{action}} request."
+        },
+        "charts": {
+            "top_communities": "Top Communities by Members",
+            "messages": "Messages (Last 30 Days)",
+            "ratio": "Buyer vs. Artist Ratio",
+            "categories": "Artworks by Category",
+            "buyers": "Buyers",
+            "artists": "Artists"
+        },
+        "overview": {
+            "title": "Dashboard Overview",
+            "subtitle": "Welcome back! Here's what's happening today.",
+            "loading": "Loading Dashboard...",
+            "denied": "Access Denied."
+        }
+    },
+    "shop": {
+        "title": "Art",
+        "marketplace": "Marketplace",
+        "subtitle": "Discover and acquire unique digital assets.",
+        "search_placeholder": "Find your masterpiece...",
+        "no_finds": "No Cosmic Finds",
+        "no_finds_desc": "Try searching for something else in the universe.",
+        "load_fail": "Failed to load products.",
+        "current_price": "Current Price",
+        "details": "Details",
+        "add": "Add"
+    },
+    "cart": {
+        "empty_title": "Your Cart is Empty",
+        "empty_desc": "Looks like you haven't added any artwork yet.",
+        "go_shop": "Go to Shop",
+        "title": "Shopping Cart",
+        "continue": "Continue Shopping",
+        "by_artist": "By {{artist}}",
+        "remove": "Remove item",
+        "clear": "Clear Cart",
+        "summary": "Summary",
+        "subtotal": "Subtotal",
+        "taxes": "Taxes",
+        "total": "Total",
+        "checkout": "Checkout (Coming Soon)",
+        "limit_note": "*Please use \"Buy Now\" on individual items in the shop for immediate purchase."
+    },
+    "profile": {
+        "title": "My Profile",
+        "subtitle": "Manage your account and preferences",
+        "bio": "Bio",
+        "bio_placeholder": "Tell us about yourself...",
+        "no_bio": "No bio added yet.",
+        "save": "Save Changes",
+        "cancel": "Cancel",
+        "edit": "Edit Profile",
+        "stats": {
+            "artworks": "Artworks",
+            "collections": "Collections"
+        },
+        "badges_title": "Badges",
+        "badges_prompt": "Click Here To See your Badges👉",
+        "recent": "Recent Activity",
+        "quick": "Quick Actions",
+        "actions": {
+            "favorites": "Favorites",
+            "favorites_desc": "View your liked artworks",
+            "purchases": "Purchases",
+            "purchases_desc": "View your collection",
+            "courses": "Courses",
+            "courses_desc": "Continue learning",
+            "communities": "Communities",
+            "communities_desc": "Join discussions"
+        },
+        "settings": {
+            "title": "Account Settings",
+            "notifications": "Notifications",
+            "notifications_desc": "Manage your notification preferences",
+            "privacy": "Privacy & Security",
+            "privacy_desc": "Control your account security",
+            "language": "Language & Region",
+            "language_desc": "Set your preferred language"
+        }
+    },
+    "badges": {
+        "title": "My Badges",
+        "subtitle": "You have published {{count}} artworks.",
+        "no_badges": "No badges yet!",
+        "no_badges_desc": "Publish your first 3 artworks to earn the \"Innovator\" badge.",
+        "loading": "Loading Your Badges...",
+        "login_required": "Please log in to see your badges.",
+        "fetch_error": "Could not fetch your badges.",
+        "earned_after": "After {{count}} artworks",
+        "names": {
+            "innovator": "Innovator",
+            "trendsetter": "Trendsetter",
+            "visionary": "Visionary",
+            "master": "Master Creator"
+        },
+        "descriptions": {
+            "innovator": "Awarded for publishing 3 artworks.",
+            "trendsetter": "Awarded for publishing 5 artworks.",
+            "visionary": "Awarded for publishing 10 artworks.",
+            "master": "Awarded for publishing 20 artworks."
+        }
+    },
+    "community_page": {
+        "load_error": "Could not load community details.",
+        "join_fail": "Failed to send join request.",
+        "leave_success": "You have left {{name}}.",
+        "leave_fail": "Failed to leave community.",
+        "send_fail": "Failed to send message.",
+        "loading": "Loading Community...",
+        "owner_badge": "You are the owner",
+        "leave_btn": "Leave Community",
+        "requested_btn": "Request Sent",
+        "join_btn": "Request to Join",
+        "back": "Back to Communities",
+        "created_by": "Created by {{name}}",
+        "members": "Members",
+        "chat_title": "Live Chat",
+        "chat_placeholder": "Type your message...",
+        "chat_send": "Send",
+        "join_prompt": "Join the community to participate in the chat.",
+        "review_note": "Your request will be reviewed by the owner."
+    },
+    "learn": {
+        "title": "Learn",
+        "subtitle": "Master new skills with expert-led courses and tutorials from our community of artists and architects",
+        "upload_btn": "Upload Course"
+    },
+    "view_post": {
+        "load_fail": "Failed to load post.",
+        "like_login": "Please login to like posts",
+        "comment_login": "Please login to comment",
+        "comment_success": "Comment added!",
+        "comment_fail": "Failed to add comment",
+        "loading": "Loading post...",
+        "back": "Back to Explore",
+        "badge": "Community Story",
+        "views": "Views",
+        "likes": "Likes",
+        "narrative": "The Narrative",
+        "enigma": "The full story remains an enigma.",
+        "close": "Close Fold",
+        "unravel": "Unravel Story",
+        "liked": "Liked",
+        "like": "Like",
+        "comment_btn": "Comment",
+        "comments_count": "Comments ({{count}})",
+        "comment_placeholder": "Share your thoughts...",
+        "no_comments": "No comments yet. Be the first to start the conversation!"
+    },
+    "chat": {
+        "title": "Chat with Crafto",
+        "placeholder": "Ask about Crafto...",
+        "greeting": "Hello! I am Crafto, your guide to the Crafto platform. How can I help you explore the world of traditional art today?",
+        "error": "Sorry, I seem to be having some trouble right now. Please try again later.",
+        "no_response": "Sorry, I could not get a response.",
+        "sending": "Sending..."
+    }
+}

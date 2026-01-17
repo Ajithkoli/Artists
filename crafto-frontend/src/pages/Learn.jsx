@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { motion } from 'framer-motion';
 import { Play, Plus } from 'lucide-react';
 import LearnCreator from '../components/LearnCretor.jsx';
+import { useTranslation } from 'react-i18next';
 
 const mockVideos = [
   {
@@ -30,6 +31,7 @@ const mockVideos = [
 ];
 
 const Learn = () => {
+  const { t } = useTranslation();
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [showLearnCreator, setShowLearnCreator] = useState(false);
   const { user } = useAuth();
@@ -45,10 +47,10 @@ const Learn = () => {
             className="text-center"
           >
             <h1 className="text-4xl md:text-5xl font-serif font-bold text-base-content mb-4">
-              Learn
+              {t('learn.title')}
             </h1>
             <p className="text-xl text-base-content/70 max-w-2xl mx-auto">
-              Master new skills with expert-led courses and tutorials from our community of artists and architects
+              {t('learn.subtitle')}
             </p>
             {user?.role === 'artist' && (
               <button
@@ -56,7 +58,7 @@ const Learn = () => {
                 onClick={() => setShowLearnCreator(true)}
               >
                 <Plus className="w-5 h-5" />
-                Upload Course
+                {t('learn.upload_btn')}
               </button>
             )}
           </motion.div>

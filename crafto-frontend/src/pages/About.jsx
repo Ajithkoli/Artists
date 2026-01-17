@@ -1,35 +1,38 @@
 import { motion } from 'framer-motion';
 import { Users, Palette, Globe, Heart, Award, Eye } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const About = () => {
+  const { t } = useTranslation();
+
   const values = [
     {
       icon: Heart,
-      title: "Passion for Art",
-      description: "We believe in the transformative power of art and its ability to inspire, heal, and connect people across cultures."
+      title: t('about.values.passion'),
+      description: t('about.values.passion_desc')
     },
     {
       icon: Users,
-      title: "Community First",
-      description: "Building a supportive ecosystem where artists and collectors can thrive together, sharing knowledge and experiences."
+      title: t('about.values.community'),
+      description: t('about.values.community_desc')
     },
     {
       icon: Globe,
-      title: "Global Reach",
-      description: "Connecting artists and collectors worldwide, breaking down geographical barriers to celebrate creativity."
+      title: t('about.values.global'),
+      description: t('about.values.global_desc')
     },
     {
       icon: Award,
-      title: "Quality & Authenticity",
-      description: "Ensuring every artwork meets our high standards of quality and authenticity through rigorous verification processes."
+      title: t('about.values.quality'),
+      description: t('about.values.quality_desc')
     }
   ];
 
   const stats = [
-    { number: "50K+", label: "Artworks", icon: Palette },
-    { number: "500+", label: "Artists", icon: Users },
-    { number: "100+", label: "Countries", icon: Globe },
-    { number: "2M+", label: "Visitors", icon: Eye }
+    { number: "50K+", label: t('about.stats.artworks'), icon: Palette },
+    { number: "500+", label: t('about.stats.artists'), icon: Users },
+    { number: "100+", label: t('about.stats.countries'), icon: Globe },
+    { number: "2M+", label: t('about.stats.visitors'), icon: Eye }
   ];
 
   return (
@@ -44,7 +47,7 @@ const About = () => {
             transition={{ duration: 0.6 }}
             className="text-4xl md:text-6xl lg:text-7xl font-serif font-bold text-base-content mb-6"
           >
-            About <span className="text-gradient">Crafto</span>
+            {t('about.title').split(' ')[0]} <span className="text-gradient">Crafto</span>
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -52,7 +55,7 @@ const About = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-xl md:text-2xl text-base-content/70 max-w-3xl mx-auto mb-8"
           >
-            We're on a mission to democratize art and architecture, connecting talented creators with passionate collectors worldwide.
+            {t('about.subtitle')}
           </motion.p>
         </div>
       </section>
@@ -112,7 +115,7 @@ const About = () => {
             transition={{ duration: 0.6 }}
             className="text-3xl md:text-4xl font-serif font-bold text-white mb-6"
           >
-            Join the Crafto Community
+            {t('about.cta.title')}
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -121,14 +124,14 @@ const About = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-xl text-white/90 mb-8"
           >
-            Whether you're an artist looking to showcase your work or a collector seeking unique pieces, we'd love to have you join our growing community.
+            {t('about.cta.subtitle')}
           </motion.p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a href="/register" className="bg-white text-primary-600 hover:bg-gray-100 font-semibold py-4 px-8 rounded-lg transition-colors">
-              Become an Artist
+              {t('about.cta.artist_btn')}
             </a>
             <a href="/explore" className="border-2 border-white text-white hover:bg-white hover:text-primary-600 font-semibold py-4 px-8 rounded-lg transition-colors">
-              Start Exploring
+              {t('about.cta.explore_btn')}
             </a>
           </div>
         </div>

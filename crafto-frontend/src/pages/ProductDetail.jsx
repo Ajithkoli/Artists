@@ -20,9 +20,11 @@ import {
 import { useAuth } from '../contexts/AuthContext'
 import toast from 'react-hot-toast'
 import { useCart } from '../contexts/CartContext';
+import { useTranslation } from 'react-i18next';
 import Bynow from './popup_function';
 
 const ProductDetail = () => {
+  const { t } = useTranslation();
   const { addToCart } = useCart();
   const { id } = useParams()
   const [product, setProduct] = useState(null)
@@ -250,8 +252,11 @@ const ProductDetail = () => {
                   </div>
                 </div>
                 <div>
-                  <p className="text-base-content/40 text-xs font-black uppercase tracking-widest">Architect</p>
+                  <p className="text-base-content/40 text-xs font-black uppercase tracking-widest">{t('product_detail.architect')}</p>
                   <p className="text-base-content font-bold text-lg">{product.artist}</p>
+                  <p className="text-primary-600 text-xs font-bold uppercase tracking-widest mt-1">
+                    {t('origin', { place: product.origin || 'India' })}
+                  </p>
                 </div>
               </div>
             </div>
@@ -259,14 +264,14 @@ const ProductDetail = () => {
             <div className="p-8 rounded-[32px] bg-base-100 border border-base-content/10 space-y-8 shadow-2xl">
               <div className="flex items-end justify-between">
                 <div>
-                  <p className="text-base-content/40 text-xs font-black uppercase tracking-widest mb-1">Current Value</p>
+                  <p className="text-base-content/40 text-xs font-black uppercase tracking-widest mb-1">{t('product_detail.current_value')}</p>
                   <div className="text-5xl font-black text-base-content tracking-tighter flex items-center">
                     <span className="text-primary-600 mr-2 text-3xl">$</span>
                     {product.price ? product.price.toLocaleString() : '0'}
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="text-base-content/40 text-xs font-black uppercase tracking-widest mb-1">Engagement</p>
+                  <p className="text-base-content/40 text-xs font-black uppercase tracking-widest mb-1">{t('product_detail.engagement')}</p>
                   <div className="flex items-center gap-4 text-base-content/60 font-bold">
                     <span className="flex items-center gap-1.5"><Eye size={16} className="text-primary-600" /> {product.views || 0}</span>
                     <span className="flex items-center gap-1.5"><Heart size={16} className="text-secondary-500" /> {product.likes?.length || 0}</span>
@@ -281,7 +286,7 @@ const ProductDetail = () => {
                   className="flex items-center justify-center gap-2 py-4 rounded-2xl bg-base-content/5 border border-base-content/10 hover:bg-base-content/10 transition-all text-base-content font-bold"
                 >
                   <ShoppingCart size={20} />
-                  <span>Add to Collection</span>
+                  <span>{t('product_detail.add_collection')}</span>
                 </button>
               </div>
 
@@ -292,14 +297,14 @@ const ProductDetail = () => {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <Sparkles className="w-5 h-5 text-secondary-500" />
-                      <span className="font-black text-xs uppercase tracking-[0.2em] text-base-content">Neural Insight</span>
+                      <span className="font-black text-xs uppercase tracking-[0.2em] text-base-content">{t('product_detail.neural_insight')}</span>
                     </div>
                     {!showAI && !isGenerating && (
                       <button
                         onClick={generateAIDescription}
                         className="text-[10px] font-black uppercase text-primary-600 hover:text-primary-700 transition-colors"
                       >
-                        Unlock Deep Dive
+                        {t('product_detail.unlock_ai')}
                       </button>
                     )}
                   </div>
@@ -318,7 +323,7 @@ const ProductDetail = () => {
                       {aiDescription}
                     </motion.p>
                   ) : (
-                    <p className="text-xs text-base-content/40">AI-generated architectural analysis is available for this piece.</p>
+                    <p className="text-xs text-base-content/40">{t('product_detail.ai_generated')}</p>
                   )}
                 </div>
               </div>
@@ -327,10 +332,10 @@ const ProductDetail = () => {
             {/* Specifications Tabbed Look (simplified) */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               {[
-                { label: 'Year', value: product.year },
-                { label: 'Medium', value: product.medium },
-                { label: 'Dimensions', value: product.dimensions },
-                { label: 'Format', value: '4K Digital' }
+                { label: t('product_detail.year'), value: product.year },
+                { label: t('product_detail.medium'), value: product.medium },
+                { label: t('product_detail.dimensions'), value: product.dimensions },
+                { label: t('product_detail.format'), value: '4K Digital' }
               ].map((spec) => (
                 <div key={spec.label} className="p-4 rounded-2xl bg-base-content/5 border border-base-content/5 text-center">
                   <p className="text-[10px] font-black uppercase text-base-content/30 mb-1">{spec.label}</p>
@@ -341,7 +346,7 @@ const ProductDetail = () => {
 
             <div className="space-y-6 pt-6">
               <div>
-                <h3 className="text-xl font-black text-base-content mb-3 tracking-tighter">The Vision</h3>
+                <h3 className="text-xl font-black text-base-content mb-3 tracking-tighter">{t('product_detail.vision')}</h3>
                 <p className="text-base-content/60 leading-relaxed font-medium">
                   {product.story || product.description}
                 </p>
@@ -361,20 +366,20 @@ const ProductDetail = () => {
 
             {/* Share Section */}
             <div className="pt-8 border-t border-white/5 flex items-center justify-between">
-              <p className="text-sm font-bold text-base-content/40">Spread the vision</p>
+              <p className="text-sm font-bold text-base-content/40">{t('product_detail.spread_vision')}</p>
               <button
                 onClick={handleShare}
                 className="flex items-center gap-2 px-6 py-3 rounded-xl bg-base-content/5 hover:bg-base-content/10 border border-base-content/5 transition-all text-base-content font-black text-xs uppercase tracking-widest"
               >
                 {copied ? <Check size={14} className="text-green-600" /> : <Share2 size={14} />}
-                <span>{copied ? 'Copied' : 'Share'}</span>
+                <span>{copied ? t('product_detail.copied') : t('product_detail.share')}</span>
               </button>
             </div>
 
             {/* Comments Section */}
             <div className="pt-12 space-y-8">
               <h3 className="text-2xl font-serif font-black text-base-content tracking-tighter">
-                Collector Comments ({product.comments?.length || 0})
+                {t('product_detail.comments')} ({product.comments?.length || 0})
               </h3>
 
               {/* Add Comment */}
@@ -383,7 +388,7 @@ const ProductDetail = () => {
                   type="text"
                   value={commentText}
                   onChange={(e) => setCommentText(e.target.value)}
-                  placeholder="Engage with this vision..."
+                  placeholder={t('product_detail.comment_placeholder')}
                   className="flex-1 bg-base-100 border border-base-content/10 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary-500/50 transition-all text-base-content"
                 />
                 <button
@@ -416,7 +421,7 @@ const ProductDetail = () => {
                   ))
                 ) : (
                   <div className="text-center py-10 rounded-3xl bg-base-content/5 border border-dashed border-base-content/10">
-                    <p className="text-base-content/40 italic text-sm">No thoughts shared yet. Be the first to engage.</p>
+                    <p className="text-base-content/40 italic text-sm">{t('product_detail.no_comments')}</p>
                   </div>
                 )}
               </div>

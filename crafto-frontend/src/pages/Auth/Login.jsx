@@ -4,8 +4,10 @@ import { motion } from 'framer-motion'
 import { useAuth } from '../../contexts/AuthContext'
 import { Eye, EyeOff, Mail, Lock, Palette, Building2, Users } from 'lucide-react'
 import toast from 'react-hot-toast'
+import { useTranslation } from 'react-i18next'
 
 const Login = () => {
+  const { t } = useTranslation()
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -17,9 +19,9 @@ const Login = () => {
   const navigate = useNavigate()
 
   const roles = [
-    { value: 'buyer', label: 'Buyer', icon: Users, description: 'Browse and collect artworks' },
-    { value: 'artist', label: 'Artist', icon: Palette, description: 'Sell your creations' },
-    { value: 'admin', label: 'Admin', icon: Building2, description: 'Manage platform' }
+    { value: 'buyer', label: t('auth.roles.buyer'), icon: Users, description: t('auth.roles.desc_buyer') },
+    { value: 'artist', label: t('auth.roles.artist'), icon: Palette, description: t('auth.roles.desc_artist') },
+    { value: 'admin', label: t('auth.roles.admin'), icon: Building2, description: t('auth.roles.desc_admin') }
   ]
 
   const handleSubmit = async (e) => {
@@ -82,14 +84,14 @@ const Login = () => {
         {/* Login Card */}
         <div className="bg-base-100 rounded-2xl shadow-xl p-8 border border-base-300">
           <div className="text-center mb-8">
-            <h1 className="text-2xl font-bold text-base-content mb-2">Welcome Back</h1>
-            <p className="text-base-content/70">Sign in to your account</p>
+            <h1 className="text-2xl font-bold text-base-content mb-2">{t('auth.welcome_back')}</h1>
+            <p className="text-base-content/70">{t('auth.sign_in_text')}</p>
           </div>
 
           {/* Role Selection */}
           <div className="mb-6">
             <label className="block text-sm font-medium text-base-content mb-3">
-              I am a...
+              {t('auth.i_am_a')}
             </label>
             <div className="grid grid-cols-3 gap-3">
               {roles.map((role) => (
@@ -98,8 +100,8 @@ const Login = () => {
                   type="button"
                   onClick={() => setFormData(prev => ({ ...prev, role: role.value }))}
                   className={`p-3 rounded-lg border-2 transition-all duration-200 text-center ${formData.role === role.value
-                      ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
-                      : 'border-base-300 hover:border-primary-300'
+                    ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                    : 'border-base-300 hover:border-primary-300'
                     }`}
                 >
                   <role.icon className="w-6 h-6 mx-auto mb-2 text-primary-600" />
@@ -117,7 +119,7 @@ const Login = () => {
               onClick={fillDemoCredentials}
               className="w-full p-3 text-sm text-primary-600 hover:text-primary-700 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-lg transition-colors"
             >
-              Fill Demo Credentials
+              {t('auth.fill_demo')}
             </button>
           </div>
 
@@ -125,7 +127,7 @@ const Login = () => {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-base-content mb-2">
-                Email Address
+                {t('auth.email_label')}
               </label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-base-content/40" />
@@ -137,14 +139,14 @@ const Login = () => {
                   onChange={handleChange}
                   required
                   className="w-full pl-10 pr-4 py-3 border border-base-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-base-100 text-base-content placeholder-base-content/50"
-                  placeholder="Enter your email"
+                  placeholder={t('auth.email_placeholder')}
                 />
               </div>
             </div>
 
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-base-content mb-2">
-                Password
+                {t('auth.password_label')}
               </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-base-content/40" />
@@ -156,7 +158,7 @@ const Login = () => {
                   onChange={handleChange}
                   required
                   className="w-full pl-10 pr-12 py-3 border border-base-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-base-100 text-base-content placeholder-base-content/50"
-                  placeholder="Enter your password"
+                  placeholder={t('auth.password_placeholder')}
                 />
                 <button
                   type="button"
@@ -176,10 +178,10 @@ const Login = () => {
               {isLoading ? (
                 <div className="flex items-center justify-center">
                   <div className="loading loading-spinner loading-sm mr-2"></div>
-                  Signing in...
+                  {t('auth.signing_in')}
                 </div>
               ) : (
-                'Sign In'
+                t('auth.sign_in_btn')
               )}
             </button>
           </form>
@@ -187,9 +189,9 @@ const Login = () => {
           {/* Links */}
           <div className="mt-6 text-center">
             <p className="text-sm text-base-content/70">
-              Don't have an account?{' '}
+              {t('auth.no_account')}{' '}
               <Link to="/register" className="text-primary-600 hover:text-primary-700 font-medium">
-                Sign up here
+                {t('auth.sign_up_here')}
               </Link>
             </p>
           </div>
@@ -201,7 +203,7 @@ const Login = () => {
             to="/"
             className="text-base-content/70 hover:text-base-content transition-colors"
           >
-            ← Back to Home
+            {t('auth.back_home')}
           </Link>
         </div>
       </motion.div>

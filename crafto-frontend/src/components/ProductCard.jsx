@@ -2,8 +2,10 @@ import React from 'react';
 import { ShoppingCart, Heart, Star, Eye } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Bynow from '../pages/popup_function';
+import { useTranslation } from 'react-i18next';
 
 const ProductCard = ({ product, onAddToCart }) => {
+    const { t } = useTranslation();
     // Generate some mock stats if missing from real data to match the design (fallback)
     const rating = product.rating || 4.5;
     const views = product.views || 0;
@@ -45,14 +47,14 @@ const ProductCard = ({ product, onAddToCart }) => {
                         {product.title}
                     </h3>
                     <p className="text-xs text-base-content/50 uppercase tracking-widest font-medium">
-                        by {product.user?.name || 'Unknown Artist'}
+                        {t('featured.by', { artist: product.user?.name || 'Unknown Artist' })} • {t('origin', { place: product.origin || 'India' })}
                     </p>
                 </div>
 
                 {/* Price and Stats */}
                 <div className="flex items-center justify-between mb-6">
                     <div className="flex flex-col">
-                        <span className="text-xs text-base-content/50 font-medium">Current Price</span>
+                        <span className="text-xs text-base-content/50 font-medium">{t('shop.current_price')}</span>
                         <span className="text-2xl font-black text-base-content uppercase tracking-tighter">
                             ${product.price}
                         </span>
@@ -62,9 +64,11 @@ const ProductCard = ({ product, onAddToCart }) => {
                             <Eye className="w-4 h-4 mb-0.5" />
                             <span>{views}</span>
                         </div>
-                        <div className="flex flex-col items-center">
-                            <Heart className="w-4 h-4 mb-0.5" />
-                            <span>{likes}</span>
+                        <div className="flex items-center space-x-4 ml-2">
+                            <div className="flex flex-col items-center">
+                                <Heart className="w-4 h-4 mb-0.5" />
+                                <span>{likes}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -75,7 +79,7 @@ const ProductCard = ({ product, onAddToCart }) => {
                         to={`/product/${product._id}`}
                         className="btn-outline !py-2.5 !px-3 text-xs w-full flex items-center justify-center gap-2"
                     >
-                        Details
+                        {t('shop.details')}
                     </Link>
 
                     <button
@@ -83,7 +87,7 @@ const ProductCard = ({ product, onAddToCart }) => {
                         className="btn-primary !py-2.5 !px-3 text-xs flex-1 flex items-center justify-center gap-2"
                     >
                         <ShoppingCart size={14} />
-                        Add
+                        {t('shop.add')}
                     </button>
 
                     <div className="col-span-2 mt-2">

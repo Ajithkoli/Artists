@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useAuth } from "../../contexts/AuthContext";
+import { useTranslation } from "react-i18next";
 import {
   Eye,
   EyeOff,
@@ -15,6 +16,7 @@ import {
 import toast from "react-hot-toast";
 
 const Register = () => {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -124,12 +126,12 @@ const Register = () => {
         <div className="bg-base-100 rounded-2xl shadow-xl p-8 border border-base-300">
           <div className="text-center mb-8">
             <h1 className="text-2xl font-bold text-base-content mb-2">
-              Join as {userType === "artist" ? "an Artist" : "a Buyer"}
+              {userType === "artist" ? t('auth.join_as_artist') : t('auth.join_as_buyer')}
             </h1>
             <p className="text-base-content/70">
               {userType === "artist"
-                ? "Create your artist profile and start sharing your work"
-                : "Sign up as a buyer to explore and purchase art"}
+                ? t('auth.join_desc_artist')
+                : t('auth.join_desc_buyer')}
             </p>
           </div>
 
@@ -138,22 +140,22 @@ const Register = () => {
             <button
               type="button"
               className={`px-4 py-2 rounded-l-lg border border-base-300 ${userType === "artist"
-                  ? "bg-primary-100 text-primary-700 font-bold"
-                  : "bg-base-100 text-base-content/70"
+                ? "bg-primary-100 text-primary-700 font-bold"
+                : "bg-base-100 text-base-content/70"
                 }`}
               onClick={() => setUserType("artist")}
             >
-              Artist
+              {t('auth.roles.artist')}
             </button>
             <button
               type="button"
               className={`px-4 py-2 rounded-r-lg border border-base-300 ${userType === "buyer"
-                  ? "bg-primary-100 text-primary-700 font-bold"
-                  : "bg-base-100 text-base-content/70"
+                ? "bg-primary-100 text-primary-700 font-bold"
+                : "bg-base-100 text-base-content/70"
                 }`}
               onClick={() => setUserType("buyer")}
             >
-              Buyer
+              {t('auth.roles.buyer')}
             </button>
           </div>
 
@@ -164,7 +166,7 @@ const Register = () => {
                 htmlFor="name"
                 className="block text-sm font-medium text-base-content mb-2"
               >
-                Full Name
+                {t('auth.full_name')}
               </label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-base-content/40" />
@@ -176,7 +178,7 @@ const Register = () => {
                   onChange={handleChange}
                   required
                   className="w-full pl-10 pr-4 py-3 border border-base-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-base-100 text-base-content placeholder-base-content/50"
-                  placeholder="Enter your full name"
+                  placeholder={t('auth.full_name_placeholder')}
                 />
               </div>
             </div>
@@ -186,7 +188,7 @@ const Register = () => {
                 htmlFor="email"
                 className="block text-sm font-medium text-base-content mb-2"
               >
-                Email Address
+                {t('auth.email_label')}
               </label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-base-content/40" />
@@ -198,7 +200,7 @@ const Register = () => {
                   onChange={handleChange}
                   required
                   className="w-full pl-10 pr-4 py-3 border border-base-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-base-100 text-base-content placeholder-base-content/50"
-                  placeholder="Enter your email"
+                  placeholder={t('auth.email_placeholder')}
                 />
               </div>
             </div>
@@ -208,7 +210,7 @@ const Register = () => {
                   htmlFor="specialization"
                   className="block text-sm font-medium text-base-content mb-2"
                 >
-                  Interested In
+                  {t('auth.interested_in')}
                 </label>
                 <div className="relative">
                   <Palette className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-base-content/40" />
@@ -220,7 +222,7 @@ const Register = () => {
                     required={true}
                     className="w-full pl-10 pr-4 py-3 border border-base-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-base-100 text-base-content"
                   >
-                    <option value="">Select your Interested Topic</option>
+                    <option value="">{t('auth.interested_placeholder')}</option>
                     {Interested.map((inter) => (
                       <option key={inter} value={inter}>
                         {inter}
@@ -238,7 +240,7 @@ const Register = () => {
                     htmlFor="specialization"
                     className="block text-sm font-medium text-base-content mb-2"
                   >
-                    Specialization
+                    {t('auth.specialization')}
                   </label>
                   <div className="relative">
                     <Palette className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-base-content/40" />
@@ -250,7 +252,7 @@ const Register = () => {
                       required={userType === "artist"}
                       className="w-full pl-10 pr-4 py-3 border border-base-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-base-100 text-base-content"
                     >
-                      <option value="">Select your specialization</option>
+                      <option value="">{t('auth.specialization_placeholder')}</option>
                       {specializations.map((spec) => (
                         <option key={spec} value={spec}>
                           {spec}
@@ -265,7 +267,7 @@ const Register = () => {
                     htmlFor="bio"
                     className="block text-sm font-medium text-base-content mb-2"
                   >
-                    Bio
+                    {t('auth.bio')}
                   </label>
                   <div className="relative">
                     <FileText className="absolute left-3 top-3 w-5 h-5 text-base-content/40" />
@@ -276,7 +278,7 @@ const Register = () => {
                       onChange={handleChange}
                       rows="3"
                       className="w-full pl-10 pr-4 py-3 border border-base-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-base-100 text-base-content placeholder-base-content/50 resize-none"
-                      placeholder="Tell us about yourself and your artistic journey..."
+                      placeholder={t('auth.bio_placeholder')}
                     />
                   </div>
                 </div>
@@ -288,7 +290,7 @@ const Register = () => {
                 htmlFor="password"
                 className="block text-sm font-medium text-base-content mb-2"
               >
-                Password
+                {t('auth.password_label')}
               </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-base-content/40" />
@@ -301,7 +303,7 @@ const Register = () => {
                   required
                   minLength="8"
                   className="w-full pl-10 pr-12 py-3 border border-base-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-base-100 text-base-content placeholder-base-content/50"
-                  placeholder="Create a password (min. 8 characters)"
+                  placeholder={t('auth.password_min')}
                 />
                 <button
                   type="button"
@@ -322,7 +324,7 @@ const Register = () => {
                 htmlFor="confirmPassword"
                 className="block text-sm font-medium text-base-content mb-2"
               >
-                Confirm Password
+                {t('auth.confirm_password_label')}
               </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-base-content/40" />
@@ -334,7 +336,7 @@ const Register = () => {
                   onChange={handleChange}
                   required
                   className="w-full pl-10 pr-12 py-3 border border-base-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-base-100 text-base-content placeholder-base-content/50"
-                  placeholder="Confirm your password"
+                  placeholder={t('auth.confirm_password_placeholder')}
                 />
                 <button
                   type="button"
@@ -358,10 +360,10 @@ const Register = () => {
               {isLoading ? (
                 <div className="flex items-center justify-center">
                   <div className="loading loading-spinner loading-sm mr-2"></div>
-                  Creating Account...
+                  {t('auth.creating_account')}
                 </div>
               ) : (
-                "Create Account"
+                t('auth.create_account')
               )}
             </button>
           </form>
@@ -372,10 +374,9 @@ const Register = () => {
               <div className="flex items-start space-x-3">
                 <Building2 className="w-5 h-5 text-info mt-0.5" />
                 <div className="text-sm text-info">
-                  <p className="font-medium mb-1">Account Approval Required</p>
+                  <p className="font-medium mb-1">{t('auth.approval_title')}</p>
                   <p>
-                    Your account will be reviewed by our admin team. You'll
-                    receive an email notification once approved.
+                    {t('auth.approval_text')}
                   </p>
                 </div>
               </div>
@@ -385,12 +386,12 @@ const Register = () => {
           {/* Links */}
           <div className="mt-6 text-center">
             <p className="text-sm text-base-content/70">
-              Already have an account?{" "}
+              {t('auth.already_account')}{" "}
               <Link
                 to="/login"
                 className="text-primary-600 hover:text-primary-700 font-medium"
               >
-                Sign in here
+                {t('auth.sign_in_here')}
               </Link>
             </p>
           </div>
@@ -402,7 +403,7 @@ const Register = () => {
             to="/"
             className="text-base-content/70 hover:text-base-content transition-colors"
           >
-            ← Back to Home
+            {t('auth.back_home')}
           </Link>
         </div>
       </motion.div>

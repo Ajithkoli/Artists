@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { useAuth } from '../contexts/AuthContext'
-import { 
-  User, 
-  Mail, 
-  Palette, 
-  Edit3, 
-  Save, 
-  X, 
+import {
+  User,
+  Mail,
+  Palette,
+  Edit3,
+  Save,
+  X,
   Camera,
   Settings,
   Heart,
@@ -20,8 +20,10 @@ import {
 } from 'lucide-react'
 import toast from 'react-hot-toast'
 import Badges from './Badges'
+import { useTranslation } from 'react-i18next'
 
 const Profile = () => {
+  const { t } = useTranslation()
   const { user, updateProfile } = useAuth()
   const [isEditing, setIsEditing] = useState(false)
   const [showBadgesModal, setShowBadgesModal] = useState(false)
@@ -36,7 +38,7 @@ const Profile = () => {
       await updateProfile(editForm)
       setIsEditing(false)
     } catch (error) {
-      toast.error('Failed to update profile')
+      toast.error(t('profile.save_fail') || 'Failed to update profile')
     }
   }
 
@@ -57,8 +59,8 @@ const Profile = () => {
   }
 
   const stats = [
-    { label: 'Artworks', value: user?.artworkCount || 10, icon: Palette, color: 'text-primary-600' },
-    { label: 'Collections', value: '12', icon: BookOpen, color: 'text-success-600' }
+    { label: t('profile.stats.artworks'), value: user?.artworkCount || 10, icon: Palette, color: 'text-primary-600' },
+    { label: t('profile.stats.collections'), value: '12', icon: BookOpen, color: 'text-success-600' }
   ]
 
   const recentActivity = [
@@ -89,10 +91,10 @@ const Profile = () => {
             className="text-center"
           >
             <h1 className="text-4xl md:text-5xl font-serif font-bold text-base-content mb-4">
-              My Profile
+              {t('profile.title')}
             </h1>
             <p className="text-xl text-base-content/70">
-              Manage your account and preferences
+              {t('profile.subtitle')}
             </p>
           </motion.div>
         </div>
@@ -149,7 +151,7 @@ const Profile = () => {
                       value={editForm.specialization}
                       onChange={handleChange}
                       className="w-full p-2 border border-base-300 rounded-lg bg-base-100 text-base-content text-center"
-                      placeholder="Specialization"
+                      placeholder={t('auth.specialization')}
                     />
                   </div>
                 ) : (
@@ -171,7 +173,7 @@ const Profile = () => {
 
               {/* Bio */}
               <div className="mb-6">
-                <h3 className="font-semibold text-base-content mb-2">Bio</h3>
+                <h3 className="font-semibold text-base-content mb-2">{t('profile.bio')}</h3>
                 {isEditing ? (
                   <textarea
                     name="bio"
@@ -179,11 +181,11 @@ const Profile = () => {
                     onChange={handleChange}
                     rows="3"
                     className="w-full p-2 border border-base-300 rounded-lg bg-base-100 text-base-content resize-none"
-                    placeholder="Tell us about yourself..."
+                    placeholder={t('profile.bio_placeholder')}
                   />
                 ) : (
                   <p className="text-base-content/70 text-sm leading-relaxed">
-                    {user?.bio || "No bio added yet."}
+                    {user?.bio || t('profile.no_bio')}
                   </p>
                 )}
               </div>
@@ -197,14 +199,14 @@ const Profile = () => {
                       className="btn-primary w-full"
                     >
                       <Save className="w-4 h-4 mr-2" />
-                      Save Changes
+                      {t('profile.save')}
                     </button>
                     <button
                       onClick={handleCancel}
                       className="btn-outline w-full"
                     >
                       <X className="w-4 h-4 mr-2" />
-                      Cancel
+                      {t('profile.cancel')}
                     </button>
                   </>
                 ) : (
@@ -213,24 +215,23 @@ const Profile = () => {
                     className="btn-outline w-full"
                   >
                     <Edit3 className="w-4 h-4 mr-2" />
-                    Edit Profile
+                    {t('profile.edit')}
                   </button>
                 )}
               </div>
 
               {/* Badges */}
               <div className="mt-6 text-center">
-                <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
-                  user?.role === 'admin' 
+                <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${user?.role === 'admin'
                     ? 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300'
                     : user?.role === 'seller'
-                    ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300'
-                    : 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300'
-                }`}>
+                      ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300'
+                      : 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300'
+                  }`}>
                   {user?.role === 'admin' && <Shield className="w-3 h-3 mr-1" />}
                   {user?.role === 'seller' && <Palette className="w-3 h-3 mr-1" />}
                   {user?.role === 'buyer' && <User className="w-3 h-3 mr-1" />}
-                  {user?.role?.charAt(0).toUpperCase() + user?.role?.slice(1)}
+                  {user?.role === 'admin' ? t('auth.roles.admin') : user?.role === 'artist' ? t('auth.roles.artist') : t('auth.roles.buyer')}
                 </span>
                 {user?.badges && user.badges.length > 0 && (
                   <div className="flex flex-wrap gap-2 mt-2 justify-center">
@@ -275,22 +276,22 @@ const Profile = () => {
               ))}
             </div>
 
-         {/* Badges Section (only for artist) */}
-{user?.role === 'artist' && (
-  <div
-    className="bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl p-6 mt-8 cursor-pointer shadow-lg hover:scale-105 transition-transform"
-    onClick={() => setShowBadgesModal(true)}
-  >
-    <h3 className="text-xl font-bold text-white mb-4">
-      Badges
-    </h3>
-    <div className="flex flex-wrap gap-2">
-      <span className="bg-white/20 text-white px-4 py-2 rounded-full text-sm font-bold shadow-md">
-        Click Here To See your Badges👉
-      </span>
-    </div>
-  </div>
-)}
+            {/* Badges Section (only for artist) */}
+            {user?.role === 'artist' && (
+              <div
+                className="bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl p-6 mt-8 cursor-pointer shadow-lg hover:scale-105 transition-transform"
+                onClick={() => setShowBadgesModal(true)}
+              >
+                <h3 className="text-xl font-bold text-white mb-4">
+                  {t('profile.badges_title')}
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  <span className="bg-white/20 text-white px-4 py-2 rounded-full text-sm font-bold shadow-md">
+                    {t('profile.badges_prompt')}
+                  </span>
+                </div>
+              </div>
+            )}
 
 
             {/* Badges Modal */}
@@ -311,7 +312,7 @@ const Profile = () => {
             {/* Recent Activity */}
             <div className="bg-base-100 rounded-2xl border border-base-300 p-6">
               <h3 className="text-xl font-semibold text-base-content mb-4">
-                Recent Activity
+                {t('profile.recent')}
               </h3>
               <div className="space-y-4">
                 {recentActivity.map((activity, index) => (
@@ -335,7 +336,7 @@ const Profile = () => {
             {/* Quick Actions */}
             <div className="bg-base-100 rounded-2xl border border-base-300 p-6">
               <h3 className="text-xl font-semibold text-base-content mb-4">
-                Quick Actions
+                {t('profile.quick')}
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <button className="p-4 border border-base-300 rounded-lg hover:bg-base-200 transition-colors text-left">
@@ -344,8 +345,8 @@ const Profile = () => {
                       <Heart className="w-5 h-5 text-primary-600" />
                     </div>
                     <div>
-                      <div className="font-medium text-base-content">Favorites</div>
-                      <div className="text-sm text-base-content/70">View your liked artworks</div>
+                      <div className="font-medium text-base-content">{t('profile.actions.favorites')}</div>
+                      <div className="text-sm text-base-content/70">{t('profile.actions.favorites_desc')}</div>
                     </div>
                   </div>
                 </button>
@@ -356,8 +357,8 @@ const Profile = () => {
                       <ShoppingBag className="w-5 h-5 text-secondary-600" />
                     </div>
                     <div>
-                      <div className="font-medium text-base-content">Purchases</div>
-                      <div className="text-sm text-base-content/70">View your collection</div>
+                      <div className="font-medium text-base-content">{t('profile.actions.purchases')}</div>
+                      <div className="text-sm text-base-content/70">{t('profile.actions.purchases_desc')}</div>
                     </div>
                   </div>
                 </button>
@@ -368,8 +369,8 @@ const Profile = () => {
                       <BookOpen className="w-5 h-5 text-accent-600" />
                     </div>
                     <div>
-                      <div className="font-medium text-base-content">Courses</div>
-                      <div className="text-sm text-base-content/70">Continue learning</div>
+                      <div className="font-medium text-base-content">{t('profile.actions.courses')}</div>
+                      <div className="text-sm text-base-content/70">{t('profile.actions.courses_desc')}</div>
                     </div>
                   </div>
                 </button>
@@ -380,8 +381,8 @@ const Profile = () => {
                       <Users className="w-5 h-5 text-success-600" />
                     </div>
                     <div>
-                      <div className="font-medium text-base-content">Communities</div>
-                      <div className="text-sm text-base-content/70">Join discussions</div>
+                      <div className="font-medium text-base-content">{t('profile.actions.communities')}</div>
+                      <div className="text-sm text-base-content/70">{t('profile.actions.communities_desc')}</div>
                     </div>
                   </div>
                 </button>
@@ -391,7 +392,7 @@ const Profile = () => {
             {/* Settings */}
             <div className="bg-base-100 rounded-2xl border border-base-300 p-6">
               <h3 className="text-xl font-semibold text-base-content mb-4">
-                Account Settings
+                {t('profile.settings.title')}
               </h3>
               <div className="space-y-4">
                 <button className="w-full p-4 border border-base-300 rounded-lg hover:bg-base-200 transition-colors text-left">
@@ -399,8 +400,8 @@ const Profile = () => {
                     <div className="flex items-center space-x-3">
                       <Bell className="w-5 h-5 text-base-content/70" />
                       <div>
-                        <div className="font-medium text-base-content">Notifications</div>
-                        <div className="text-sm text-base-content/70">Manage your notification preferences</div>
+                        <div className="font-medium text-base-content">{t('profile.settings.notifications')}</div>
+                        <div className="text-sm text-base-content/70">{t('profile.settings.notifications_desc')}</div>
                       </div>
                     </div>
                     <Settings className="w-5 h-5 text-base-content/50" />
@@ -412,8 +413,8 @@ const Profile = () => {
                     <div className="flex items-center space-x-3">
                       <Shield className="w-5 h-5 text-base-content/70" />
                       <div>
-                        <div className="font-medium text-base-content">Privacy & Security</div>
-                        <div className="text-sm text-base-content/70">Control your account security</div>
+                        <div className="font-medium text-base-content">{t('profile.settings.privacy')}</div>
+                        <div className="text-sm text-base-content/70">{t('profile.settings.privacy_desc')}</div>
                       </div>
                     </div>
                     <Settings className="w-5 h-5 text-base-content/50" />
@@ -425,8 +426,8 @@ const Profile = () => {
                     <div className="flex items-center space-x-3">
                       <Globe className="w-5 h-5 text-base-content/70" />
                       <div>
-                        <div className="font-medium text-base-content">Language & Region</div>
-                        <div className="text-sm text-base-content/70">Set your preferred language</div>
+                        <div className="font-medium text-base-content">{t('profile.settings.language')}</div>
+                        <div className="text-sm text-base-content/70">{t('profile.settings.language_desc')}</div>
                       </div>
                     </div>
                     <Settings className="w-5 h-5 text-base-content/50" />

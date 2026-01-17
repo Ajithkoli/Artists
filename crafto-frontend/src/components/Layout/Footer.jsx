@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { motion } from 'framer-motion'
 import {
   Instagram,
@@ -11,32 +12,33 @@ import {
 } from 'lucide-react'
 
 const Footer = () => {
+  const { t } = useTranslation()
   const currentYear = new Date().getFullYear()
 
   const footerLinks = {
     company: [
-      { name: 'About Us', href: '/about' },
-      { name: 'Careers', href: '#' },
-      { name: 'Press', href: '#' },
-      { name: 'Blog', href: '#' },
+      { name: t('footer.links.about'), href: '/about' },
+      { name: t('footer.links.careers'), href: '#' },
+      { name: t('footer.links.press'), href: '#' },
+      { name: t('footer.links.blog'), href: '#' },
     ],
     marketplace: [
-      { name: 'Explore Art', href: '/explore' },
-      { name: 'Artists', href: '#' },
-      { name: 'Collections', href: '#' },
-      { name: 'Auctions', href: '#' },
+      { name: t('footer.links.explore'), href: '/explore' },
+      { name: t('footer.links.artists'), href: '#' },
+      { name: t('footer.links.collections'), href: '#' },
+      { name: t('footer.links.auctions'), href: '#' },
     ],
     support: [
-      { name: 'Help Center', href: '#' },
-      { name: 'Contact Us', href: '#' },
-      { name: 'Privacy Policy', href: '#' },
-      { name: 'Terms of Service', href: '#' },
+      { name: t('footer.links.help'), href: '#' },
+      { name: t('footer.links.contact'), href: '#' },
+      { name: t('footer.links.privacy'), href: '#' },
+      { name: t('footer.links.terms'), href: '#' },
     ],
     community: [
-      { name: 'Join Community', href: '/community' },
-      { name: 'Live Streams', href: '#' },
-      { name: 'Courses', href: '/learn' },
-      { name: 'Events', href: '#' },
+      { name: t('footer.links.join'), href: '/community' },
+      { name: t('footer.links.live'), href: '#' },
+      { name: t('footer.links.courses'), href: '/learn' },
+      { name: t('footer.links.events'), href: '#' },
     ]
   }
 
@@ -60,8 +62,7 @@ const Footer = () => {
               <span className="text-2xl font-serif font-bold text-gradient">Crafto</span>
             </Link>
             <p className="text-base-content/70 mb-6 max-w-md">
-              Discover and collect unique artworks and architectural designs from talented artists worldwide.
-              Join our vibrant community of creators and collectors.
+              {t('footer.desc')}
             </p>
 
             {/* Contact Info */}
@@ -83,7 +84,7 @@ const Footer = () => {
 
           {/* Company Section */}
           <div>
-            <h3 className="font-semibold text-base-content mb-4">Company</h3>
+            <h3 className="font-semibold text-base-content mb-4">{t('footer.company')}</h3>
             <ul className="space-y-2">
               {footerLinks.company.map((link) => (
                 <li key={link.name}>
@@ -100,7 +101,7 @@ const Footer = () => {
 
           {/* Marketplace Section */}
           <div>
-            <h3 className="font-semibold text-base-content mb-4">Marketplace</h3>
+            <h3 className="font-semibold text-base-content mb-4">{t('footer.marketplace')}</h3>
             <ul className="space-y-2">
               {footerLinks.marketplace.map((link) => (
                 <li key={link.name}>
@@ -117,7 +118,7 @@ const Footer = () => {
 
           {/* Support Section */}
           <div>
-            <h3 className="font-semibold text-base-content mb-4">Support</h3>
+            <h3 className="font-semibold text-base-content mb-4">{t('footer.support')}</h3>
             <ul className="space-y-2">
               {footerLinks.support.map((link) => (
                 <li key={link.name}>
@@ -134,7 +135,7 @@ const Footer = () => {
 
           {/* Community Section */}
           <div>
-            <h3 className="font-semibold text-base-content mb-4">Community</h3>
+            <h3 className="font-semibold text-base-content mb-4">{t('footer.community')}</h3>
             <ul className="space-y-2">
               {footerLinks.community.map((link) => (
                 <li key={link.name}>
@@ -154,7 +155,7 @@ const Footer = () => {
         <div className="border-t border-base-300 mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-sm text-base-content/70">
-              © {currentYear} Crafto. All rights reserved.
+              {t('footer.rights', { year: currentYear })}
             </p>
 
             {/* Social Links */}

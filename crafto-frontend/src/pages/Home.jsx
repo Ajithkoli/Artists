@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import apiClient from '../api/axios'
 import { useAuth } from '../contexts/AuthContext'
+import { useTranslation } from 'react-i18next'
 import {
   ArrowRight,
   Palette,
@@ -15,6 +16,7 @@ import {
 } from 'lucide-react'
 
 const Home = () => {
+  const { t } = useTranslation()
   const { user, isAuthenticated } = useAuth()
   // Mock featured artworks data
   // Products state to replace mock data
@@ -51,10 +53,10 @@ const Home = () => {
   }, []);
 
   const stats = [
-    { number: "500+", label: "Artists", icon: Palette },
-    { number: "2000+", label: "Buyers", icon: Users },
-    { number: "100+", label: "Communities", icon: Building2 },
-    { number: "50K+", label: "Artworks", icon: Star }
+    { number: "500+", label: t('stats.artists'), icon: Palette },
+    { number: "2000+", label: t('stats.buyers'), icon: Users },
+    { number: "100+", label: t('stats.communities'), icon: Building2 },
+    { number: "50K+", label: t('stats.artworks'), icon: Star }
   ]
 
   const containerVariants = {
@@ -103,24 +105,20 @@ const Home = () => {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-3 w-3 bg-primary-500"></span>
               </span>
-              <span className="text-sm font-bold text-base-content tracking-widest uppercase">The Future of Art is Here</span>
+              <span className="text-sm font-bold text-base-content tracking-widest uppercase">{t('hero.tagline')}</span>
             </motion.div>
 
             <motion.h1
               variants={itemVariants}
               className="text-5xl md:text-8xl lg:text-9xl font-serif font-black text-base-content mb-8 leading-[0.9] tracking-tighter"
-            >
-              Unleash Your <br />
-              <span className="text-gradient drop-shadow-[0_0_30px_rgba(6,182,212,0.3)]">Celestial</span>
-              {' '}Vision
-            </motion.h1>
+              dangerouslySetInnerHTML={{ __html: t('hero.title') }}
+            ></motion.h1>
 
             <motion.p
               variants={itemVariants}
               className="text-xl md:text-2xl text-base-content/60 max-w-2xl mx-auto mb-12 font-medium leading-relaxed"
             >
-              Experience the next generation of architectural digital art.
-              Discover, collect, and trade extraordinary pieces in a galaxy of creativity.
+              {t('hero.description')}
             </motion.p>
 
             <motion.div
@@ -128,11 +126,11 @@ const Home = () => {
               className="flex flex-col sm:flex-row gap-6 justify-center items-center"
             >
               <Link to="/explore" className="btn-primary text-xl px-10 py-5 group">
-                Enter the Gallery
+                {t('hero.enter_gallery')}
                 <ArrowRight className="w-6 h-6 ml-3 group-hover:translate-x-2 transition-transform" />
               </Link>
               <Link to="/community" className="px-10 py-5 rounded-xl border-2 border-base-content/10 hover:border-primary-500/50 hover:bg-base-content/5 transition-all text-xl font-bold text-base-content">
-                Join the Fold
+                {t('hero.join_fold')}
               </Link>
             </motion.div>
           </motion.div>
@@ -194,14 +192,14 @@ const Home = () => {
           >
             <div className="max-w-2xl">
               <h2 className="text-4xl md:text-6xl font-serif font-black text-base-content mb-6 tracking-tighter">
-                Stellar <span className="text-secondary-500">Masterpieces</span>
+                {t('featured.title')}
               </h2>
               <p className="text-xl text-base-content/60 font-medium">
-                Handpicked treasures from the most renowned digital architects in our ecosystem.
+                {t('featured.subtitle')}
               </p>
             </div>
             <Link to="/explore" className="group flex items-center space-x-3 text-base-content font-bold text-lg hover:text-primary-600 transition-colors">
-              <span>View All Treasures</span>
+              <span>{t('featured.view_all')}</span>
               <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
             </Link>
           </motion.div>
@@ -240,11 +238,11 @@ const Home = () => {
                       {artwork.title}
                     </h3>
                     <p className="text-xs text-base-content/50 uppercase tracking-widest font-bold mb-6">
-                      by {artwork.artist}
+                      {t('featured.by', { artist: artwork.artist })}
                     </p>
                     <div className="flex items-center justify-between">
                       <div className="flex flex-col">
-                        <span className="text-[10px] text-base-content/40 font-black uppercase tracking-widest leading-none mb-1">Price</span>
+                        <span className="text-[10px] text-base-content/40 font-black uppercase tracking-widest leading-none mb-1">{t('featured.price')}</span>
                         <span className="text-2xl font-black text-base-content tracking-tighter">{artwork.price}</span>
                       </div>
                       <div className="flex items-center space-x-3 text-xs text-base-content/40 font-bold">
@@ -287,28 +285,29 @@ const Home = () => {
             </div>
 
             <div className="relative z-10 max-w-3xl mx-auto">
-              <h2 className="text-4xl md:text-7xl font-serif font-black text-white mb-8 tracking-tighter leading-tight text-glow">
-                Ready to Join the <br />Elite Creators?
+              <h2
+                className="text-4xl md:text-7xl font-serif font-black text-white mb-8 tracking-tighter leading-tight text-glow"
+                dangerouslySetInnerHTML={{ __html: t('cta.title') }}
+              >
               </h2>
               <p className="text-xl text-white/80 font-medium mb-12">
-                Your journey into the celestial Crafto begins here.
-                Mint your legacy and connect with global collectors.
+                {t('cta.subtitle')}
               </p>
               <div className="flex flex-col sm:flex-row gap-6 justify-center">
                 {!isAuthenticated ? (
                   <Link to="/register" className="bg-white text-primary-600 hover:scale-105 active:scale-95 font-bold py-5 px-10 rounded-2xl transition-all shadow-xl shadow-black/20">
-                    Get Started Now
+                    {t('cta.get_started')}
                   </Link>
                 ) : (
                   <Link
                     to={user?.role === 'artist' ? '/seller-dashboard' : '/profile'}
                     className="bg-white text-primary-600 hover:scale-105 active:scale-95 font-bold py-5 px-10 rounded-2xl transition-all shadow-xl shadow-black/20"
                   >
-                    Go to Dashboard
+                    {t('cta.dashboard')}
                   </Link>
                 )}
                 <Link to="/explore" className="bg-black/20 backdrop-blur-md border-2 border-white/20 text-white hover:bg-white/10 hover:border-white/40 font-bold py-5 px-10 rounded-2xl transition-all">
-                  Browse Gallery
+                  {t('cta.browse')}
                 </Link>
               </div>
             </div>

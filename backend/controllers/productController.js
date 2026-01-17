@@ -5,7 +5,7 @@ const ErrorHandler = require('../utils/errorHandler');
 
 exports.createProduct = async (req, res) => {
   try {
-    const { title, description, price, isBiddable, biddingDays, tags } = req.body;
+    const { title, description, price, isBiddable, biddingDays, tags, origin } = req.body;
     const filePath = req.file ? req.file.path : null;
 
 
@@ -23,6 +23,7 @@ exports.createProduct = async (req, res) => {
       isBiddable: isBiddable === "true",
       biddingEndTime,
       tags: tags ? JSON.parse(tags) : [],
+      origin,
       // --- ADD THIS LINE ---
       user: req.user.id // Get the user ID from the isAuthenticatedUser middleware
     });

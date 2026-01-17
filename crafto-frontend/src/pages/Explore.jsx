@@ -4,12 +4,15 @@ import { Link } from 'react-router-dom'
 import apiClient from '../api/axios'
 import { Star, Heart, Eye, ShoppingCart, Search } from 'lucide-react'
 import { FileText, LayoutGrid } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 const Explore = () => {
   const [posts, setPosts] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [search, setSearch] = useState("");
+
+  const { t } = useTranslation();
 
   // ✅ Fetch posts from backend
   useEffect(() => {
@@ -21,7 +24,7 @@ const Explore = () => {
         setPosts(res.data?.data || res.data || [])
       } catch (err) {
         console.error(err)
-        setError("Failed to load posts. Please try again later.")
+        setError(t('explore.error.desc'))
       } finally {
         setLoading(false)
       }
@@ -31,7 +34,7 @@ const Explore = () => {
       fetchPosts();
     }, 50000); // 50 seconds
     return () => clearInterval(interval);
-  }, [])
+  }, [t])
   //const img = ;
   console.log("hiii", posts)
 
@@ -44,10 +47,10 @@ const Explore = () => {
             animate={{ opacity: 1, scale: 1 }}
             className="text-5xl md:text-7xl font-serif font-black text-base-content mb-6 tracking-tighter"
           >
-            Community <span className="text-gradient">Stories</span>
+            {t('explore.title')}
           </motion.h1>
           <p className="text-xl text-base-content/60 max-w-2xl mx-auto font-medium">
-            Explore the latest updates, stories, and inspirations from our global architectural community.
+            {t('explore.subtitle')}
           </p>
           <div className="max-w-xl mx-auto mt-12 relative group">
             <div className="absolute inset-0 bg-secondary-500/10 blur-xl opacity-0 group-focus-within:opacity-100 transition-opacity rounded-2xl"></div>
@@ -56,7 +59,7 @@ const Explore = () => {
               type="text"
               value={search}
               onChange={e => setSearch(e.target.value)}
-              placeholder="Search conversations..."
+              placeholder={t('explore.search_placeholder')}
               className="w-full pl-14 pr-6 py-5 rounded-2xl bg-base-100 border border-base-content/10 focus:border-secondary-500/50 outline-none transition-all placeholder:text-base-content/30 text-base-content font-medium shadow-2xl"
             />
           </div>
@@ -67,13 +70,13 @@ const Explore = () => {
       {loading && (
         <div className="flex flex-col items-center justify-center py-32 space-y-4">
           <span className="loading loading-ring loading-lg text-primary-400"></span>
-          <p className="text-base-content/50 font-bold uppercase tracking-widest text-sm">Syncing with the galaxy...</p>
+          <p className="text-base-content/50 font-bold uppercase tracking-widest text-sm">{t('explore.loading')}</p>
         </div>
       )}
 
       {error && (
         <div className="max-w-md mx-auto p-8 rounded-3xl bg-error/5 border border-error/20 text-center">
-          <p className="text-error font-bold mb-2">Network Disruption</p>
+          <p className="text-error font-bold mb-2">{t('explore.error.title')}</p>
           <p className="text-sm text-error/60">{error}</p>
         </div>
       )}
@@ -102,7 +105,7 @@ const Explore = () => {
                   <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
                     <div className="flex items-center space-x-2">
                       <span className="px-3 py-1 bg-white/10 backdrop-blur-md rounded-full border border-white/20 text-[10px] font-bold text-white tracking-widest uppercase">
-                        Architecture
+                        {t('explore.architecture')}
                       </span>
                     </div>
                   </div>
@@ -129,7 +132,7 @@ const Explore = () => {
                     to={`/explore/${post._id}`}
                     className="mt-auto group flex items-center justify-center space-x-2 w-full py-4 rounded-xl bg-base-content/5 hover:bg-base-content/10 border border-base-content/5 transition-all text-sm font-bold text-base-content"
                   >
-                    <span>View Full Story</span>
+                    <span>{t('explore.view_story')}</span>
                     <FileText size={16} className="group-hover:text-primary-400 transition-colors" />
                   </Link>
                 </div>

@@ -5,10 +5,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Bot, User } from 'lucide-react';
 import { MessageCircle } from 'lucide-react';
 import apiClient from '../api/axios';
+import { useTranslation } from 'react-i18next';
 
 // This component now calls the server-side AI proxy at `/api/v1/ai/chat`.
 
 const CraftoChat = () => {
+    const { t } = useTranslation();
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -17,7 +19,7 @@ const CraftoChat = () => {
     // This function initializes the chat with the system prompt
     const initializeChat = () => {
         // Local system prompt is kept in frontend but the server-side model can also apply its own prompt.
-        const greeting = 'Hello! I am Crafto, your guide to the Crafto platform. How can I help you explore the world of traditional art today?';
+        const greeting = t('chat.greeting');
         setMessages([{ role: 'model', text: greeting }]);
         return null; // chat state not needed when using server proxy
     };
@@ -35,11 +37,11 @@ const CraftoChat = () => {
         try {
             // Call server-side AI proxy. Backend will add GEMINI_API_KEY server-side.
             const resp = await apiClient.post('/ai/chat', { message: input });
-            const text = resp?.data?.text || 'Sorry, I could not get a response.';
+            const text = resp?.data?.text || t('chat.no_response');
             setMessages(prev => [...prev, { role: 'model', text }]);
         } catch (error) {
             console.error('AI proxy error:', error);
-            setMessages(prev => [...prev, { role: 'model', text: 'Sorry, I seem to be having some trouble right now. Please try again later.' }]);
+            setMessages(prev => [...prev, { role: 'model', text: t('chat.error') }]);
         } finally {
             setIsLoading(false);
         }
@@ -48,7 +50,7 @@ const CraftoChat = () => {
     return (
         <div className="max-w-2xl mx-auto bg-base-100 rounded-xl shadow-lg border border-base-300 dark:border-slate-700 overflow-hidden flex flex-col" style={{ minHeight: '600px' }}>
             <div className="p-4 border-b dark:border-slate-700">
-                <h2 className="text-xl font-bold text-center text-slate-800 dark:text-white">Chat with Crafto</h2>
+                <h2 className="text-xl font-bold text-center text-slate-800 dark:text-white">{t('chat.title')}</h2>
             </div>
 
             <div className="flex-1 p-6 overflow-y-auto" style={{ maxHeight: '60vh' }}>
@@ -76,7 +78,7 @@ const CraftoChat = () => {
                 {isLoading && (
                     <div className="flex justify-end items-center gap-2 mt-2">
                         <MessageCircle className="w-5 h-5 animate-spin text-blue-500" />
-                        <span className="text-blue-500">Sending...</span>
+                        <span className="text-blue-500">{t('chat.sending')}</span>
                     </div>
                 )}
             </div>
@@ -86,7 +88,7 @@ const CraftoChat = () => {
                     type="text"
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
-                    placeholder="Ask about Crafto..."
+                    placeholder={t('chat.placeholder')}
                     className="input input-bordered w-full"
                     disabled={isLoading}
                     onKeyDown={(e) => {

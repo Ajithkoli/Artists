@@ -1,10 +1,11 @@
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
+
+// Load env vars immediately
+dotenv.config({ path: "./config.env" });
+
 const User = require("./models/user.model");
 const connectDatabase = require("./db");
-
-// Load env vars
-dotenv.config({ path: "./config.env" });
 
 const createAdmin = async () => {
     try {
