@@ -4,8 +4,13 @@ const createPost = async (req, res) => {
   try {
     const { title, description, story, tags } = req.body;
 
-    if (!req.file) return res.status(400).json({ success: false, message: "Photo is required" });
+    if (!req.file) {
+      console.error("Create Post Error: No file provided");
+      return res.status(400).json({ success: false, message: "Photo is required" });
+    }
+
     if (!title || !description || !story) {
+      console.error("Create Post Error: Missing fields", { title: !!title, description: !!description, story: !!story });
       return res.status(400).json({ success: false, message: "All fields are required" });
     }
 
@@ -20,19 +25,20 @@ const createPost = async (req, res) => {
     }
 
     const post = new Post({
-      photoUrl: req.file.path,
+      photoUrl: req.file.path || req.file.url, // Handle different multer variants
       title,
       description,
       story,
       tags: parsedTags,
-      user: req.user.id
+      user: req.user._id // Using _id specifically
     });
 
     const savedPost = await post.save();
+    console.log("Post created successfully:", savedPost._id);
     res.status(201).json({ success: true, post: savedPost });
   } catch (err) {
-    console.error("Create Post Error:", err);
-    res.status(500).json({ success: false, message: err.message || "Server error" });
+    console.error("Create Post Exception:", err);
+    res.status(500).json({ success: false, message: err.message || "Internal Server Error" });
   }
 };
 
