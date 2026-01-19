@@ -230,6 +230,7 @@ const AnalyticsCharts = ({ analytics, stats }) => {
 const ArtListings = () => {
     const { t } = useTranslation();
     const [products, setProducts] = useState([]);
+    const [searchTerm, setSearchTerm] = useState("");
     const [loading, setLoading] = useState(true);
 
     const fetchProducts = async () => {
@@ -258,16 +259,60 @@ const ArtListings = () => {
         }
     };
 
+    const getImageUrl = (photoPath) => {
+        if (!photoPath) return "https://via.placeholder.com/300?text=No+Image";
+
+        // Check for absolute URLs (Cloudinary, etc.)
+        if (photoPath.startsWith('http://') || photoPath.startsWith('https://')) {
+            return photoPath;
+        }
+
+        // Normalize path separators
+        const normalizedPath = photoPath.replace(/\\/g, '/');
+
+        // If path starts with uploads/, replace it with /api/v1/image/
+        if (normalizedPath.startsWith('uploads/')) {
+            const filename = normalizedPath.split('/').pop();
+            return `${import.meta.env.VITE_API_BASE_URL}/image/${filename}`;
+        }
+
+        // Fallback or other paths
+        return `${import.meta.env.VITE_API_BASE_URL}/${normalizedPath}`;
+    };
+
+    const filteredProducts = products.filter(product =>
+        product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.user?.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     if (loading) return <div className="text-center text-gray-400 p-10">{t('admin.overview.loading')}</div>;
 
     return (
         <div className="bg-gray-800/30 backdrop-blur-lg rounded-xl p-6 border border-gray-700/50">
-            <h3 className="text-xl font-bold text-white mb-6">Marketplace Listings</h3>
+            <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+                <h3 className="text-xl font-bold text-white">Marketplace Listings</h3>
+                <div className="relative w-full md:w-64">
+                    <input
+                        type="text"
+                        placeholder="Search artworks..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="w-full bg-gray-900/50 border border-gray-700 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                </div>
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {products.length > 0 ? products.map((product) => (
+                {filteredProducts.length > 0 ? filteredProducts.map((product) => (
                     <div key={product._id} className="bg-gray-900/50 rounded-xl overflow-hidden border border-gray-700/30 group">
                         <div className="aspect-video relative overflow-hidden">
-                            <img src={`${import.meta.env.VITE_API_BASE_URL}/${product.photo}`} alt={product.title} className="w-full h-full object-cover" />
+                            <img
+                                src={getImageUrl(product.photo)}
+                                alt={product.title}
+                                className="w-full h-full object-cover"
+                                onError={(e) => { e.target.src = "https://via.placeholder.com/300?text=Error+Loading"; }}
+                            />
                         </div>
                         <div className="p-4">
                             <div className="flex justify-between items-start mb-2">
@@ -286,7 +331,7 @@ const ArtListings = () => {
                             </div>
                         </div>
                     </div>
-                )) : <p className="text-gray-400 col-span-full text-center py-10">No products found.</p>}
+                )) : <p className="text-gray-400 col-span-full text-center py-10">No matching products found.</p>}
             </div>
         </div>
     );
