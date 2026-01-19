@@ -48,18 +48,17 @@ exports.getProducts = async (req, res) => {
   }
 };
 
-// ✅ Get Single Product by ID
 exports.getProductById = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id)
+    const product = await Product.findByIdAndUpdate(
+      req.params.id,
+      { $inc: { views: 1 } },
+      { new: true }
+    )
       .populate('user', 'name specialization bio')
       .populate('comments.user', 'name');
 
     if (!product) return res.status(404).json({ success: false, message: "Not Found" });
-
-    // Increment views
-    product.views = (product.views || 0) + 1;
-    await product.save();
 
     res.json({ success: true, product });
   } catch (error) {
@@ -152,5 +151,18 @@ exports.notifyArtistForPurchase = async (req, res, next) => {
 
   } catch (error) {
     next(error);
+  }
+};
+
+exports.deleteProduct = async (req, res, next) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product) return res.status(404).json({ success: false, message: "Product not found" });
+
+    await Product.findByIdAndDelete(req.params.id);
+
+    res.json({ success: true, message: "Product deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
   }
 };

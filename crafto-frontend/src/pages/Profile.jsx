@@ -95,11 +95,16 @@ const Profile = () => {
   }
 
   const stats = [
-    { label: t('profile.stats.artworks'), value: user?.artworkCount || 0, icon: Palette, color: 'text-primary-600' },
-    { label: t('profile.stats.purchases'), value: orderStats.buyerCount, icon: ShoppingBag, color: 'text-success-600' },
-    { label: t('profile.stats.collections'), value: orderStats.sellerCount, icon: BookOpen, color: 'text-blue-600' },
-    { label: t('profile.stats.communities'), value: 3, icon: Users, color: 'text-purple-600' }
-  ]
+    { id: 'artworks', label: t('profile.stats.artworks'), value: user?.artworkCount || 0, icon: Palette, color: 'text-primary-600' },
+    { id: 'purchases', label: t('profile.stats.purchases'), value: orderStats.buyerCount, icon: ShoppingBag, color: 'text-success-600' },
+    { id: 'collections', label: t('profile.stats.collections'), value: orderStats.sellerCount, icon: BookOpen, color: 'text-blue-600' },
+    { id: 'communities', label: t('profile.stats.communities'), value: 3, icon: Users, color: 'text-purple-600' }
+  ].filter(stat => {
+    if (user?.role === 'buyer') {
+      return stat.id !== 'artworks' && stat.id !== 'collections'
+    }
+    return true
+  })
 
   const recentActivity = [
     { type: 'like', text: 'Liked "Abstract Harmony" by Sarah Artist', time: '2 hours ago' },
@@ -457,35 +462,39 @@ const Profile = () => {
                 {t('profile.quick')}
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <button
-                  onClick={() => setShowUploadProductModal(true)}
-                  className="p-4 border border-base-300 rounded-lg hover:bg-base-200 transition-colors text-left"
-                >
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
-                      <Plus className="w-5 h-5 text-primary-600" />
-                    </div>
-                    <div>
-                      <div className="font-medium text-base-content">{t('upload_artwork.title')}</div>
-                      <div className="text-sm text-base-content/70">{t('upload_artwork.subtitle') || 'Upload your work'}</div>
-                    </div>
-                  </div>
-                </button>
+                {(user?.role === 'artist' || user?.role === 'admin') && (
+                  <>
+                    <button
+                      onClick={() => setShowUploadProductModal(true)}
+                      className="p-4 border border-base-300 rounded-lg hover:bg-base-200 transition-colors text-left"
+                    >
+                      <div className="flex items-center space-x-3">
+                        <div className="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
+                          <Plus className="w-5 h-5 text-primary-600" />
+                        </div>
+                        <div>
+                          <div className="font-medium text-base-content">{t('upload_artwork.title')}</div>
+                          <div className="text-sm text-base-content/70">{t('upload_artwork.subtitle') || 'Upload your work'}</div>
+                        </div>
+                      </div>
+                    </button>
 
-                <button
-                  onClick={() => setShowPostModal(true)}
-                  className="p-4 border border-base-300 rounded-lg hover:bg-base-200 transition-colors text-left"
-                >
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-secondary-100 rounded-lg flex items-center justify-center">
-                      <Edit3 className="w-5 h-5 text-secondary-600" />
-                    </div>
-                    <div>
-                      <div className="font-medium text-base-content">{t('post_creator.title')}</div>
-                      <div className="text-sm text-base-content/70">{t('post_creator.subtitle') || 'Share your journey'}</div>
-                    </div>
-                  </div>
-                </button>
+                    <button
+                      onClick={() => setShowPostModal(true)}
+                      className="p-4 border border-base-300 rounded-lg hover:bg-base-200 transition-colors text-left"
+                    >
+                      <div className="flex items-center space-x-3">
+                        <div className="w-10 h-10 bg-secondary-100 rounded-lg flex items-center justify-center">
+                          <Edit3 className="w-5 h-5 text-secondary-600" />
+                        </div>
+                        <div>
+                          <div className="font-medium text-base-content">{t('post_creator.title')}</div>
+                          <div className="text-sm text-base-content/70">{t('post_creator.subtitle') || 'Share your journey'}</div>
+                        </div>
+                      </div>
+                    </button>
+                  </>
+                )}
 
                 <button
                   onClick={() => setActiveTab('orders')}

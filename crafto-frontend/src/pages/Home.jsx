@@ -110,7 +110,7 @@ const Home = () => {
 
             <motion.h1
               variants={itemVariants}
-              className="text-5xl md:text-8xl lg:text-9xl font-serif font-black text-base-content mb-8 leading-[0.9] tracking-tighter"
+              className="text-4xl md:text-8xl lg:text-9xl font-serif font-black text-base-content mb-8 leading-[0.9] tracking-tighter"
               dangerouslySetInnerHTML={{ __html: t('hero.title') }}
             ></motion.h1>
 
@@ -123,13 +123,13 @@ const Home = () => {
 
             <motion.div
               variants={itemVariants}
-              className="flex flex-col sm:flex-row gap-6 justify-center items-center"
+              className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center"
             >
-              <Link to="/explore" className="btn-primary text-xl px-10 py-5 group">
+              <Link to="/explore" className="btn-primary text-lg md:text-xl px-8 md:px-10 py-4 md:py-5 group w-full sm:w-auto">
                 {t('hero.enter_gallery')}
-                <ArrowRight className="w-6 h-6 ml-3 group-hover:translate-x-2 transition-transform" />
+                <ArrowRight className="w-5 h-5 md:w-6 md:h-6 ml-3 group-hover:translate-x-2 transition-transform" />
               </Link>
-              <Link to="/community" className="px-10 py-5 rounded-xl border-2 border-base-content/10 hover:border-primary-500/50 hover:bg-base-content/5 transition-all text-xl font-bold text-base-content">
+              <Link to="/community" className="px-8 md:px-10 py-4 md:py-5 rounded-xl border-2 border-base-content/10 hover:border-primary-500/50 hover:bg-base-content/5 transition-all text-lg md:text-xl font-bold text-base-content w-full sm:w-auto">
                 {t('hero.join_fold')}
               </Link>
             </motion.div>

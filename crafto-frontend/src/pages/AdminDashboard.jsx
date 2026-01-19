@@ -16,12 +16,12 @@ const API_URL = `${import.meta.env.VITE_API_BASE_URL}/admin`;
 
 // --- Reusable Components (placed in the same file for simplicity) ---
 
-const Sidebar = ({ isOpen }) => {
+const Sidebar = ({ isOpen, activeTab, setActiveTab }) => {
     const { t } = useTranslation();
     const menuItems = [
-        { icon: Home, label: t('admin.sidebar.dashboard'), active: true },
-        { icon: Clock, label: t('admin.sidebar.pending') },
-        { icon: Palette, label: t('admin.sidebar.listings') },
+        { id: 'dashboard', icon: Home, label: t('admin.sidebar.dashboard') },
+        { id: 'pending', icon: Clock, label: t('admin.sidebar.pending') },
+        { id: 'listings', icon: Palette, label: t('admin.sidebar.listings') },
     ];
     return (
         <div className={`fixed left-0 top-0 h-full bg-gray-900/90 backdrop-blur-lg border-r border-gray-700/50 transition-all duration-300 z-50 ${isOpen ? 'w-64' : 'w-16'}`}>
@@ -32,8 +32,12 @@ const Sidebar = ({ isOpen }) => {
                 {isOpen && <span className="text-white font-bold text-lg">{t('admin.sidebar.title')}</span>}
             </div>
             <nav className="mt-6">
-                {menuItems.map((item, index) => (
-                    <div key={index} className={`flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-gray-800/50 cursor-pointer transition-all ${item.active ? 'bg-gradient-to-r from-blue-500/20 to-purple-600/20 border-r-2 border-blue-500 text-white' : ''}`}>
+                {menuItems.map((item) => (
+                    <div
+                        key={item.id}
+                        onClick={() => setActiveTab(item.id)}
+                        className={`flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-gray-800/50 cursor-pointer transition-all ${activeTab === item.id ? 'bg-gradient-to-r from-blue-500/20 to-purple-600/20 border-r-2 border-blue-500 text-white' : ''}`}
+                    >
                         <item.icon className="w-5 h-5" />
                         {isOpen && <span>{item.label}</span>}
                     </div>
@@ -221,10 +225,79 @@ const AnalyticsCharts = ({ analytics, stats }) => {
 };
 
 
+// --- Reusable Components ---
+
+const ArtListings = () => {
+    const { t } = useTranslation();
+    const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    const fetchProducts = async () => {
+        try {
+            const res = await apiClient.get('/products');
+            setProducts(res.data.products);
+        } catch {
+            toast.error("Failed to fetch products.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchProducts();
+    }, []);
+
+    const handleDelete = async (id) => {
+        if (!window.confirm("Are you sure you want to delete this artwork?")) return;
+        try {
+            await apiClient.delete(`/products/${id}`, { withCredentials: true });
+            toast.success("Product deleted successfully");
+            fetchProducts();
+        } catch {
+            toast.error("Failed to delete product");
+        }
+    };
+
+    if (loading) return <div className="text-center text-gray-400 p-10">{t('admin.overview.loading')}</div>;
+
+    return (
+        <div className="bg-gray-800/30 backdrop-blur-lg rounded-xl p-6 border border-gray-700/50">
+            <h3 className="text-xl font-bold text-white mb-6">Marketplace Listings</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {products.length > 0 ? products.map((product) => (
+                    <div key={product._id} className="bg-gray-900/50 rounded-xl overflow-hidden border border-gray-700/30 group">
+                        <div className="aspect-video relative overflow-hidden">
+                            <img src={`${import.meta.env.VITE_API_BASE_URL}/${product.photo}`} alt={product.title} className="w-full h-full object-cover" />
+                        </div>
+                        <div className="p-4">
+                            <div className="flex justify-between items-start mb-2">
+                                <h4 className="text-white font-semibold truncate flex-1">{product.title}</h4>
+                                <span className="text-blue-400 font-bold ml-2">₹{product.price}</span>
+                            </div>
+                            <p className="text-gray-400 text-sm mb-4 line-clamp-2">{product.description}</p>
+                            <div className="flex items-center justify-between">
+                                <span className="text-xs text-gray-500">By {product.user?.name || 'Artist'}</span>
+                                <button
+                                    onClick={() => handleDelete(product._id)}
+                                    className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
+                                >
+                                    <X className="w-5 h-5" />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )) : <p className="text-gray-400 col-span-full text-center py-10">No products found.</p>}
+            </div>
+        </div>
+    );
+};
+
+
 // --- Main Dashboard Component ---
 const ArtAdminDashboard = () => {
     const { t } = useTranslation();
     const [sidebarOpen, setSidebarOpen] = useState(true);
+    const [activeTab, setActiveTab] = useState('dashboard');
     const [stats, setStats] = useState(null);
     const [analytics, setAnalytics] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -257,7 +330,7 @@ const ArtAdminDashboard = () => {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-            <Sidebar isOpen={sidebarOpen} />
+            <Sidebar isOpen={sidebarOpen} activeTab={activeTab} setActiveTab={setActiveTab} />
             <div className={`transition-all duration-300 ${sidebarOpen ? 'ml-64' : 'ml-16'}`}>
                 <Topbar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
                 <main className="p-6">
@@ -265,9 +338,14 @@ const ArtAdminDashboard = () => {
                         <h1 className="text-3xl font-bold text-white mb-2">{t('admin.overview.title')}</h1>
                         <p className="text-gray-400">{t('admin.overview.subtitle')}</p>
                     </div>
-                    <StatsCards stats={stats} />
-                    <PendingRequests />
-                    <AnalyticsCharts analytics={analytics} stats={stats} />
+                    {activeTab === 'dashboard' && (
+                        <>
+                            <StatsCards stats={stats} />
+                            <AnalyticsCharts analytics={analytics} stats={stats} />
+                        </>
+                    )}
+                    {activeTab === 'pending' && <PendingRequests />}
+                    {activeTab === 'listings' && <ArtListings />}
                 </main>
             </div>
         </div>

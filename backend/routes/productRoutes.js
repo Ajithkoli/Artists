@@ -7,7 +7,8 @@ const {
     getProductById,
     notifyArtistForPurchase,
     toggleLikeProduct,
-    addCommentToProduct
+    addCommentToProduct,
+    deleteProduct
 } = require("../controllers/productController");
 const { isAuthenticatedUser } = require("../middleware/auth");
 const watermarkMiddleware = require('../middleware/watermark.middleware');
@@ -24,6 +25,7 @@ router.post("/:id/buy-request", isAuthenticatedUser, notifyArtistForPurchase);
 // Engagement routes
 router.post("/:id/like", isAuthenticatedUser, toggleLikeProduct);
 router.post("/:id/comment", isAuthenticatedUser, addCommentToProduct);
+router.delete("/:id", isAuthenticatedUser, deleteProduct);
 
 
 module.exports = router;
