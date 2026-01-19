@@ -6,6 +6,7 @@ import { Send, Bot, User } from 'lucide-react';
 import { MessageCircle } from 'lucide-react';
 import apiClient from '../api/axios';
 import { useTranslation } from 'react-i18next';
+import ReactMarkdown from 'react-markdown';
 
 // This component now calls the server-side AI proxy at `/api/v1/ai/chat`.
 
@@ -67,7 +68,20 @@ const CraftoChat = () => {
                             <div className={`max-w-[80%] p-3 rounded-xl ${msg.role === 'user' ? 'bg-blue-500 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-200'}`}>
                                 <div className="flex items-center gap-2">
                                     {msg.role === 'user' && <MessageCircle className="w-4 h-4 mr-1 text-white" />}
-                                    <p style={{ whiteSpace: 'pre-wrap' }}>{msg.text}</p>
+                                    <div className="prose prose-sm dark:prose-invert max-w-none">
+                                        <ReactMarkdown
+                                            components={{
+                                                p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+                                                ul: ({ children }) => <ul className="list-disc ml-4 mb-2">{children}</ul>,
+                                                ol: ({ children }) => <ol className="list-decimal ml-4 mb-2">{children}</ol>,
+                                                li: ({ children }) => <li className="mb-1">{children}</li>,
+                                                strong: ({ children }) => <span className="font-bold">{children}</span>,
+                                                em: ({ children }) => <span className="italic">{children}</span>
+                                            }}
+                                        >
+                                            {msg.text}
+                                        </ReactMarkdown>
+                                    </div>
                                 </div>
                             </div>
                             {msg.role === 'user' && <div className="flex-shrink-0 w-8 h-8 bg-slate-500 rounded-full flex items-center justify-center text-white"><User size={20} /></div>}

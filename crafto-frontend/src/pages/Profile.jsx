@@ -96,9 +96,9 @@ const Profile = () => {
 
   const stats = [
     { label: t('profile.stats.artworks'), value: user?.artworkCount || 0, icon: Palette, color: 'text-primary-600' },
-    { label: t('profile.stats.purchases') || t('cart.title'), value: orderStats.buyerCount, icon: ShoppingBag, color: 'text-success-600' },
-    { label: t('profile.stats.collections') || 'Sales', value: orderStats.sellerCount, icon: BookOpen, color: 'text-blue-600' },
-    { label: t('profile.stats.communities') || 'Communities', value: 3, icon: Users, color: 'text-purple-600' }
+    { label: t('profile.stats.purchases'), value: orderStats.buyerCount, icon: ShoppingBag, color: 'text-success-600' },
+    { label: t('profile.stats.collections'), value: orderStats.sellerCount, icon: BookOpen, color: 'text-blue-600' },
+    { label: t('profile.stats.communities'), value: 3, icon: Users, color: 'text-purple-600' }
   ]
 
   const recentActivity = [
@@ -466,8 +466,8 @@ const Profile = () => {
                       <Plus className="w-5 h-5 text-primary-600" />
                     </div>
                     <div>
-                      <div className="font-medium text-base-content">{t('upload_artwork.title') || 'New Artwork'}</div>
-                      <div className="text-sm text-base-content/70">Upload your work</div>
+                      <div className="font-medium text-base-content">{t('upload_artwork.title')}</div>
+                      <div className="text-sm text-base-content/70">{t('upload_artwork.subtitle') || 'Upload your work'}</div>
                     </div>
                   </div>
                 </button>
@@ -481,8 +481,8 @@ const Profile = () => {
                       <Edit3 className="w-5 h-5 text-secondary-600" />
                     </div>
                     <div>
-                      <div className="font-medium text-base-content">{t('post_creator.title') || 'New Post'}</div>
-                      <div className="text-sm text-base-content/70">Share your journey</div>
+                      <div className="font-medium text-base-content">{t('post_creator.title')}</div>
+                      <div className="text-sm text-base-content/70">{t('post_creator.subtitle') || 'Share your journey'}</div>
                     </div>
                   </div>
                 </button>

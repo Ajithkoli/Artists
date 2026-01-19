@@ -277,7 +277,9 @@
         "edit": "Edit Profile",
         "stats": {
             "artworks": "Artworks",
-            "collections": "Collections"
+            "purchases": "Purchases",
+            "collections": "Collections",
+            "communities": "Communities"
         },
         "badges_title": "Badges",
         "badges_prompt": "Click Here To See your Badges👉",
@@ -379,5 +381,13 @@
         "error": "Sorry, I seem to be having some trouble right now. Please try again later.",
         "no_response": "Sorry, I could not get a response.",
         "sending": "Sending..."
+    },
+    "upload_artwork": {
+        "title": "Upload your work",
+        "subtitle": "Upload your work"
+    },
+    "post_creator": {
+        "title": "Share your journey",
+        "subtitle": "Share your journey"
     }
 }

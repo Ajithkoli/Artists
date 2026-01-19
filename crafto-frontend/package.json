@@ -21,6 +21,7 @@
     "react-hook-form": "^7.45.4",
     "react-hot-toast": "^2.4.1",
     "react-i18next": "^16.5.3",
+    "react-markdown": "^10.1.0",
     "react-router-dom": "^6.26.0",
     "recharts": "^2.7.2",
     "tailwind-merge": "^1.14.0"

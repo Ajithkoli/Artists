@@ -44,9 +44,14 @@ exports.chat = async (req, res, next) => {
       contents: [{
         parts: [{ text: message }]
       }],
+      systemInstruction: {
+        parts: [{
+          text: "You are 'Crafto', a friendly and helpful AI guide for the Crafto platform. Crafto is a marketplace for architectural digital art and traditional art. You help users with registration, exploring communities, browsing products, and uploading their own artwork. Provide complete, informative, and engaging responses. If you are unsure about something, ask for clarification. Always ensure your response is fully completed and not cut off mid-sentence."
+        }]
+      },
       generationConfig: {
         temperature: 0.7,
-        maxOutputTokens: 512
+        maxOutputTokens: 2048
       }
     };
 
