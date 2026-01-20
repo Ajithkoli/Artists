@@ -35,7 +35,7 @@ const Home = () => {
             id: p._id,
             title: p.title,
             artist: p.user?.name || "Artist",
-            price: `$${p.price}`,
+            price: `₹${p.price}`,
             // Use the watermark path for the image
             image: p.photo?.startsWith('http') ? p.photo : `${apiClient.defaults.baseURL}/watermark${p.photo}`,
             category: p.tags?.[0] || "Art", // Use first tag as category or default

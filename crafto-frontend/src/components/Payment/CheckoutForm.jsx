@@ -74,7 +74,7 @@ const CheckoutForm = ({ product, onSuccess, onCancel }) => {
                 </div>
                 <div className="flex justify-between items-center text-lg font-bold">
                     <span className="text-gray-600 dark:text-gray-300">Total:</span>
-                    <span className="text-primary-600">${product.price}</span>
+                    <span className="text-primary-600">₹{product.price}</span>
                 </div>
             </div>
 
@@ -126,7 +126,7 @@ const CheckoutForm = ({ product, onSuccess, onCancel }) => {
                             Processing...
                         </>
                     ) : (
-                        `Pay $${product.price}`
+                        `Pay ₹${product.price}`
                     )}
                 </button>
             </div>

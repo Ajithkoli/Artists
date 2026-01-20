@@ -140,7 +140,7 @@ const Cart = () => {
                             <div className="flex-grow">
                                 <h3 className="font-bold text-lg">{item.title}</h3>
                                 <p className="text-sm text-gray-500 mb-2">{t('cart.by_artist', { artist: item.user?.name || 'Artist' })}</p>
-                                <div className="text-primary-600 font-bold">${item.price}</div>
+                                <div className="text-primary-600 font-bold">₹{item.price}</div>
                             </div>
                             <button
                                 onClick={() => removeFromCart(item._id)}
@@ -165,15 +165,15 @@ const Cart = () => {
                         <h2 className="text-xl font-bold mb-4">{t('cart.summary')}</h2>
                         <div className="flex justify-between mb-2 text-gray-600 dark:text-gray-300">
                             <span>{t('cart.subtotal')}</span>
-                            <span>${cartTotal}</span>
+                            <span>₹{cartTotal}</span>
                         </div>
                         <div className="flex justify-between mb-4 text-gray-600 dark:text-gray-300">
                             <span>{t('cart.taxes')}</span>
-                            <span>$0.00</span>
+                            <span>₹0.00</span>
                         </div>
                         <div className="border-t pt-4 mb-6 flex justify-between font-bold text-lg">
                             <span>{t('cart.total')}</span>
-                            <span>${cartTotal}</span>
+                            <span>₹{cartTotal}</span>
                         </div>
 
                         <button

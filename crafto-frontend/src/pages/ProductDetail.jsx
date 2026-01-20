@@ -290,7 +290,7 @@ const ProductDetail = () => {
                 <div>
                   <p className="text-base-content/40 text-xs font-black uppercase tracking-widest mb-1">{t('product_detail.current_value')}</p>
                   <div className="text-5xl font-black text-base-content tracking-tighter flex items-center">
-                    <span className="text-primary-600 mr-2 text-3xl">$</span>
+                    <span className="text-primary-600 mr-2 text-3xl">₹</span>
                     {product.price ? product.price.toLocaleString() : '0'}
                   </div>
                 </div>

@@ -56,7 +56,7 @@ const ProductCard = ({ product, onAddToCart }) => {
                     <div className="flex flex-col">
                         <span className="text-xs text-base-content/50 font-medium">{t('shop.current_price')}</span>
                         <span className="text-2xl font-black text-base-content uppercase tracking-tighter">
-                            ${product.price}
+                            ₹{product.price}
                         </span>
                     </div>
                     <div className="flex items-center space-x-4 text-xs text-base-content/60">

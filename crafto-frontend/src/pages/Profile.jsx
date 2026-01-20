@@ -459,7 +459,7 @@ const Profile = () => {
                         </div>
                         <div className="p-4">
                           <h4 className="font-bold text-base-content">{artwork.title}</h4>
-                          <p className="text-primary-600 font-bold">${artwork.price}</p>
+                          <p className="text-primary-600 font-bold">₹{artwork.price}</p>
                           <button
                             onClick={() => handleDeleteProduct(artwork._id)}
                             className="mt-2 text-red-500 hover:text-red-700 text-sm font-medium flex items-center gap-1"
@@ -492,7 +492,7 @@ const Profile = () => {
                           <p className="text-xs text-base-content/50">Bought from {order.seller?.name}</p>
                         </div>
                         <div className="text-right">
-                          <p className="font-bold text-primary-600">${order.amount}</p>
+                          <p className="font-bold text-primary-600">₹{order.amount}</p>
                           <p className="text-[10px] uppercase font-bold text-success-600">{order.paymentStatus}</p>
                         </div>
                       </div>
