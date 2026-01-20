@@ -88,16 +88,28 @@ exports.toggleLikeProduct = async (req, res) => {
 
 exports.addCommentToProduct = async (req, res) => {
   try {
-    const { text } = req.body;
+    const { text, rating } = req.body;
     if (!text) return res.status(400).json({ success: false, message: "Comment text is required" });
+
+    const reviewRating = Number(rating) || 5;
 
     const product = await Product.findById(req.params.id);
     if (!product) return res.status(404).json({ success: false, message: "Product not found" });
 
-    product.comments.push({
+    // Check if user already reviewed? 
+    // Ideally yes, but for now allow multiple comments as per current logic, just add rating.
+
+    const review = {
       user: req.user.id,
-      text: text
-    });
+      text: text,
+      rating: reviewRating
+    };
+
+    product.comments.push(review);
+
+    // Calculate rating
+    product.numReviews = product.comments.length;
+    product.rating = product.comments.reduce((acc, item) => item.rating + acc, 0) / product.comments.length;
 
     await product.save();
 

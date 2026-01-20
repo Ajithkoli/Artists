@@ -36,6 +36,7 @@ const ProductDetail = () => {
   const [copied, setCopied] = useState(false)
   const { user, isAuthenticated } = useAuth()
   const [commentText, setCommentText] = useState("")
+  const [userRating, setUserRating] = useState(5)
   const [isSubmittingComment, setIsSubmittingComment] = useState(false)
 
   useEffect(() => {
@@ -52,7 +53,8 @@ const ProductDetail = () => {
             artist: p.user?.name || 'Artist',
             tags: p.tags || [],
             reviews: p.reviews || [],
-            rating: p.rating || 4.5,
+            rating: p.rating !== undefined ? p.rating : 0,
+            numReviews: p.numReviews || 0,
             views: p.views || 0,
             likes: p.likes || [],
             comments: p.comments || [],
@@ -104,9 +106,29 @@ const ProductDetail = () => {
 
     try {
       setIsSubmittingComment(true);
-      const res = await apiClient.post(`/products/${id}/comment`, { text: commentText });
-      setProduct(prev => ({ ...prev, comments: res.data.comments }));
+      const res = await apiClient.post(`/products/${id}/comment`, { text: commentText, rating: userRating });
+
+      // Update product with new comments and potential new rating if returned
+      // Ideally backend returns updated rating too, but for now we trust the comments update or re-fetch if needed.
+      // But the controller returns { comments: ... }. The rating calculation happens on backend.
+      // We might need to handle rating update in UI manually or rely on re-fetch.
+      // The controller returns `updatedProduct.comments`. 
+      // Let's assume we want to view the new rating immediately. 
+      // Usually it's better to refetch the whole product or have the backend return the new rating.
+      // Current controller: `res.json({ success: true, comments: updatedProduct.comments });`
+      // It DOES NOT return the new rating. 
+      // I should update the controller to return the new rating as well, OR just update comments and let the rating be stale until refresh.
+      // Wait, I can calculate it locally or just accept it's slightly stale.
+      // Actually, let's just update comments for now.
+
+      setProduct(prev => {
+        const newComments = res.data.comments;
+        const newRating = newComments.reduce((acc, item) => (item.rating || 5) + acc, 0) / newComments.length;
+        return { ...prev, comments: newComments, rating: newRating, numReviews: newComments.length };
+      });
+
       setCommentText("");
+      setUserRating(5);
       toast.success("Comment added!");
     } catch (err) {
       toast.error("Failed to add comment");
@@ -237,7 +259,9 @@ const ProductDetail = () => {
                 <div className="h-1 w-1 bg-white/20 rounded-full" />
                 <div className="flex items-center gap-1.5">
                   <Star className="w-4 h-4 text-secondary-500 fill-current" />
-                  <span className="text-base-content font-bold">{product.rating}</span>
+                  <span className="text-base-content font-bold">
+                    {Number(product.rating).toFixed(1)} ({product.numReviews || product.comments.length})
+                  </span>
                 </div>
               </div>
 
@@ -383,21 +407,44 @@ const ProductDetail = () => {
               </h3>
 
               {/* Add Comment */}
-              <form onSubmit={handleComment} className="flex gap-4">
-                <input
-                  type="text"
-                  value={commentText}
-                  onChange={(e) => setCommentText(e.target.value)}
-                  placeholder={t('product_detail.comment_placeholder')}
-                  className="flex-1 bg-base-100 border border-base-content/10 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary-500/50 transition-all text-base-content"
-                />
-                <button
-                  type="submit"
-                  disabled={isSubmittingComment || !commentText.trim()}
-                  className="p-3 bg-secondary-500 text-white rounded-xl hover:bg-secondary-600 transition-all disabled:opacity-50 shadow-glow-secondary"
-                >
-                  <Send size={20} />
-                </button>
+              <form onSubmit={handleComment} className="flex flex-col gap-4">
+                {/* Rating Input */}
+                <div className="flex items-center gap-2 mb-2">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={star}
+                      type="button"
+                      onClick={() => setUserRating(star)}
+                      className={`focus:outline-none transition-transform hover:scale-110 ${star <= userRating ? "text-yellow-400" : "text-gray-300"
+                        }`}
+                    >
+                      <Star
+                        size={24}
+                        fill={star <= userRating ? "currentColor" : "none"}
+                      />
+                    </button>
+                  ))}
+                  <span className="text-sm text-base-content/60 font-bold ml-2">
+                    {userRating}.0
+                  </span>
+                </div>
+
+                <div className="flex gap-4">
+                  <input
+                    type="text"
+                    value={commentText}
+                    onChange={(e) => setCommentText(e.target.value)}
+                    placeholder={t('product_detail.comment_placeholder')}
+                    className="flex-1 bg-base-100 border border-base-content/10 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary-500/50 transition-all text-base-content"
+                  />
+                  <button
+                    type="submit"
+                    disabled={isSubmittingComment || !commentText.trim()}
+                    className="p-3 bg-secondary-500 text-white rounded-xl hover:bg-secondary-600 transition-all disabled:opacity-50 shadow-glow-secondary"
+                  >
+                    <Send size={20} />
+                  </button>
+                </div>
               </form>
 
               {/* Comments List */}
@@ -410,7 +457,18 @@ const ProductDetail = () => {
                       </div>
                       <div className="flex-1">
                         <div className="flex justify-between items-start mb-1">
-                          <h4 className="font-bold text-base-content text-sm">{comment.user?.name || 'Collector'}</h4>
+                          <div className="flex flex-col">
+                            <h4 className="font-bold text-base-content text-sm">{comment.user?.name || 'Collector'}</h4>
+                            <div className="flex items-center gap-0.5 mt-0.5">
+                              {[...Array(5)].map((_, i) => (
+                                <Star
+                                  key={i}
+                                  size={12}
+                                  className={i < (comment.rating || 5) ? "text-yellow-400 fill-current" : "text-gray-300"}
+                                />
+                              ))}
+                            </div>
+                          </div>
                           <span className="text-[10px] text-base-content/40 font-bold uppercase tracking-widest">
                             {new Date(comment.createdAt).toLocaleDateString()}
                           </span>

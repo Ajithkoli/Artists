@@ -16,10 +16,13 @@ const ProductSchema = new mongoose.Schema({
         {
             user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
             text: { type: String, required: true },
+            rating: { type: Number, required: true, default: 5 },
             createdAt: { type: Date, default: Date.now }
         }
     ],
     views: { type: Number, default: 0 },
+    rating: { type: Number, default: 0 },
+    numReviews: { type: Number, default: 0 },
 
     // Origin of the product (e.g., Mysuru, Bidar)
     origin: { type: String, required: true },

@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 const ProductCard = ({ product, onAddToCart }) => {
     const { t } = useTranslation();
     // Generate some mock stats if missing from real data to match the design (fallback)
-    const rating = product.rating || 4.5;
+    const rating = product.rating !== undefined ? product.rating : 0;
     const views = product.views || 0;
     const likes = product.likes?.length || 0;
     const category = product.category || product.tags?.[0] || "Art";
@@ -35,7 +35,7 @@ const ProductCard = ({ product, onAddToCart }) => {
                 {/* Rating Badge */}
                 <div className="absolute top-3 right-3 flex items-center space-x-1 px-2 py-1 bg-base-100/40 backdrop-blur-md rounded-lg border border-base-content/10">
                     <Star className="w-3 h-3 text-yellow-500 fill-current" />
-                    <span className="text-xs font-bold text-base-content">{rating}</span>
+                    <span className="text-xs font-bold text-base-content">{Number(rating).toFixed(1)}</span>
                 </div>
             </div>
 

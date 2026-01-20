@@ -41,6 +41,7 @@ const Profile = () => {
   })
   const [orderStats, setOrderStats] = useState({ buyerCount: 0, sellerCount: 0, artworkCount: 0, communityCount: 0 })
   const [myArtworks, setMyArtworks] = useState([])
+  const [myPosts, setMyPosts] = useState([])
   const [myOrders, setMyOrders] = useState([])
   const [activeTab, setActiveTab] = useState('activity') // 'activity', 'artworks', 'orders'
   const navigate = useNavigate()
@@ -48,10 +49,11 @@ const Profile = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [statsRes, artworksRes, ordersRes] = await Promise.all([
+        const [statsRes, artworksRes, ordersRes, postsRes] = await Promise.all([
           apiClient.get('/payment/stats'),
           apiClient.get('/payment/my-artworks'),
-          apiClient.get('/payment/my-orders')
+          apiClient.get('/payment/my-orders'),
+          apiClient.get('/explore/my-posts')
         ])
 
         if (statsRes.data.success) {
@@ -64,6 +66,7 @@ const Profile = () => {
         }
         if (artworksRes.data.success) setMyArtworks(artworksRes.data.artworks)
         if (ordersRes.data.success) setMyOrders(ordersRes.data.orders)
+        if (postsRes.data.success) setMyPosts(postsRes.data.posts)
       } catch (error) {
         console.error("Failed to fetch profile data:", error)
       }
@@ -94,6 +97,20 @@ const Profile = () => {
       ...prev,
       [e.target.name]: e.target.value
     }))
+  }
+
+  const handleDeletePost = async (postId) => {
+    if (!window.confirm("Are you sure you want to delete this story? This action cannot be undone.")) return;
+
+    try {
+      const res = await apiClient.delete(`/explore/${postId}`);
+      if (res.data.success) {
+        toast.success("Story deleted successfully");
+        setMyPosts(prev => prev.filter(p => p._id !== postId));
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to delete story");
+    }
   }
 
   const handleDeleteProduct = async (productId) => {
@@ -393,6 +410,15 @@ const Profile = () => {
                 {t('profile.actions.purchases')}
                 {activeTab === 'orders' && <motion.div layoutId="activeTab" className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-600" />}
               </button>
+              {(user?.role === 'artist' || user?.role === 'admin') && (
+                <button
+                  onClick={() => setActiveTab('posts')}
+                  className={`pb-4 px-4 font-medium transition-colors relative ${activeTab === 'posts' ? 'text-primary-600' : 'text-base-content/50'}`}
+                >
+                  My Stories
+                  {activeTab === 'posts' && <motion.div layoutId="activeTab" className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-600" />}
+                </button>
+              )}
             </div>
 
             {/* Tab Content */}
@@ -474,6 +500,46 @@ const Profile = () => {
                   ) : (
                     <div className="text-center py-12 text-base-content/50 italic">
                       You haven't purchased anything yet.
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {activeTab === 'posts' && (
+                <div className="space-y-4">
+                  {myPosts.length > 0 ? (
+                    myPosts.map((post) => (
+                      <div key={post._id} className="flex gap-4 bg-base-100 p-4 rounded-xl border border-base-300">
+                        {post.photoUrl && (
+                          <img
+                            src={post.photoUrl.startsWith('http') ? post.photoUrl : `${apiClient.defaults.baseURL}${post.photoUrl}`}
+                            alt={post.title}
+                            className="w-24 h-24 rounded-lg object-cover"
+                          />
+                        )}
+                        <div className="flex-1">
+                          <h4 className="font-bold text-lg text-base-content">{post.title}</h4>
+                          <p className="text-sm text-base-content/70 line-clamp-2">{post.description}</p>
+                          <div className="flex gap-4 mt-2 text-xs text-base-content/50">
+                            <span>{new Date(post.createdAt).toLocaleDateString()}</span>
+                            <span>{post.likes?.length || 0} Likes</span>
+                            <span>{post.comments?.length || 0} Comments</span>
+                          </div>
+                        </div>
+                        <div>
+                          <button
+                            onClick={() => handleDeletePost(post._id)}
+                            className="text-red-500 hover:text-red-700 bg-red-50 p-2 rounded-lg transition-colors"
+                            title="Delete Story"
+                          >
+                            <X className="w-5 h-5" />
+                          </button>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-center py-12 text-base-content/50 italic">
+                      You haven't shared any stories yet.
                     </div>
                   )}
                 </div>

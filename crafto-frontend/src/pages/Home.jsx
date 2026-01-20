@@ -39,7 +39,7 @@ const Home = () => {
             // Use the watermark path for the image
             image: p.photo?.startsWith('http') ? p.photo : `${apiClient.defaults.baseURL}/watermark${p.photo}`,
             category: p.tags?.[0] || "Art", // Use first tag as category or default
-            rating: p.rating || 4.5,
+            rating: p.rating !== undefined ? p.rating : 0,
             likes: p.likes?.length || 0,
             views: p.views || 0
           }));

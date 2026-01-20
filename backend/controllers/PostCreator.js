@@ -120,4 +120,32 @@ const addCommentToPost = async (req, res) => {
   }
 };
 
-module.exports = { createPost, getPosts, getPostById, toggleLikePost, addCommentToPost };
+const deletePost = async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post) return res.status(404).json({ success: false, message: "Post not found" });
+
+    // Check if user is the owner
+    if (post.user.toString() !== req.user.id.toString() && req.user.role !== 'admin') {
+      return res.status(403).json({ success: false, message: "Not authorized to delete this post" });
+    }
+
+    await Post.findByIdAndDelete(req.params.id);
+    res.json({ success: true, message: "Post deleted successfully" });
+  } catch (err) {
+    console.error("Delete Post Error:", err);
+    res.status(500).json({ success: false, message: err.message || "Server error" });
+  }
+};
+
+const getMyPosts = async (req, res) => {
+  try {
+    const posts = await Post.find({ user: req.user.id }).sort({ createdAt: -1 });
+    res.json({ success: true, posts });
+  } catch (err) {
+    console.error("Get My Posts Error:", err);
+    res.status(500).json({ success: false, message: err.message || "Server error" });
+  }
+};
+
+module.exports = { createPost, getPosts, getPostById, toggleLikePost, addCommentToPost, deletePost, getMyPosts };
