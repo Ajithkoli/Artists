@@ -199,16 +199,22 @@ exports.verifyCartPayment = async (req, res, next) => {
     }
 };
 
+const Community = require("../models/community.model");
+
 // Get My Order Stats (Counts for Profile)
 exports.getMyOrderStats = async (req, res, next) => {
     try {
         const buyerCount = await Order.countDocuments({ buyer: req.user.id });
         const sellerCount = await Order.countDocuments({ seller: req.user.id });
+        const artworkCount = await Product.countDocuments({ user: req.user.id });
+        const communityCount = await Community.countDocuments({ members: req.user.id });
 
         res.status(200).json({
             success: true,
             buyerCount,
-            sellerCount
+            sellerCount,
+            artworkCount,
+            communityCount
         });
     } catch (error) {
         next(error);

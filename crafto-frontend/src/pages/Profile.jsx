@@ -39,7 +39,7 @@ const Profile = () => {
     bio: user?.bio || '',
     specialization: user?.specialization || ''
   })
-  const [orderStats, setOrderStats] = useState({ buyerCount: 0, sellerCount: 0 })
+  const [orderStats, setOrderStats] = useState({ buyerCount: 0, sellerCount: 0, artworkCount: 0, communityCount: 0 })
   const [myArtworks, setMyArtworks] = useState([])
   const [myOrders, setMyOrders] = useState([])
   const [activeTab, setActiveTab] = useState('activity') // 'activity', 'artworks', 'orders'
@@ -57,7 +57,9 @@ const Profile = () => {
         if (statsRes.data.success) {
           setOrderStats({
             buyerCount: statsRes.data.buyerCount,
-            sellerCount: statsRes.data.sellerCount
+            sellerCount: statsRes.data.sellerCount,
+            artworkCount: statsRes.data.artworkCount,
+            communityCount: statsRes.data.communityCount
           })
         }
         if (artworksRes.data.success) setMyArtworks(artworksRes.data.artworks)
@@ -94,11 +96,27 @@ const Profile = () => {
     }))
   }
 
+  const handleDeleteProduct = async (productId) => {
+    if (!window.confirm("Are you sure you want to delete this artwork? This action cannot be undone.")) return;
+
+    try {
+      const res = await apiClient.delete(`/products/${productId}`);
+      if (res.data.success) {
+        toast.success("Artwork deleted successfully");
+        setMyArtworks(prev => prev.filter(p => p._id !== productId));
+        // Update stats locally
+        setOrderStats(prev => ({ ...prev, artworkCount: prev.artworkCount - 1 }));
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to delete artwork");
+    }
+  }
+
   const stats = [
-    { id: 'artworks', label: t('profile.stats.artworks'), value: user?.artworkCount || 0, icon: Palette, color: 'text-primary-600' },
+    { id: 'artworks', label: t('profile.stats.artworks'), value: orderStats.artworkCount, icon: Palette, color: 'text-primary-600' },
     { id: 'purchases', label: t('profile.stats.purchases'), value: orderStats.buyerCount, icon: ShoppingBag, color: 'text-success-600' },
     { id: 'collections', label: t('profile.stats.collections'), value: orderStats.sellerCount, icon: BookOpen, color: 'text-blue-600' },
-    { id: 'communities', label: t('profile.stats.communities'), value: 3, icon: Users, color: 'text-purple-600' }
+    { id: 'communities', label: t('profile.stats.communities'), value: orderStats.communityCount, icon: Users, color: 'text-purple-600' }
   ].filter(stat => {
     if (user?.role === 'buyer') {
       return stat.id !== 'artworks' && stat.id !== 'collections'
@@ -416,6 +434,12 @@ const Profile = () => {
                         <div className="p-4">
                           <h4 className="font-bold text-base-content">{artwork.title}</h4>
                           <p className="text-primary-600 font-bold">${artwork.price}</p>
+                          <button
+                            onClick={() => handleDeleteProduct(artwork._id)}
+                            className="mt-2 text-red-500 hover:text-red-700 text-sm font-medium flex items-center gap-1"
+                          >
+                            <X className="w-4 h-4" /> Delete
+                          </button>
                         </div>
                       </div>
                     ))
