@@ -18,9 +18,14 @@ app.use(cors({
     // Allow requests with no origin (like mobile apps or curl)
     if (!origin) return callback(null, true);
 
-    const isVercelPreview = origin.endsWith(".vercel.app") && origin.includes("ajithkolis-projects");
+    console.log("CORS Check - Origin:", origin, "FrontendURL:", frontendUrl); // Debug Log
 
-    if (process.env.NODE_ENV !== 'production' || origin === frontendUrl || isVercelPreview) {
+    const isVercelPreview = origin.endsWith(".vercel.app");
+
+    // Add specifically allowed origins here if needed
+    const allowedOrigins = [frontendUrl, "https://artists-ochre.vercel.app"];
+
+    if (process.env.NODE_ENV !== 'production' || allowedOrigins.includes(origin) || isVercelPreview) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
